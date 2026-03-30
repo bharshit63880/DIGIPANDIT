@@ -1,0 +1,94 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { api } from "../lib/api";
+import { Button } from "../components/Button";
+import { payEntity } from "../lib/payments";
+
+export default function UserBookingsPage() {
+  const user = useSelector((state) => state.auth.user);
+  const [bookings, setBookings] = useState([]);
+  const [message, setMessage] = useState("");
+  const [payingId, setPayingId] = useState("");
+
+  const loadBookings = async () => {
+    const response = await api.get("/bookings/me");
+    setBookings(response.data.data);
+  };
+
+  useEffect(() => {
+    loadBookings();
+  }, []);
+
+  const cancelBooking = async (bookingId) => {
+    await api.patch(`/bookings/${bookingId}/status`, { status: "CANCELLED" });
+    loadBookings();
+  };
+
+  const payBooking = async (booking) => {
+    try {
+      setPayingId(booking._id);
+      setMessage("");
+      await payEntity({
+        entityType: "BOOKING",
+        entityId: booking._id,
+        title: booking.serviceName,
+        customer: user,
+      });
+      setMessage(`Payment successful for ${booking.serviceName}.`);
+      await loadBookings();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setPayingId("");
+    }
+  };
+
+  return (
+    <div className="rounded-[36px] bg-white p-8 shadow-soft">
+      <h1 className="text-4xl font-bold text-brand-ink">Your bookings</h1>
+      {message ? <p className="mt-4 text-sm font-medium text-brand-maroon">{message}</p> : null}
+      <div className="mt-8 space-y-4">
+        {bookings.map((booking) => (
+          <div key={booking._id} className="rounded-[24px] border border-brand-sand p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-clay">{booking.status}</p>
+                <h2 className="mt-2 text-xl font-bold text-brand-ink">{booking.serviceName}</h2>
+                <p className="mt-2 text-sm text-brand-ink/65">{booking.pandit?.name} | {new Date(booking.scheduleAt).toLocaleString()}</p>
+                <p className="mt-2 text-sm text-brand-ink/65">
+                  Session mode: <span className="font-semibold text-brand-ink">{booking.meetingMode === "ONLINE" ? "Online consultation" : "Offline visit"}</span>
+                </p>
+                <p className="mt-2 text-sm text-brand-ink/65">
+                  Payment: <span className="font-semibold text-brand-maroon">{booking.payment?.status || "CREATED"}</span>
+                </p>
+                {booking.meetingMode === "ONLINE" && booking.payment?.status !== "PAID" ? (
+                  <p className="mt-2 text-sm text-brand-maroon">
+                    Payment complete karte hi video-call ya online consultation button yahin dikh jayega.
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {booking.meetingLink && booking.payment?.status === "PAID" && booking.status !== "CANCELLED" && booking.status !== "REJECTED" ? (
+                  <Link to={`/video-call/${booking._id}`}>
+                    <Button variant="secondary">Join video call</Button>
+                  </Link>
+                ) : null}
+                {booking.payment?.status !== "PAID" && booking.status !== "CANCELLED" && booking.status !== "REJECTED" ? (
+                  <Button onClick={() => payBooking(booking)} disabled={payingId === booking._id}>
+                    {payingId === booking._id ? "Processing..." : `Pay Rs. ${booking.payment?.amount || booking.servicePrice}`}
+                  </Button>
+                ) : null}
+                {booking.status === "PENDING" || booking.status === "ACCEPTED" ? (
+                  <Button variant="secondary" onClick={() => cancelBooking(booking._id)}>
+                    Cancel
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

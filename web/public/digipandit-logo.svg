@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 360" role="img" aria-labelledby="title desc">
+  <title id="title">DigiPandit Logo</title>
+  <desc id="desc">DigiPandit logo with spiritual mark, wordmark, and tagline.</desc>
+  <rect width="980" height="360" fill="#000000" />
+  <image href="/digipandit-mark.svg" x="355" y="16" width="270" height="270" />
+  <text x="490" y="318" text-anchor="middle" fill="#045d83" font-family="Georgia, 'Times New Roman', serif" font-size="72" letter-spacing="3">
+    DIGIPANDIT
+  </text>
+  <text x="490" y="346" text-anchor="middle" fill="#045d83" font-family="Arial, sans-serif" font-size="22" letter-spacing="6">
+    MODERN SPIRITUAL SERVICES MARKETPLACE
+  </text>
+</svg>

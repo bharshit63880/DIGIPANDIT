@@ -1,0 +1,8 @@
+backend/node_modules
+web/node_modules
+mobile/node_modules
+web/dist
+mobile/.expo
+backend/.env
+web/.env
+mobile/.env
