@@ -11,6 +11,7 @@
       }
     }
   ],
+  "outputDirectory": "web/dist",
   "routes": [
     { "src": "/(.*)", "dest": "/web/dist/$1" }
   ]
