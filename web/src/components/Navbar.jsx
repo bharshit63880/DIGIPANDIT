@@ -5,11 +5,11 @@ import { logout } from "../features/auth/authSlice";
 import { Button } from "./Button";
 
 const navItems = [
-  { to: "/pandits", label: "Browse Pandits" },
-  { to: "/pandits?category=ASTROLOGY_CHAT", label: "Astrology" },
+  { to: "/", label: "Home" },
+  { to: "/astrology", label: "Astrology" },
+  { to: "/pandits", label: "Pandit Booking" },
   { to: "/hawan-guide", label: "Hawan Guide" },
-  { to: "/aarti-chalisa", label: "Aarti" },
-  { to: "/store", label: "Puja Store" },
+  { to: "/store", label: "Store" },
 ];
 
 export function Navbar() {
@@ -18,7 +18,6 @@ export function Navbar() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const cartCount = useSelector((state) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0));
-  const currentCategory = new URLSearchParams(location.search).get("category");
 
   const handleLogout = () => {
     dispatch(logout());
@@ -26,16 +25,11 @@ export function Navbar() {
   };
 
   const isNavItemActive = (to) => {
-    if (to === "/pandits") {
-      return location.pathname === "/pandits" && currentCategory !== "ASTROLOGY_CHAT";
+    if (to === "/") {
+      return location.pathname === "/";
     }
 
-    if (to === "/pandits?category=ASTROLOGY_CHAT") {
-      return location.pathname === "/pandits" && currentCategory === "ASTROLOGY_CHAT";
-    }
-
-    const [pathname, search = ""] = to.split("?");
-    return location.pathname === pathname && location.search === (search ? `?${search}` : "");
+    return location.pathname === to || location.pathname.startsWith(`${to}/`);
   };
 
   return (
@@ -91,7 +85,7 @@ export function Navbar() {
               <>
                 <Link to={user.role === "ADMIN" ? "/admin" : user.role === "PANDIT" ? "/pandit-dashboard" : "/dashboard"}>
                   <Button variant="secondary" className="whitespace-nowrap">
-                    Dashboard
+                    {user.role === "USER" ? "Profile" : "Dashboard"}
                   </Button>
                 </Link>
                 <Button onClick={handleLogout} className="hidden whitespace-nowrap sm:inline-flex">

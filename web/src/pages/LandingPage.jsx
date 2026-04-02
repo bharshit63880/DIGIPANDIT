@@ -8,8 +8,8 @@ import { getExpertImage, getProductFallbackImage, getProductImage } from "../lib
 import { allowedStoreCategories, getProductContent, productCategoryLabels } from "../lib/productContent";
 
 const highlights = [
-  { icon: Calendar, title: "Book verified pandits", text: "Schedule pujas and rituals with trusted experts available in your city." },
-  { icon: MessageCircleMore, title: "Astrology consultations", text: "Start guided astrology consultations with structured chat-based support." },
+  { icon: Calendar, title: "Book verified pandits", text: "Schedule hawan, puja, and katha services with address-aware pricing and trusted experts." },
+  { icon: MessageCircleMore, title: "Astrology consultations", text: "Start chat, audio, or video consultations with wallet-based per-minute billing." },
   { icon: ShoppingBasket, title: "Shop puja essentials", text: "Order curated kits, idols, incense, and other ritual essentials in one place." },
   { icon: ShieldCheck, title: "Built for trust", text: "Admin oversight keeps experts, orders, and customer journeys accountable and reliable." },
 ];
@@ -24,12 +24,12 @@ export default function LandingPage() {
       try {
         const [panditRes, astrologerRes, productRes] = await Promise.all([
           api.get("/pandits", { params: { category: "PUJA", limit: 3 } }),
-          api.get("/pandits", { params: { category: "ASTROLOGY_CHAT", limit: 3 } }),
+          api.get("/astrologers", { params: { mode: "CHAT", onlineOnly: "true" } }),
           api.get("/products", { params: { limit: 4 } }),
         ]);
 
         setFeaturedPandits(panditRes.data.data);
-        setFeaturedAstrologers(astrologerRes.data.data);
+        setFeaturedAstrologers((astrologerRes.data.data || []).slice(0, 3));
         setFeaturedProducts(productRes.data.data.filter((product) => allowedStoreCategories.includes(product.category)).slice(0, 4));
       } catch (error) {
         setFeaturedPandits([]);
@@ -59,11 +59,14 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
-              <Link to="/pandits">
-                <Button>Find a Pandit</Button>
+              <Link to="/astrology">
+                <Button>Open Astrology</Button>
               </Link>
-              <Link to="/pandits?category=ASTROLOGY_CHAT">
-                <Button variant="secondary">Book Astrology</Button>
+              <Link to="/pandits">
+                <Button variant="secondary">Pandit Booking</Button>
+              </Link>
+              <Link to="/astrology">
+                <Button variant="secondary">Start Consultation</Button>
               </Link>
               <Link to="/hawan-guide">
                 <Button variant="secondary">Open Hawan Guide</Button>
@@ -100,15 +103,15 @@ export default function LandingPage() {
             </div>
             <h2 className="mt-5 text-4xl font-bold">Astrology consultations now have clear visibility on the home page.</h2>
             <p className="mt-4 max-w-2xl text-base leading-8 text-white/80">
-              Astrology services now have a dedicated entry point so users can browse experts directly,
-              book online sessions, and continue conversations from their dashboard.
+              Astrology is now one unified experience where users can generate kundali, review predictions,
+              fund their wallet, and begin per-minute live consultations with astrologers.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/pandits?category=ASTROLOGY_CHAT">
-                <Button variant="secondary">Start Astrology Chat</Button>
+              <Link to="/astrology">
+                <Button variant="secondary">Open Astrology Page</Button>
               </Link>
-              <Link to="/pandits?category=ASTROLOGY_CALL">
-                <Button className="bg-brand-gold text-brand-ink hover:bg-white">Book Astrology Call</Button>
+              <Link to="/astrology">
+                <Button className="bg-brand-gold text-brand-ink hover:bg-white">Generate Kundali</Button>
               </Link>
             </div>
           </div>
@@ -120,7 +123,7 @@ export default function LandingPage() {
               </div>
               <h3 className="mt-5 text-2xl font-bold text-brand-ink">Instant chat guidance</h3>
               <p className="mt-3 text-sm leading-7 text-brand-ink/70">
-                Browse astrologers, start chat-based consultations, and continue conversations from the dashboard.
+                Browse astrologers, start wallet-based chat sessions, and continue conversations from the dashboard.
               </p>
             </div>
             <div className="rounded-[30px] bg-white p-6 shadow-soft">
@@ -129,7 +132,7 @@ export default function LandingPage() {
               </div>
               <h3 className="mt-5 text-2xl font-bold text-brand-ink">Call consultation slots</h3>
               <p className="mt-3 text-sm leading-7 text-brand-ink/70">
-                Users can discover online consultation services separately from puja bookings and schedule them by time.
+                Audio and video consultations are priced per minute and remain distinct from offline pandit bookings.
               </p>
             </div>
           </div>
@@ -201,17 +204,30 @@ export default function LandingPage() {
           {featuredAstrologers.map((pandit) => (
             <article key={pandit._id} className="overflow-hidden rounded-[30px] bg-white shadow-soft">
               <img
-                src={getExpertImage(pandit)}
-                alt={pandit.user?.name}
+                src={getExpertImage({
+                  user: {
+                    name: pandit.name,
+                    avatar: pandit.avatar && typeof pandit.avatar === "object" ? pandit.avatar : { url: pandit.avatar || "" },
+                  },
+                })}
+                alt={pandit.name}
                 className="h-52 w-full object-cover object-[center_18%]"
               />
               <div className="p-6">
                 <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-clay">Astrology</p>
-                <h3 className="mt-3 text-2xl font-bold text-brand-ink">{pandit.user?.name}</h3>
+                <h3 className="mt-3 text-2xl font-bold text-brand-ink">{pandit.name}</h3>
                 <p className="mt-2 text-sm text-brand-ink/65">{pandit.languages?.join(", ")}</p>
                 <p className="mt-4 text-sm leading-7 text-brand-ink/70">{pandit.bio}</p>
-                <Link to={`/pandits/${pandit._id}`} className="mt-6 inline-flex">
-                  <Button variant="secondary">Book consultation</Button>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-brand-cream px-3 py-1 text-xs font-semibold text-brand-maroon">
+                    From Rs. {pandit.minPricePerMinute || 0}/min
+                  </span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${pandit.isOnline ? "bg-emerald-100 text-emerald-700" : "bg-brand-sand text-brand-ink"}`}>
+                    {pandit.isOnline ? "Online" : "Offline"}
+                  </span>
+                </div>
+                <Link to="/astrology" className="mt-6 inline-flex">
+                  <Button variant="secondary">Open astrology</Button>
                 </Link>
               </div>
             </article>
@@ -223,7 +239,7 @@ export default function LandingPage() {
         <SectionTitle
           eyebrow="Store Picks"
           title="Curated puja essentials are also featured on the home page"
-          description="The products below are loaded from seeded database records, not static placeholders."
+          description="These products are loaded from live store data so the experience feels realistic."
         />
 
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">

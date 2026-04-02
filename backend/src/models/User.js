@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema(
     city: { type: String, trim: true },
     state: { type: String, trim: true },
     addresses: [addressSchema],
+    wallet: {
+      balance: { type: Number, default: 0, min: 0 },
+      currency: { type: String, default: "INR" },
+      lastRechargedAt: { type: Date, default: null },
+    },
     emailVerified: { type: Boolean, default: false },
     emailVerificationOtp: { type: String, default: null },
     emailVerificationOtpExpiresAt: { type: Date, default: null },

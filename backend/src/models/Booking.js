@@ -34,6 +34,14 @@ const bookingSchema = new mongoose.Schema(
     },
     serviceName: { type: String, required: true },
     servicePrice: { type: Number, required: true, min: 0 },
+    pricingBreakdown: {
+      basePrice: { type: Number, default: 0, min: 0 },
+      travelCharge: { type: Number, default: 0, min: 0 },
+      samagriCost: { type: Number, default: 0, min: 0 },
+      extraDakshina: { type: Number, default: 0, min: 0 },
+      videoDakshinaFee: { type: Number, default: 0, min: 0 },
+      total: { type: Number, default: 0, min: 0 },
+    },
     scheduleAt: { type: Date, required: true },
     durationInMinutes: { type: Number, default: 60, min: 15 },
     address: {
@@ -54,6 +62,7 @@ const bookingSchema = new mongoose.Schema(
       },
       gatewayOrderId: String,
       gatewayPaymentId: String,
+      failureReason: String,
       amount: { type: Number, required: true, min: 0 },
       paidAt: Date,
     },
@@ -61,6 +70,11 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: ["ONLINE", "OFFLINE"],
       default: "OFFLINE",
+    },
+    sessionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ConsultationSession",
+      default: null,
     },
   },
   {

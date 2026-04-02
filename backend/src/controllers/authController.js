@@ -8,6 +8,7 @@ const ApiError = require("../utils/ApiError");
 const generateOtp = require("../utils/generateOtp");
 const { signToken } = require("../utils/jwt");
 const { sendMockEmail } = require("../services/emailService");
+const { otpEmail } = require("../utils/emailTemplates");
 
 const formatAuthResponse = (user) => ({
   token: signToken({ userId: user._id, role: user.role }),
@@ -45,7 +46,11 @@ const register = asyncHandler(async (req, res) => {
   await sendMockEmail({
     to: user.email,
     subject: "Verify your DigiPandit account",
-    html: `Your DigiPandit verification OTP is ${otp}`,
+    html: otpEmail({
+      heading: "Verify your email",
+      body: "Use the OTP below to verify your DigiPandit account and continue.",
+      otp,
+    }),
     meta: { type: "EMAIL_VERIFICATION" },
   });
 
@@ -95,7 +100,11 @@ const requestEmailVerificationOtp = asyncHandler(async (req, res) => {
   await sendMockEmail({
     to: user.email,
     subject: "DigiPandit email verification OTP",
-    html: `Your OTP is ${otp}`,
+    html: otpEmail({
+      heading: "Email verification code",
+      body: "Use this one-time code to verify your email for DigiPandit.",
+      otp,
+    }),
     meta: { type: "EMAIL_VERIFICATION" },
   });
 
@@ -148,7 +157,12 @@ const forgotPassword = asyncHandler(async (req, res) => {
   await sendMockEmail({
     to: user.email,
     subject: "DigiPandit password reset OTP",
-    html: `Your password reset OTP is ${otp}`,
+    html: otpEmail({
+      heading: "Password reset code",
+      body: "Use this one-time code to reset your password for DigiPandit.",
+      otp,
+      actionLabel: "Enter this code on the reset password screen",
+    }),
     meta: { type: "FORGOT_PASSWORD" },
   });
 

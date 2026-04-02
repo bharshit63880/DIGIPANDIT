@@ -40,4 +40,71 @@
   .container-shell {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  .spiritual-flame {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 4.5rem;
+    border-radius: 9999px 9999px 9999px 9999px / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 30%, #fff7c2 0%, #ffd76a 36%, #ff9f45 68%, #ff6a2f 100%);
+    box-shadow: 0 0 35px rgba(255, 177, 74, 0.45);
+    transform-origin: center bottom;
+    animation: flame-flicker 1.7s ease-in-out infinite;
+  }
+
+  .spiritual-flame::after {
+    content: "";
+    position: absolute;
+    inset: 0.8rem 0.7rem 1.2rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 50% 30%, #ffffff 0%, #ffe68b 45%, rgba(255, 230, 139, 0) 100%);
+    opacity: 0.9;
+  }
+
+  .spiritual-particle {
+    position: absolute;
+    bottom: -5%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: rgba(255, 215, 130, 0.65);
+    box-shadow: 0 0 18px rgba(255, 188, 89, 0.35);
+    animation: spiritual-rise linear infinite;
+  }
+}
+
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: translateY(0) scale(1) rotate(-2deg);
+  }
+
+  25% {
+    transform: translateY(-2px) scale(1.04) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(0.97) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateY(-1px) scale(1.03) rotate(1deg);
+  }
+}
+
+@keyframes spiritual-rise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.8);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate3d(0, -120vh, 0) scale(1.35);
+    opacity: 0;
+  }
 }

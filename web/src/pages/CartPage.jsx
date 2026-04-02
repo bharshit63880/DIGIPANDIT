@@ -31,10 +31,10 @@ export default function CartPage() {
         items: items.map((item) => ({ productId: item._id, quantity: item.quantity })),
         shippingAddress: {
           label: "Primary",
-          line1: "Demo address",
-          city: "Delhi",
-          state: "Delhi",
-          pincode: "110001",
+          line1: "Shipping address line 1",
+          city: "City",
+          state: "State",
+          pincode: "000000",
         },
       });
       setPaying(true);

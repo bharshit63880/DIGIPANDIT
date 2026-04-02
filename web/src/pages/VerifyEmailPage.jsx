@@ -22,7 +22,7 @@ export default function VerifyEmailPage() {
   const [verifying, setVerifying] = useState(false);
   const [message, setMessage] = useState(
     location.state?.email
-      ? "A verification code has been sent automatically. In demo mode, you can find it in the backend mock email log."
+      ? "A verification code has been sent automatically."
       : ""
   );
   const [error, setError] = useState("");
@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
       setError("");
       setMessage("");
       await api.post("/auth/verify-email/request", { email });
-      setMessage("A verification code has been sent. In demo mode, you can find it in the backend mock email log.");
+      setMessage("A verification code has been sent to your email.");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -67,9 +67,7 @@ export default function VerifyEmailPage() {
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
         <h1 className="text-4xl font-bold text-brand-ink">Verify your email</h1>
-        <p className="mt-3 text-brand-ink/65">
-          Complete your email verification here. In demo mode, the verification code appears in the backend mock email log.
-        </p>
+        <p className="mt-3 text-brand-ink/65">Complete your email verification here using the code sent to you.</p>
 
         <form onSubmit={handleVerify} className="mt-8 space-y-4">
           <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />

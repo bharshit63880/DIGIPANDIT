@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { Navigate } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import AppShell from "../layouts/AppShell";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -8,13 +9,14 @@ const LoginPage = lazy(() => import("../pages/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/RegisterPage"));
 const VerifyEmailPage = lazy(() => import("../pages/VerifyEmailPage"));
 const ForgotPasswordPage = lazy(() => import("../pages/ForgotPasswordPage"));
+const AstrologyPage = lazy(() => import("../pages/AstrologyPage"));
 const PanditsPage = lazy(() => import("../pages/PanditsPage"));
 const PanditDetailPage = lazy(() => import("../pages/PanditDetailPage"));
 const HawanPage = lazy(() => import("../pages/HawanPage"));
-const AartiChalisaPage = lazy(() => import("../pages/AartiChalisaPage"));
 const StorePage = lazy(() => import("../pages/StorePage"));
 const ProductDetailPage = lazy(() => import("../pages/ProductDetailPage"));
 const CartPage = lazy(() => import("../pages/CartPage"));
+const PaymentStatusPage = lazy(() => import("../pages/PaymentStatusPage"));
 const UserDashboardPage = lazy(() => import("../pages/UserDashboardPage"));
 const UserBookingsPage = lazy(() => import("../pages/UserBookingsPage"));
 const UserProfilePage = lazy(() => import("../pages/UserProfilePage"));
@@ -33,13 +35,15 @@ export const appRoutes = [
       { path: "/register", element: <RegisterPage /> },
       { path: "/verify-email", element: <VerifyEmailPage /> },
       { path: "/forgot-password", element: <ForgotPasswordPage /> },
+      { path: "/astrology", element: <AstrologyPage /> },
       { path: "/pandits", element: <PanditsPage /> },
       { path: "/pandits/:panditId", element: <PanditDetailPage /> },
+      { path: "/kundali", element: <Navigate to="/astrology" replace /> },
       { path: "/hawan-guide", element: <HawanPage /> },
-      { path: "/aarti-chalisa", element: <AartiChalisaPage /> },
       { path: "/store", element: <StorePage /> },
       { path: "/store/:slug", element: <ProductDetailPage /> },
       { path: "/cart", element: <CartPage /> },
+      { path: "/payment-status", element: <PaymentStatusPage /> },
     ],
   },
   {

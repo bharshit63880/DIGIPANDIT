@@ -158,7 +158,7 @@ export function PanditJiChatWidget() {
                 rows={2}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="PanditJi se kuch poochhiye..."
+                placeholder="Apna sawaal likhiye (ritual, mantra, timing, samagri)"
                 className="min-h-[52px] flex-1 resize-none rounded-[20px] border border-brand-sand px-4 py-3 text-sm outline-none focus:border-brand-clay"
               />
               <Button onClick={() => sendMessage(draft)} disabled={!canSend} className="h-[52px] w-[52px] rounded-2xl px-0">

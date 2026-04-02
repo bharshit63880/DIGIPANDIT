@@ -46,10 +46,10 @@ export default function PanditDetailPage() {
         meetingMode: isOnlineService ? "ONLINE" : "OFFLINE",
         address: {
           label: "Primary",
-          line1: "Demo address",
-          city: pandit.serviceCities?.[0] || "Delhi",
-          state: pandit.user?.state || "Delhi",
-          pincode: "110001",
+          line1: "Service address line 1",
+          city: pandit.serviceCities?.[0] || "Your city",
+          state: pandit.user?.state || "Your state",
+          pincode: "000000",
         },
       });
       setMessage(

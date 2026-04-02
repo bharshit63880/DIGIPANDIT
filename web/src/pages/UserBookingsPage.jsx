@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import { api } from "../lib/api";
 import { Button } from "../components/Button";
 import { payEntity } from "../lib/payments";
+import { BookingReceiptCard } from "../components/BookingReceiptCard";
 
 export default function UserBookingsPage() {
   const user = useSelector((state) => state.auth.user);
   const [bookings, setBookings] = useState([]);
   const [message, setMessage] = useState("");
   const [payingId, setPayingId] = useState("");
+  const [expandedReceiptId, setExpandedReceiptId] = useState("");
 
   const loadBookings = async () => {
     const response = await api.get("/bookings/me");
@@ -36,9 +38,11 @@ export default function UserBookingsPage() {
         customer: user,
       });
       setMessage(`Payment successful for ${booking.serviceName}.`);
+      setExpandedReceiptId(booking._id);
       await loadBookings();
     } catch (error) {
       setMessage(error.message);
+      await loadBookings();
     } finally {
       setPayingId("");
     }
@@ -60,8 +64,13 @@ export default function UserBookingsPage() {
                   Session mode: <span className="font-semibold text-brand-ink">{booking.meetingMode === "ONLINE" ? "Online consultation" : "Offline visit"}</span>
                 </p>
                 <p className="mt-2 text-sm text-brand-ink/65">
-                  Payment: <span className="font-semibold text-brand-maroon">{booking.payment?.status || "CREATED"}</span>
+                  Payment: <span className={`font-semibold ${booking.payment?.status === "FAILED" ? "text-red-600" : "text-brand-maroon"}`}>{booking.payment?.status || "CREATED"}</span>
                 </p>
+                {booking.payment?.status === "FAILED" ? (
+                  <p className="mt-2 text-sm text-red-600">
+                    {booking.payment?.failureReason || "Payment did not complete. You can retry safely."}
+                  </p>
+                ) : null}
                 {booking.meetingMode === "ONLINE" && booking.payment?.status !== "PAID" ? (
                   <p className="mt-2 text-sm text-brand-maroon">
                     Payment complete karte hi video-call ya online consultation button yahin dikh jayega.
@@ -76,7 +85,16 @@ export default function UserBookingsPage() {
                 ) : null}
                 {booking.payment?.status !== "PAID" && booking.status !== "CANCELLED" && booking.status !== "REJECTED" ? (
                   <Button onClick={() => payBooking(booking)} disabled={payingId === booking._id}>
-                    {payingId === booking._id ? "Processing..." : `Pay Rs. ${booking.payment?.amount || booking.servicePrice}`}
+                    {payingId === booking._id
+                      ? "Processing..."
+                      : booking.payment?.status === "FAILED"
+                        ? `Retry payment Rs. ${booking.payment?.amount || booking.servicePrice}`
+                        : `Pay Rs. ${booking.payment?.amount || booking.servicePrice}`}
+                  </Button>
+                ) : null}
+                {booking.payment?.status === "PAID" ? (
+                  <Button variant="secondary" onClick={() => setExpandedReceiptId((current) => (current === booking._id ? "" : booking._id))}>
+                    {expandedReceiptId === booking._id ? "Hide receipt" : "View receipt"}
                   </Button>
                 ) : null}
                 {booking.status === "PENDING" || booking.status === "ACCEPTED" ? (
@@ -86,6 +104,12 @@ export default function UserBookingsPage() {
                 ) : null}
               </div>
             </div>
+
+            {booking.payment?.status === "PAID" && expandedReceiptId === booking._id ? (
+              <div className="mt-5">
+                <BookingReceiptCard booking={booking} title="Invoice Receipt" />
+              </div>
+            ) : null}
           </div>
         ))}
       </div>

@@ -5,12 +5,21 @@ const serviceSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     category: {
       type: String,
-      enum: ["PUJA", "ASTROLOGY_CHAT", "ASTROLOGY_CALL"],
+      enum: ["PUJA", "ASTROLOGY_CHAT", "ASTROLOGY_CALL", "ASTROLOGY_VIDEO"],
       default: "PUJA",
+    },
+    serviceType: {
+      type: String,
+      enum: ["PUJA", "HAWAN", "KATHA", "CONSULTATION"],
+      default: "CONSULTATION",
     },
     description: { type: String, trim: true },
     durationInMinutes: { type: Number, default: 60, min: 15 },
     price: { type: Number, required: true, min: 0 },
+    travelCharge: { type: Number, default: 0, min: 0 },
+    samagriCost: { type: Number, default: 0, min: 0 },
+    extraDakshina: { type: Number, default: 0, min: 0 },
+    videoDakshinaFee: { type: Number, default: 0, min: 0 },
     isActive: { type: Boolean, default: true },
   },
   { _id: true }

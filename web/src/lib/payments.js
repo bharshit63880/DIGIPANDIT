@@ -1,85 +1,34 @@
 import { api } from "./api";
 
-const loadRazorpay = () =>
-  new Promise((resolve) => {
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
+function submitHostedForm({ action, method, fields }) {
+  const form = document.createElement("form");
+  form.method = method || "POST";
+  form.action = action;
+  form.style.display = "none";
 
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
+  Object.entries(fields || {}).forEach(([key, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = value ?? "";
+    form.appendChild(input);
   });
 
-export const payEntity = async ({ entityType, entityId, title, customer }) => {
-  const orderResponse = await api.post("/payments/create-order", {
+  document.body.appendChild(form);
+  form.submit();
+}
+
+export const payEntity = async ({ entityType, entityId }) => {
+  const response = await api.post("/payments/create-order", {
     entityType,
     entityId,
   });
 
-  const order = orderResponse.data.data;
+  const paymentSession = response.data.data;
+  const action = paymentSession.action?.startsWith("http")
+    ? paymentSession.action
+    : "https://test.payu.in/_payment";
 
-  if (order.mock || !order.keyId) {
-    const verifyResponse = await api.post("/payments/verify", {
-      entityType,
-      entityId,
-      razorpayPaymentId: `mock_payment_${Date.now()}`,
-      razorpayOrderId: order.id,
-    });
-
-    return {
-      mode: "mock",
-      entity: verifyResponse.data.data,
-    };
-  }
-
-  const isLoaded = await loadRazorpay();
-  if (!isLoaded) {
-    throw new Error("Razorpay checkout failed to load");
-  }
-
-  return new Promise((resolve, reject) => {
-    const razorpay = new window.Razorpay({
-      key: order.keyId,
-      amount: order.amount,
-      currency: order.currency || "INR",
-      name: "DigiPandit",
-      description: title || "DigiPandit Payment",
-      order_id: order.id,
-      prefill: {
-        name: customer?.name || "",
-        email: customer?.email || "",
-        contact: customer?.phone || "",
-      },
-      theme: {
-        color: "#8c351d",
-      },
-      handler: async (response) => {
-        try {
-          const verifyResponse = await api.post("/payments/verify", {
-            entityType,
-            entityId,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-          });
-
-          resolve({
-            mode: "razorpay",
-            entity: verifyResponse.data.data,
-          });
-        } catch (error) {
-          reject(error);
-        }
-      },
-      modal: {
-        ondismiss: () => reject(new Error("Payment cancelled")),
-      },
-    });
-
-    razorpay.open();
-  });
+  submitHostedForm({ ...paymentSession, action });
+  return { mode: "payu-redirect" };
 };

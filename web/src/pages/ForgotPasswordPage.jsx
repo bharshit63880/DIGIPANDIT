@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
       setError("");
       setMessage("");
       await api.post("/auth/forgot-password", { email });
-      setMessage("A password reset code has been sent. In demo mode, you can find it in the backend mock email log.");
+      setMessage("A password reset code has been sent to your email.");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -52,9 +52,7 @@ export default function ForgotPasswordPage() {
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
         <h1 className="text-4xl font-bold text-brand-ink">Forgot password</h1>
-        <p className="mt-3 text-brand-ink/65">
-          Reset your password using the email verification code. In demo mode, the code appears in the backend mock email log.
-        </p>
+        <p className="mt-3 text-brand-ink/65">Reset your password using the email verification code sent to you.</p>
 
         <form onSubmit={handleReset} className="mt-8 space-y-4">
           <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />

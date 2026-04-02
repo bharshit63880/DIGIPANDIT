@@ -1,499 +1,546 @@
-import { useState } from "react";
-import { AlertCircle, CheckCircle2, Flame, Leaf, ShieldCheck, Sparkles, SunMedium } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  Flame,
+  ListChecks,
+  MessageCircleMore,
+  PauseCircle,
+  PlayCircle,
+  RotateCcw,
+  SendHorizontal,
+  Sparkles,
+  Video,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import { SectionTitle } from "../components/SectionTitle";
+import { hawanPurposes } from "../data/hawanGuides";
 
-const quickInfo = [
-  {
-    icon: SunMedium,
-    title: "Ideal timing",
-    text: "Morning is generally considered ideal, although the final muhurat should be confirmed with your pandit based on the ritual requirements.",
-  },
-  {
-    icon: Leaf,
-    title: "Dress guidance",
-    text: "Wear clean, simple, and comfortable clothing. Lightweight cotton attire is usually preferred, while overly synthetic or loose fabrics are best avoided.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Safety essentials",
-    text: "Keep children at a safe distance from the fire, keep water nearby, and ensure the ritual area is properly ventilated.",
-  },
-];
+function formatTimer(totalSeconds) {
+  const safeSeconds = Math.max(0, totalSeconds);
+  const mins = Math.floor(safeSeconds / 60);
+  const secs = safeSeconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
 
-const samagri = [
-  "Hawan kund",
-  "Mango ya peepal ki samidha",
-  "Ghee",
-  "Hawan samagri mix",
-  "Kapoor",
-  "Roli, chawal, moli",
-  "Panchpatra aur spoon",
-  "Kalash aur jal",
-  "Phool aur pushp mala",
-  "Aasan",
-  "Nariyal",
-  "Supari aur laung",
-];
+function getAssistantReply(prompt, purpose, step) {
+  const normalizedPrompt = prompt.toLowerCase();
 
-const steps = [
-  "Begin by cleaning the space and arranging the chowki, aasan, and hawan kund properly.",
-  "Start with kalash sthapana, sankalp, and Ganesh vandana.",
-  "Light the sacred fire and offer ghee and hawan samagri gradually.",
-  "Offer each aahuti with mantra chanting, focus, and a calm devotional mindset.",
-  "After the primary sankalp is completed, perform the purnahuti.",
-  "Conclude with aarti, pranam, and distribution of prasad.",
-];
+  if (normalizedPrompt.includes("kitni")) {
+    return `Is ${purpose.title} hawan ke ${step.title} step me mantra ko kam se kam ${step.repeatCount} baar dhyan se repeat kijiye. Agar pandit guide kar rahe hon to unki ginti ko priority dijiye.`;
+  }
 
-const carePoints = [
-  "Pregnant women, senior citizens, and anyone with breathing concerns should maintain a safe distance from the smoke.",
-  "Proper ventilation is essential, especially in apartments or enclosed rooms.",
-  "Do not place the hawan kund near wooden furniture, curtains, or other flammable materials.",
-  "Keep clothing, dupattas, and puja items at a safe distance from the fire.",
-  "Do not offer excessive aahutis too quickly, as it can create uncontrolled smoke or flames.",
-];
+  if (normalizedPrompt.includes("sankalp")) {
+    return `Sankalp me apna naam, jagah, tithi, aur ${purpose.title.toLowerCase()} ka uddeshya boliye. Agar gotra pata ho to include kariye, warna shraddha aur spasht intention kaafi hai.`;
+  }
 
-const dressGuide = [
-  "Men may wear a simple kurta-pajama or dhoti-kurta.",
-  "Women may wear a cotton suit, saree, or other modest traditional attire.",
-  "Dark colours, especially black, are often avoided during auspicious home rituals.",
-  "It is generally preferable to remove footwear before sitting at the puja area.",
-];
+  if (normalizedPrompt.includes("aahuti")) {
+    return `Aahuti chhoti aur niyantrit rakhiye. Har offering ke saath mantra ka antim bhaag aur "swaha" clear boliye, phir samagri ko dheere se agni me chhodiye.`;
+  }
 
-const hawanOptions = [
-  {
-    id: "mahamrityunjay",
-    title: "Mahamrityunjay Hawan",
-    subtitle: "For prayers focused on health, peace, and protection",
-    when: "Often chosen during health concerns, recovery periods, mental stress, or difficult family situations.",
-    purpose:
-      "This Hawan is performed to invoke Shiv kripa, inner strength, and peace. It is commonly chosen for health and protection-oriented sankalps.",
-    idealFor: ["Health recovery support", "Family wellbeing", "Spiritual protection sankalp"],
-    keyPoints: [
-      "Aahutis are offered with the Mahamrityunjay mantra.",
-      "The sankalp is usually taken with remembrance of Mahadev or Shivling pujan.",
-      "Belpatra, jal, and ghee are commonly used.",
-    ],
-  },
-  {
-    id: "lakshmi",
-    title: "Lakshmi Hawan",
-    subtitle: "For prosperity, auspicious energy, and household wellbeing",
-    when: "Commonly performed during Diwali, business openings, the new financial year, or prosperity-focused household rituals.",
-    purpose:
-      "Lakshmi Hawan is performed for prosperity, household harmony, and positive energy. It is especially popular for auspicious new beginnings.",
-    idealFor: ["Diwali pujan", "Shop or office opening", "Prosperity sankalp"],
-    keyPoints: [
-      "Lakshmi ji and Ganesh ji are often invoked together.",
-      "Cleanliness, auspicious attire, and deep prajwalan are given special importance.",
-      "The ritual usually concludes with aarti and prasad distribution.",
-    ],
-  },
-  {
-    id: "hanuman",
-    title: "Hanuman Hawan",
-    subtitle: "For courage, protection, and removal of obstacles",
-    when: "Often performed on Tuesdays, Saturdays, during challenging periods, or when seeking inner strength.",
-    purpose:
-      "Hanuman Hawan is performed for sankat nivaran, courage, and spiritual resilience during difficult phases.",
-    idealFor: ["Sankat nivaran", "Courage and confidence", "Spiritual strength"],
-    keyPoints: [
-      "It may be performed with recitation of the Hanuman Chalisa or Bajrang Baan.",
-      "Sindoor, boondi or laddoo bhog, and sincere prayer are often included.",
-      "This Hawan is known for its strong devotional energy.",
-    ],
-  },
-];
+  if (normalizedPrompt.includes("pace") || normalizedPrompt.includes("speed")) {
+    return `Mantra ka pace steady rakhiye, jaldi nahi. Har line ko saaf ucharan ke saath bolna is hawan me quantity se zyada important hai.`;
+  }
 
-const faqItems = [
-  {
-    question: "Kya hawan ghar par bina pandit ke kar sakte hain?",
-    answer:
-      "A simple devotional fire ritual may be done at home, but for detailed vidhi, mantras, or specific sankalps, guidance from a pandit is strongly recommended.",
-  },
-  {
-    question: "Hawan kitni der ka hota hai?",
-    answer:
-      "A simple Hawan may take 30 to 45 minutes, while a more detailed ritual with sankalp, pujan, and purnahuti can take 60 to 120 minutes or longer.",
-  },
-  {
-    question: "Kya flat ya apartment me Hawan safe hai?",
-    answer:
-      "Yes, provided there is good ventilation, smoke alarms are considered, and a small controlled hawan kund is used. Safety should always come first.",
-  },
-  {
-    question: "Hawan ke baad bachi hui samagri ka kya karein?",
-    answer:
-      "Unused clean samagri may be stored separately. Once the ash has cooled, it may be respectfully placed near plants or immersed in a clean sacred space.",
-  },
-];
-
-const pujanOptions = [
-  {
-    id: "ganesh",
-    title: "Ganesh Pujan",
-    subtitle: "For beginning any auspicious undertaking",
-    when: "Often performed before a housewarming, new venture, marriage, or any major Hawan or puja.",
-    purpose:
-      "Ganesh Pujan is performed to remove obstacles and seek a smooth beginning for the occasion.",
-    includes: [
-      "Ganesh sthapana or murti/photo pujan",
-      "Roli, chawal, durva, and modak or bhog",
-      "Ganesh mantra recitation and pushpanjali",
-    ],
-    flow: [
-      "Place Ganesh ji respectfully on the aasan.",
-      "Offer roli, chawal, flowers, and durva.",
-      "Begin the Hawan or main puja after prayer and invocation.",
-    ],
-  },
-  {
-    id: "mata",
-    title: "Mata Pujan",
-    subtitle: "For strength, protection, and household peace",
-    when: "Frequently performed during Navratri, grih shanti ceremonies, or prayers for family wellbeing.",
-    purpose:
-      "Mata Pujan is performed to invoke protection, positivity, and emotional steadiness within the home.",
-    includes: [
-      "Chunri, flowers, roli, and chawal",
-      "Deepak aur bhog",
-      "Durga stuti or mata mantras",
-    ],
-    flow: [
-      "Prepare and decorate the space respectfully for Mata pujan.",
-      "Offer chunri, flowers, and bhog.",
-      "After aarti and stuti, aahutis may be offered in Mata's name during the Hawan.",
-    ],
-  },
-  {
-    id: "navgraha",
-    title: "Navgraha Pujan",
-    subtitle: "For grah shanti and planetary balance",
-    when: "Often recommended when a kundli suggests grah dosh, repeated delays, or ongoing stress in important areas of life.",
-    purpose:
-      "Navgraha Pujan is performed to seek balance, peace, and harmony related to the planetary influences in one’s chart.",
-    includes: [
-      "Navgraha mantra recitation",
-      "Specific samagri or colour-linked offerings",
-      "Shanti sankalp aur aahuti",
-    ],
-    flow: [
-      "A sankalp is taken under the guidance of a pandit for the relevant grahas.",
-      "Aahutis and shanti path are performed with mantra recitation.",
-      "After purnahuti, a prayer and daan sankalp may also be included.",
-    ],
-  },
-  {
-    id: "griha",
-    title: "Griha Shanti Pujan",
-    subtitle: "For a new home, renovation, or disturbed household energy",
-    when: "Often chosen before moving into a new home, after renovations, or when the home feels unsettled.",
-    purpose:
-      "Griha Shanti is performed to invite harmony, stability, and auspicious energy into the home.",
-    includes: [
-      "Kalash sthapana",
-      "Vastu aur griha shanti mantra",
-      "Hawan aur purnahuti",
-    ],
-    flow: [
-      "Create a clean puja space in the mandir area or central part of the home.",
-      "Begin the Hawan after sankalp and remembrance of griha devtas.",
-      "After purnahuti, prasad may be distributed and shanti jal may be sprinkled through the house.",
-    ],
-  },
-  {
-    id: "kuldevta",
-    title: "Kuldevta Pujan",
-    subtitle: "For ancestral blessings and family tradition",
-    when: "Often performed before weddings, naamkaran, major family rituals, or other important auspicious occasions.",
-    purpose:
-      "Kuldevta Pujan honours family lineage, traditions, and blessings passed down through generations.",
-    includes: [
-      "Kuldevta smaran aur sankalp",
-      "Phool, roli, chawal, naivedya",
-      "Simple mantra recitation and pranam vidhi",
-    ],
-    flow: [
-      "Begin with remembrance of the kuldevta under the guidance of family elders, where possible.",
-      "Offer bhog, flowers, and respectful pranam.",
-      "If a Hawan is being performed, aahutis may also be offered in the name of the kuldevta.",
-    ],
-  },
-];
+  return `Is step me focus ${step.title.toLowerCase()} par rakhiye. Agar confusion ho to mantra ki pronunciation follow karke stable rhythm me agla action lijiye.`;
+}
 
 export default function HawanPage() {
-  const [activeHawan, setActiveHawan] = useState(hawanOptions[0]);
-  const [activePujan, setActivePujan] = useState(pujanOptions[0]);
+  const [selectedPurposeId, setSelectedPurposeId] = useState(hawanPurposes[0].id);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [completedSteps, setCompletedSteps] = useState({});
+  const [remainingSeconds, setRemainingSeconds] = useState(hawanPurposes[0].steps[0].timerSeconds);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isMantraPlaying, setIsMantraPlaying] = useState(false);
+  const [loopMantra, setLoopMantra] = useState(false);
+  const [assistantDraft, setAssistantDraft] = useState("");
+  const [assistantMessages, setAssistantMessages] = useState([
+    {
+      id: "helper-welcome",
+      role: "assistant",
+      content: "Namaste. Main is hawan flow ke saath chalne wali helper guide hoon. Aap step-specific sawal quick prompts se pooch sakte hain.",
+    },
+  ]);
+  const mantraLoopStepRef = useRef("");
+  const mantraLoopingRef = useRef(false);
+
+  const selectedPurpose = useMemo(
+    () => hawanPurposes.find((purpose) => purpose.id === selectedPurposeId) || hawanPurposes[0],
+    [selectedPurposeId]
+  );
+  const currentStep = selectedPurpose.steps[currentStepIndex];
+  const checklistProgress = Math.round((checkedItems.length / selectedPurpose.samagri.length) * 100);
+  const stepProgress = Math.round((Object.keys(completedSteps).length / selectedPurpose.steps.length) * 100);
+
+  const stopMantra = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsMantraPlaying(false);
+  };
+
+  const playCurrentMantra = () => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    stopMantra();
+    mantraLoopStepRef.current = currentStep.id;
+
+    const utterance = new SpeechSynthesisUtterance(`${currentStep.mantra}. ${currentStep.pronunciation}.`);
+    utterance.lang = "hi-IN";
+    utterance.rate = 0.88;
+    utterance.pitch = 1;
+    utterance.onend = () => {
+      if (mantraLoopingRef.current && mantraLoopStepRef.current === currentStep.id) {
+        playCurrentMantra();
+        return;
+      }
+
+      setIsMantraPlaying(false);
+    };
+
+    setIsMantraPlaying(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleChecklistItem = (item) => {
+    setCheckedItems((current) =>
+      current.includes(item) ? current.filter((entry) => entry !== item) : [...current, item]
+    );
+  };
+
+  const goToStep = (index) => {
+    setCompletedSteps((current) => ({
+      ...current,
+      [currentStep.id]: true,
+    }));
+    setCurrentStepIndex(index);
+  };
+
+  const handleNextStep = () => {
+    if (currentStepIndex < selectedPurpose.steps.length - 1) {
+      goToStep(currentStepIndex + 1);
+    }
+  };
+
+  const handlePrompt = (prompt) => {
+    const trimmedPrompt = prompt.trim();
+    if (!trimmedPrompt) {
+      return;
+    }
+
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content: trimmedPrompt,
+    };
+    const assistantMessage = {
+      id: `assistant-${Date.now() + 1}`,
+      role: "assistant",
+      content: getAssistantReply(trimmedPrompt, selectedPurpose, currentStep),
+    };
+
+    setAssistantMessages((current) => [...current, userMessage, assistantMessage]);
+    setAssistantDraft("");
+  };
+
+  useEffect(() => {
+    mantraLoopingRef.current = loopMantra;
+  }, [loopMantra]);
+
+  useEffect(() => {
+    setCurrentStepIndex(0);
+    setCheckedItems([]);
+    setCompletedSteps({});
+    setIsTimerRunning(false);
+    setRemainingSeconds(selectedPurpose.steps[0].timerSeconds);
+    stopMantra();
+    setAssistantMessages([
+      {
+        id: "helper-welcome",
+        role: "assistant",
+        content: `Namaste. ${selectedPurpose.title} flow loaded hai. Current step ke hisaab se quick guidance ke liye prompts use kijiye.`,
+      },
+    ]);
+  }, [selectedPurposeId]);
+
+  useEffect(() => {
+    setIsTimerRunning(false);
+    setRemainingSeconds(currentStep.timerSeconds);
+    stopMantra();
+  }, [currentStepIndex]);
+
+  useEffect(() => {
+    if (!isTimerRunning) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setRemainingSeconds((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setIsTimerRunning(false);
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, [isTimerRunning]);
+
+  useEffect(
+    () => () => {
+      stopMantra();
+    },
+    []
+  );
 
   return (
-    <div>
+    <div className="pb-20">
       <section className="bg-hero-pattern">
-        <div className="container-shell py-16 lg:py-20">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/85 px-4 py-2 text-sm font-semibold text-brand-maroon shadow-soft">
-              <Flame className="h-4 w-4" />
-              Hawan Knowledge Guide
+        <div className="container-shell grid gap-10 py-16 lg:grid-cols-[0.95fr_1.05fr] lg:py-20">
+          <div className="space-y-7">
+            
+            <div className="space-y-4">
+              <h1 className="max-w-3xl text-5xl font-bold leading-tight text-brand-ink md:text-6xl">
+                A ritual-by-ritual hawan experience with mantra, timer, checklist, and contextual help.
+              </h1>
+              <p className="max-w-2xl text-lg leading-8 text-brand-ink/72">
+                Pick your intention first, then move through a structured five-step flow designed to feel guided instead of static.
+              </p>
             </div>
-            <h1 className="mt-6 text-5xl font-bold leading-tight text-brand-ink md:text-6xl">
-              A practical guide to when to perform a Hawan, how to prepare, and what to keep in mind.
-            </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-brand-ink/72">
-              This guide offers a practical introduction to Hawan preparation, samagri checklists, dress guidance,
-              safety essentials, and companion rituals such as Ganesh Pujan, Mata Pujan, and Navgraha Pujan.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/pandits?category=PUJA">
-                <Button>Find a pandit for Hawan</Button>
-              </Link>
-              <Link to="/store">
-                <Button variant="secondary">Open the puja store</Button>
-              </Link>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {hawanPurposes.map((purpose) => (
+                <button
+                  key={purpose.id}
+                  type="button"
+                  onClick={() => setSelectedPurposeId(purpose.id)}
+                  className={`rounded-[28px] p-5 text-left shadow-soft ${
+                    selectedPurposeId === purpose.id ? "bg-brand-maroon text-white" : "bg-white text-brand-ink"
+                  }`}
+                >
+                  <p className="text-sm font-bold uppercase tracking-[0.18em] opacity-75">{purpose.subtitle}</p>
+                  <h2 className="mt-3 text-2xl font-bold">{purpose.title}</h2>
+                  <p className={`mt-3 text-sm leading-7 ${selectedPurposeId === purpose.id ? "text-white/78" : "text-brand-ink/72"}`}>
+                    {purpose.description}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[38px] bg-white/92 p-6 shadow-soft backdrop-blur sm:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-brand-clay">Selected Hawan</p>
+                <h2 className="mt-2 text-3xl font-bold text-brand-ink">{selectedPurpose.title}</h2>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-brand-ink/72">{selectedPurpose.description}</p>
+              </div>
+              <div className="rounded-[24px] bg-brand-cream px-5 py-4">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-clay">Overall Progress</p>
+                <p className="mt-2 text-2xl font-bold text-brand-ink">{stepProgress}%</p>
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-[26px] bg-brand-ink p-5 text-white">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/60">Current Step</p>
+                  <p className="mt-2 text-2xl font-bold">{currentStep.title}</p>
+                </div>
+                <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white/80">
+                  Step {currentStepIndex + 1} / {selectedPurpose.steps.length}
+                </div>
+              </div>
+              <div className="mt-5 h-2 rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-brand-gold" style={{ width: `${((currentStepIndex + 1) / selectedPurpose.steps.length) * 100}%` }} />
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link to="/pandits?category=PUJA">
+                  <Button>Book a Pandit</Button>
+                </Link>
+                <Link to="/store">
+                  <Button variant="secondary">View Samagri Store</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="container-shell py-14">
-        <div className="grid gap-5 md:grid-cols-3">
-          {quickInfo.map((item) => {
-            const Icon = item.icon;
-            return (
-              <article key={item.title} className="rounded-[30px] bg-white p-6 shadow-soft">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-maroon text-white">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h2 className="mt-5 text-2xl font-bold text-brand-ink">{item.title}</h2>
-                <p className="mt-3 text-sm leading-8 text-brand-ink/72">{item.text}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="container-shell py-4">
+      <section className="container-shell py-16">
         <SectionTitle
-          eyebrow="Basic Guide"
-          title="What to prepare before a Hawan"
-          description="Even if you are participating for the first time, the points below provide a clear and practical starting point."
+          eyebrow="Step Flow"
+          title="Move one ritual block at a time"
+          description="The flow below keeps the intent, mantra, timer, and step-specific support in one place."
         />
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <article className="rounded-[32px] bg-white p-7 shadow-soft">
-            <h3 className="text-2xl font-bold text-brand-ink">Essential Hawan samagri</h3>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {samagri.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[22px] bg-brand-sand/30 p-4">
-                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-brand-maroon" />
-                  <p className="text-sm leading-7 text-brand-ink/75">{item}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <article className="rounded-[32px] bg-white p-7 shadow-soft">
-            <h3 className="text-2xl font-bold text-brand-ink">Step-by-step process</h3>
-            <div className="mt-5 space-y-4">
-              {steps.map((step, index) => (
-                <div key={step} className="flex gap-4 rounded-[22px] bg-brand-sand/30 p-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-maroon text-sm font-bold text-white">
-                    {index + 1}
-                  </div>
-                  <p className="text-sm leading-7 text-brand-ink/75">{step}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section className="container-shell py-14">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <article className="rounded-[32px] bg-white p-7 shadow-soft">
-            <h3 className="text-2xl font-bold text-brand-ink">What to wear and how to sit</h3>
+        <div className="mt-10 grid gap-6 xl:grid-cols-[0.8fr_1.2fr_0.85fr]">
+          <div className="rounded-[32px] bg-white p-6 shadow-soft">
+            <h3 className="text-2xl font-bold text-brand-ink">Ritual Steps</h3>
             <div className="mt-5 space-y-3">
-              {dressGuide.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[20px] bg-brand-sand/25 p-4">
-                  <Sparkles className="mt-1 h-4 w-4 shrink-0 text-brand-maroon" />
-                  <p className="text-sm leading-7 text-brand-ink/74">{item}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <article className="rounded-[32px] bg-white p-7 shadow-soft">
-            <h3 className="text-2xl font-bold text-brand-ink">Important safety guidance</h3>
-            <div className="mt-5 space-y-3">
-              {carePoints.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[20px] bg-amber-50 p-4">
-                  <AlertCircle className="mt-1 h-4 w-4 shrink-0 text-brand-maroon" />
-                  <p className="text-sm leading-7 text-brand-ink/74">{item}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section className="container-shell py-4">
-        <SectionTitle
-          eyebrow="Popular Hawan"
-          title="Which Hawan is suitable for different intentions"
-          description="If you are planning a Hawan for a specific sankalp, the options below explain where each one is commonly used."
-        />
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          {hawanOptions.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => setActiveHawan(option)}
-              className={`rounded-full px-5 py-3 text-sm font-semibold ${
-                activeHawan.id === option.id
-                  ? "bg-brand-maroon text-white"
-                  : "bg-white text-brand-ink shadow-soft hover:bg-brand-sand"
-              }`}
-            >
-              {option.title}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <article className="rounded-[32px] bg-white p-8 shadow-soft">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-clay">{activeHawan.subtitle}</p>
-            <h3 className="mt-3 text-3xl font-bold text-brand-ink">{activeHawan.title}</h3>
-            <div className="mt-6 space-y-5">
-              <div>
-                <h4 className="text-base font-bold text-brand-ink">Kab karna useful rehta hai</h4>
-                <h4 className="text-base font-bold text-brand-ink">When it is commonly performed</h4>
-                <p className="mt-2 text-sm leading-8 text-brand-ink/74">{activeHawan.when}</p>
-              </div>
-              <div>
-                <h4 className="text-base font-bold text-brand-ink">Purpose</h4>
-                <p className="mt-2 text-sm leading-8 text-brand-ink/74">{activeHawan.purpose}</p>
-              </div>
-            </div>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link to="/pandits?category=PUJA">
-                <Button>Book this hawan now</Button>
-              </Link>
-              <Link to="/store">
-                <Button variant="secondary">View samagri</Button>
-              </Link>
-            </div>
-          </article>
-
-          <article className="rounded-[32px] bg-white p-8 shadow-soft">
-            <h4 className="text-xl font-bold text-brand-ink">Best suited for</h4>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {activeHawan.idealFor.map((item) => (
-                <span key={item} className="rounded-full bg-brand-cream px-4 py-2 text-sm font-semibold text-brand-maroon">
-                  {item}
-                </span>
-              ))}
-            </div>
-
-            <h4 className="mt-8 text-xl font-bold text-brand-ink">Key points</h4>
-            <div className="mt-4 space-y-3">
-              {activeHawan.keyPoints.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[20px] bg-brand-sand/25 p-4">
-                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-brand-maroon" />
-                  <p className="text-sm leading-7 text-brand-ink/74">{item}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section className="container-shell pb-20">
-        <SectionTitle
-          eyebrow="Associated Pujan"
-          title="Common pujan options performed alongside a Hawan"
-          description="Each option below explains the purpose, ideal timing, and basic flow of the associated ritual."
-        />
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          {pujanOptions.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => setActivePujan(option)}
-              className={`rounded-full px-5 py-3 text-sm font-semibold ${
-                activePujan.id === option.id
-                  ? "bg-brand-maroon text-white"
-                  : "bg-white text-brand-ink shadow-soft hover:bg-brand-sand"
-              }`}
-            >
-              {option.title}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="rounded-[32px] bg-white p-8 shadow-soft">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-clay">{activePujan.subtitle}</p>
-            <h3 className="mt-3 text-3xl font-bold text-brand-ink">{activePujan.title}</h3>
-            <div className="mt-6 space-y-5">
-              <div>
-                <h4 className="text-base font-bold text-brand-ink">Kab karein</h4>
-                <p className="mt-2 text-sm leading-8 text-brand-ink/74">{activePujan.when}</p>
-              </div>
-              <div>
-                <h4 className="text-base font-bold text-brand-ink">Purpose</h4>
-                <p className="mt-2 text-sm leading-8 text-brand-ink/74">{activePujan.purpose}</p>
-              </div>
-            </div>
-          </article>
-
-          <article className="rounded-[32px] bg-white p-8 shadow-soft">
-            <h4 className="text-xl font-bold text-brand-ink">What it typically includes</h4>
-            <div className="mt-4 space-y-3">
-              {activePujan.includes.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-[20px] bg-brand-sand/25 p-4">
-                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-brand-maroon" />
-                  <p className="text-sm leading-7 text-brand-ink/74">{item}</p>
-                </div>
-              ))}
-            </div>
-
-            <h4 className="mt-8 text-xl font-bold text-brand-ink">Basic flow</h4>
-            <div className="mt-4 space-y-3">
-              {activePujan.flow.map((item, index) => (
-                <div key={item} className="flex gap-4 rounded-[20px] bg-brand-sand/25 p-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-maroon text-sm font-bold text-white">
-                    {index + 1}
+              {selectedPurpose.steps.map((step, index) => (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => setCurrentStepIndex(index)}
+                  className={`flex w-full items-center gap-3 rounded-[24px] px-4 py-4 text-left ${
+                    currentStepIndex === index ? "bg-brand-maroon text-white" : "bg-brand-cream/70 text-brand-ink"
+                  }`}
+                >
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${completedSteps[step.id] ? "bg-brand-gold text-brand-ink" : currentStepIndex === index ? "bg-white/15 text-white" : "bg-white text-brand-ink"}`}>
+                    {completedSteps[step.id] ? <CheckCircle2 className="h-5 w-5" /> : index + 1}
                   </div>
-                  <p className="text-sm leading-7 text-brand-ink/74">{item}</p>
+                  <div>
+                    <p className="text-sm font-bold uppercase tracking-[0.16em] opacity-75">Step {index + 1}</p>
+                    <p className="mt-1 text-base font-semibold">{step.title}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-[32px] bg-white p-6 shadow-soft sm:p-8">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.26em] text-brand-clay">{selectedPurpose.title}</p>
+                  <h3 className="mt-2 text-3xl font-bold text-brand-ink">{currentStep.title}</h3>
+                  <p className="mt-4 text-sm leading-8 text-brand-ink/74">{currentStep.description}</p>
+                </div>
+                <div className="rounded-full bg-brand-cream px-4 py-2 text-sm font-semibold text-brand-ink">
+                  {formatTimer(remainingSeconds)}
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
+                <div className="rounded-[26px] bg-brand-cream/70 p-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-clay">Sanskrit Mantra</p>
+                  <p className="mt-3 text-xl font-semibold leading-9 text-brand-ink">{currentStep.mantra}</p>
+                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-brand-clay">Hinglish Pronunciation</p>
+                  <p className="mt-2 text-base leading-8 text-brand-ink/74">{currentStep.pronunciation}</p>
+                </div>
+
+                <div className="rounded-[26px] bg-brand-ink p-5 text-white">
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/60">Controls</p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isMantraPlaying) {
+                          stopMantra();
+                          return;
+                        }
+
+                        playCurrentMantra();
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-brand-ink"
+                    >
+                      {isMantraPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
+                      {isMantraPlaying ? "Stop Mantra" : "Play Mantra"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLoopMantra((current) => !current)}
+                      className={`inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold ${
+                        loopMantra ? "bg-brand-gold text-brand-ink" : "bg-white/10 text-white"
+                      }`}
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      {loopMantra ? "Loop On" : "Loop Off"}
+                    </button>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsTimerRunning((current) => !current)}
+                      className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-3 text-sm font-semibold text-white"
+                    >
+                      {isTimerRunning ? <PauseCircle className="h-4 w-4" /> : <Clock3 className="h-4 w-4" />}
+                      {isTimerRunning ? "Pause Timer" : "Start Timer"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsTimerRunning(false);
+                        setRemainingSeconds(currentStep.timerSeconds);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-3 text-sm font-semibold text-white"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Reset Timer
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {currentStep.id === "samagri" ? (
+                <div className="mt-8 rounded-[28px] border border-brand-sand/70 p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-clay">Smart Samagri Checklist</p>
+                      <h4 className="mt-2 text-2xl font-bold text-brand-ink">Preparation progress</h4>
+                    </div>
+                    <div className="rounded-full bg-brand-cream px-4 py-2 text-sm font-semibold text-brand-ink">
+                      {checklistProgress}%
+                    </div>
+                  </div>
+
+                  <div className="mt-5 h-2 rounded-full bg-brand-cream">
+                    <div className="h-full rounded-full bg-brand-maroon" style={{ width: `${checklistProgress}%` }} />
+                  </div>
+
+                  <div className="mt-6 grid gap-3 md:grid-cols-2">
+                    {selectedPurpose.samagri.map((item) => {
+                      const checked = checkedItems.includes(item);
+                      return (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => toggleChecklistItem(item)}
+                          className={`flex items-start gap-3 rounded-[22px] p-4 text-left ${
+                            checked ? "bg-brand-maroon text-white" : "bg-brand-cream/70 text-brand-ink"
+                          }`}
+                        >
+                          <div className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${checked ? "bg-white text-brand-maroon" : "bg-white text-brand-ink"}`}>
+                            {checked ? <CheckCircle2 className="h-4 w-4" /> : <ListChecks className="h-4 w-4" />}
+                          </div>
+                          <span className="text-sm font-medium leading-7">{item}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="mt-8 rounded-[28px] border border-dashed border-brand-sand p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-cream text-brand-maroon">
+                    <Video className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-clay">Instructional Video</p>
+                    <p className="mt-1 text-lg font-semibold text-brand-ink">{currentStep.videoLabel}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm leading-7 text-brand-ink/70">
+                  Video slot is ready for a short visual walkthrough for this step. You can wire a real clip later without changing the flow structure.
+                </p>
+              </div>
+
+              <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStepIndex((current) => Math.max(0, current - 1))}
+                  disabled={currentStepIndex === 0}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-cream px-4 py-3 text-sm font-semibold text-brand-ink disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous Step
+                </button>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCompletedSteps((current) => ({
+                        ...current,
+                        [currentStep.id]: !current[currentStep.id],
+                      }))
+                    }
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold ${
+                      completedSteps[currentStep.id] ? "bg-brand-gold text-brand-ink" : "bg-brand-cream text-brand-ink"
+                    }`}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    {completedSteps[currentStep.id] ? "Marked Done" : "Mark as Done"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    disabled={currentStepIndex === selectedPurpose.steps.length - 1}
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-maroon px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Next Step
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[32px] bg-white p-6 shadow-soft">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-maroon text-white">
+                <MessageCircleMore className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-clay">Context Helper</p>
+                <h3 className="mt-1 text-2xl font-bold text-brand-ink">Ask during the ritual</h3>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {selectedPurpose.assistantPrompts.map((prompt) => (
+                <button
+                  key={`${selectedPurpose.id}-${prompt}`}
+                  type="button"
+                  onClick={() => handlePrompt(prompt)}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-cream px-3 py-2 text-xs font-semibold text-brand-ink hover:bg-brand-sand"
+                >
+                  <Sparkles className="h-3.5 w-3.5 text-brand-clay" />
+                  {prompt}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {assistantMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`max-w-[92%] rounded-[22px] px-4 py-3 text-sm leading-7 ${
+                    message.role === "assistant"
+                      ? "bg-brand-cream/75 text-brand-ink"
+                      : "ml-auto bg-brand-maroon text-white"
+                  }`}
+                >
+                  {message.content}
                 </div>
               ))}
             </div>
-          </article>
-        </div>
 
-        <div className="mt-8 flex flex-wrap gap-4">
-          <Link to="/pandits?category=PUJA">
-            <Button>Book this pujan</Button>
-          </Link>
-          <Link to="/store">
-            <Button variant="secondary">View puja samagri</Button>
-          </Link>
-        </div>
-      </section>
-
-      <section className="container-shell pb-20">
-        <SectionTitle
-          eyebrow="FAQ"
-          title="Clear answers to common Hawan questions"
-          description="This section addresses some of the most common practical questions people have before performing a Hawan."
-        />
-
-        <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          {faqItems.map((item) => (
-            <article key={item.question} className="rounded-[28px] bg-white p-6 shadow-soft">
-              <h3 className="text-xl font-bold text-brand-ink">{item.question}</h3>
-              <p className="mt-3 text-sm leading-8 text-brand-ink/74">{item.answer}</p>
-            </article>
-          ))}
+            <div className="mt-5 border-t border-brand-sand pt-5">
+              <div className="flex items-end gap-3">
+                <textarea
+                  rows={3}
+                  value={assistantDraft}
+                  onChange={(event) => setAssistantDraft(event.target.value)}
+                  placeholder="Sawal likhiye (jaise: aahuti kitni baar deni hai, mantra kitni repetitions?)"
+                  className="min-h-[88px] flex-1 resize-none rounded-[22px] border border-brand-sand px-4 py-3 text-sm outline-none focus:border-brand-clay"
+                />
+                <button
+                  type="button"
+                  onClick={() => handlePrompt(assistantDraft)}
+                  disabled={!assistantDraft.trim()}
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-maroon text-white shadow-soft disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <SendHorizontal className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

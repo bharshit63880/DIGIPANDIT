@@ -47,6 +47,7 @@ const storeOrderSchema = new mongoose.Schema(
       },
       gatewayOrderId: String,
       gatewayPaymentId: String,
+      failureReason: String,
       amount: { type: Number, required: true, min: 0 },
       paidAt: Date,
     },

@@ -40,6 +40,8 @@ export default function UserDashboardPage() {
         entityType: "BOOKING",
         title: booking.serviceName,
         amount: booking.payment?.amount || booking.servicePrice,
+        paymentStatus: booking.payment?.status,
+        failureReason: booking.payment?.failureReason,
       })),
     ...summary.orders
       .filter((order) => order.payment?.status !== "PAID")
@@ -95,9 +97,10 @@ export default function UserDashboardPage() {
                   <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-clay">{item.entityType === "BOOKING" ? "Booking" : "Store order"}</p>
                   <h3 className="mt-2 text-xl font-bold text-brand-ink">{item.title}</h3>
                   <p className="mt-2 text-sm text-brand-ink/65">Amount due: Rs. {item.amount}</p>
+                  {item.failureReason ? <p className="mt-2 text-sm text-red-600">{item.failureReason}</p> : null}
                 </div>
                 <Button onClick={() => payNow(item)} disabled={payingId === item.id}>
-                  {payingId === item.id ? "Processing..." : "Pay now"}
+                  {payingId === item.id ? "Processing..." : item.paymentStatus === "FAILED" ? "Retry payment" : "Pay now"}
                 </Button>
               </div>
             ))

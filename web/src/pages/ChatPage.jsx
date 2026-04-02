@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "../components/Button";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
 
 export default function ChatPage() {
+  const [searchParams] = useSearchParams();
   const token = useSelector((state) => state.auth.token);
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -19,12 +20,16 @@ export default function ChatPage() {
       const response = await api.get("/chat/rooms");
       setRooms(response.data.data);
       if (response.data.data.length) {
-        setSelectedRoom(response.data.data[0]);
+        const requestedRoomId = searchParams.get("room");
+        const requestedRoom = requestedRoomId
+          ? response.data.data.find((room) => room._id === requestedRoomId)
+          : null;
+        setSelectedRoom(requestedRoom || response.data.data[0]);
       }
     };
 
     loadRooms();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (!selectedRoom) return;
@@ -82,7 +87,7 @@ export default function ChatPage() {
               }`}
             >
               <p className="font-bold">{counterpartLabel(room)}</p>
-              <p className="mt-1 text-sm opacity-75">{room.lastMessage || "Start the conversation"}</p>
+              <p className="mt-1 text-sm opacity-75">{room.lastMessage || "No messages yet. Say hello to begin."}</p>
             </button>
           ))}
         </div>
@@ -116,7 +121,7 @@ export default function ChatPage() {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               className="flex-1 rounded-full border border-brand-sand px-4 py-3 outline-none"
-              placeholder="Type your message"
+              placeholder="Type and send your message"
             />
             <Button onClick={handleSend}>Send</Button>
           </div>
