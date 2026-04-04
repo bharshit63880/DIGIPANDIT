@@ -11,5 +11,9 @@
       }
     }
   ],
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/dist/index.html" }
+  ]
 }
