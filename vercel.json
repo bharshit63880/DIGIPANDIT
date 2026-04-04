@@ -5,14 +5,14 @@
       "src": "web/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "web/dist",
+        "distDir": "dist",
         "installCommand": "cd web && npm install",
-        "buildCommand": "cd web && npm run build"
+        "buildCommand": "cd web && npm run build && mv dist ../dist"
       }
     }
   ],
-  "outputDirectory": "web/dist",
+  "outputDirectory": "dist",
   "routes": [
-    { "src": "/(.*)", "dest": "/web/dist/$1" }
+    { "src": "/(.*)", "dest": "/dist/$1" }
   ]
 }
