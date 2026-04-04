@@ -31,6 +31,16 @@ app.use(
   })
 );
 
+// Basic root responder so hitting "/" doesn't 404 on the API project
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    service: "DigiPandit backend",
+    health: "ok",
+    docs: "/api/health",
+  });
+});
+
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
