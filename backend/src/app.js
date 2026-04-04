@@ -11,12 +11,25 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: env.clientUrl,
-    credentials: true,
-  })
-);
+// CORS: allow configured client and vercel preview/prod domains
+const allowedOrigins = [
+  env.clientUrl,
+  `https://${process.env.VERCEL_URL || ""}`.replace(/\/$/, ""),
+].filter(Boolean);
+
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // mobile apps / curl
+    const ok =
+      allowedOrigins.some((o) => origin === o) ||
+      /.*\.vercel\.app$/.test(origin);
+    return ok ? callback(null, true) : callback(new Error("Not allowed by CORS"));
+  },
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(helmet());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
