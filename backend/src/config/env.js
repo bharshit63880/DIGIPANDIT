@@ -10,7 +10,7 @@ const env = {
   jwtSecret: process.env.JWT_SECRET || "change_me",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
   emailFrom: process.env.EMAIL_FROM || "no-reply@digipandit.local",
-  payuMerchantKey: process.env. PAYU_MERCHANT_KEY ||  "",
+  payuMerchantKey: process.env.PAYU_MERCHANT_KEY || "",
   payuMerchantSalt: process.env.PAYU_MERCHANT_SALT || "",
   payuBaseUrl: process.env.PAYU_BASE_URL || "",
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
