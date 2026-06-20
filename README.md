@@ -1,290 +1,177 @@
 # DigiPandit
 
-DigiPandit is a full-stack spiritual services platform that combines pandit discovery, astrology consultations, puja bookings, devotional content, store orders, chat, payments, and admin operations in a single monorepo.
+**DigiPandit** ek complete full-stack spiritual services platform hai jo pandit discovery, astrology consultations, puja bookings, devotional content, puja samagri store, real-time chat, video calls, payments aur admin management ko ek hi jagah laata hai.
 
-This repository contains:
+Yeh ek modern **monorepo** structure mein bana hai jo scalable, maintainable aur production-ready hai.
 
-- `backend/` - Express + MongoDB API with authentication, bookings, chat, store, admin, uploads, and AI support
-- `web/` - React + Vite + Tailwind web application for users, pandits, and admins
-- `mobile/` - React Native + Expo mobile application for the user experience
+---
 
-## What The Platform Covers
+## ✨ Key Features
 
-- User registration, login, email verification, and password reset
-- Pandit and astrologer discovery with filters for puja, astrology chat, and astrology calls
-- Booking flow for online and offline spiritual services
-- Storefront for puja kits, idols, incense, and related devotional products
-- Real-time chat and consultation continuity with Socket.IO
-- Video consultation entry flow from bookings and chat
-- Admin dashboard for users, products, experts, bookings, orders, and withdrawals
-- Pandit dashboard for profile management, services, schedule, and bookings
-- AI-powered PanditJi assistant flow on the web app
+### 👤 User Experience
+- User registration, login, email verification & password reset
+- Pandit & Astrologer discovery with smart filters
+- Online/Offline booking for Puja, Hawan, Astrology Chat & Calls
+- Real-time chat with experts
+- Video consultation support
+- Puja products store with cart & checkout
 
-## Monorepo Structure
+### 🛕 Expert Dashboard (Pandit/Astrologer)
+- Profile management & service catalog
+- Availability calendar
+- Booking management (Accept/Reject/Complete)
+- Earnings & withdrawal tracking
 
-```text
+### ⚙️ Admin Dashboard
+- User, Pandit & Product management
+- Booking & Order oversight
+- Analytics & reports
+- Content & media management
+
+### 💳 Additional Features
+- Secure payments via Razorpay
+- Real-time notifications with Socket.IO
+- AI-powered PanditJi assistant
+- Responsive design (Web + Mobile)
+- Cloudinary media uploads
+
+---
+
+## 🏗️ Monorepo Architecture
 digipandit/
-├── backend/
-│   ├── src/
-│   └── .env.example
-├── web/
-│   ├── public/
-│   ├── src/
-│   └── .env.example
-├── mobile/
-│   ├── src/
-│   └── .env.example
+├── backend/          # Node.js + Express API
+├── web/              # React + Vite + Tailwind
+├── mobile/           # React Native + Expo
 ├── SRS.md
 └── README.md
-```
+text---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-### Backend
+| Layer     | Technologies |
+|---------|-------------|
+| **Backend** | Node.js, Express, MongoDB, Mongoose, Socket.IO, Zod, JWT, Razorpay, Cloudinary |
+| **Web**     | React 18, Vite, Tailwind CSS, Redux Toolkit, React Router |
+| **Mobile**  | React Native, Expo, React Navigation |
+| **Others**  | Docker (optional), Vercel/Netlify ready |
 
-- Node.js
-- Express
-- MongoDB + Mongoose
-- Socket.IO
-- Zod validation
-- Razorpay
-- Cloudinary
+---
 
-### Web
+## 🚀 Local Setup Guide
 
-- React 18
-- Vite
-- Tailwind CSS
-- Redux Toolkit
-- React Router
-- Axios
+### 1. Prerequisites
+- Node.js (v18+)
+- MongoDB (local or cloud)
+- Razorpay & Cloudinary credentials (for payments & uploads)
 
-### Mobile
-
-- React Native
-- Expo
-- React Navigation
-- Async Storage
-- Axios
-
-## Core Backend Modules
-
-The backend exposes the following main route groups under `/api`:
-
-- `/auth` - authentication, verification, password reset
-- `/users` - user profile and account operations
-- `/pandits` - pandit listing, details, and dashboard data
-- `/bookings` - booking creation and booking lifecycle
-- `/products` - product catalogue and product details
-- `/store` - store order creation and order retrieval
-- `/chat` - chat rooms and messages
-- `/payments` - payment flows
-- `/admin` - admin dashboards and operations
-- `/uploads` - media upload endpoints
-- `/ai` - AI assistant integration
-
-## Environment Setup
-
-Create local `.env` files from the provided examples before running the apps.
-
-### Backend
-
-Copy:
-
+### 2. Clone Repository
 ```bash
-cp backend/.env.example backend/.env
-```
+git clone https://github.com/yourusername/digipandit.git
+cd digipandit
+3. Environment Setup
+Backend:
+Bashcp backend/.env.example backend/.env
+# Edit backend/.env with your credentials
+Web:
+Bashcp web/.env.example web/.env
+Mobile:
+Bashcp mobile/.env.example mobile/.env
+4. Install Dependencies
+Bash# Backend
+cd backend && npm install
 
-Required keys in `backend/.env`:
+# Web
+cd ../web && npm install
 
-```env
-PORT=5000
-NODE_ENV=development
-CLIENT_URL=http://localhost:5173
-MONGO_URI=mongodb://127.0.0.1:27017/digipandit
-JWT_SECRET=change_this_super_secret_key
-JWT_EXPIRES_IN=7d
-EMAIL_FROM=no-reply@digipandit.local
-RAZORPAY_KEY_ID=rzp_test_your_key
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-ADMIN_NAME=DigiPandit Admin
-ADMIN_EMAIL=admin@digipandit.com
-ADMIN_PASSWORD=Admin@12345
-```
-
-### Web
-
-Copy:
-
-```bash
-cp web/.env.example web/.env
-```
-
-Required keys in `web/.env`:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_SOCKET_URL=http://localhost:5000
-```
-
-### Mobile
-
-Copy:
-
-```bash
-cp mobile/.env.example mobile/.env
-```
-
-Required keys in `mobile/.env`:
-
-```env
-EXPO_PUBLIC_API_URL=http://10.0.2.2:5000/api
-EXPO_PUBLIC_SOCKET_URL=http://10.0.2.2:5000
-```
-
-Mobile URL notes:
-
-- For Android Emulator use `http://10.0.2.2:5000`
-- For iOS Simulator use your local machine URL as needed
-- For a physical device use your laptop's LAN IP instead of `localhost`
-
-## Installation
-
-Install dependencies separately for each app:
-
-```bash
-cd backend
-npm install
-
-cd ../web
-npm install
-
-cd ../mobile
-npm install
-```
-
-## Running The Project Locally
-
-### 1. Start MongoDB
-
-Make sure MongoDB is running locally and matches your `MONGO_URI`.
-
-### 2. Seed Admin And Demo Data
-
-From the `backend/` folder:
-
-```bash
+# Mobile
+cd ../mobile && npm install
+5. Seed Database
+Bashcd backend
 npm run seed:admin
 npm run seed:demo
-```
+6. Run Applications
+Bash# Terminal 1 - Backend
+cd backend && npm run dev
 
-### 3. Start The Backend
+# Terminal 2 - Web
+cd web && npm run dev
 
-```bash
-cd backend
-npm run dev
-```
+# Terminal 3 - Mobile
+cd mobile && npm start
+Default Admin Login:
 
-### 4. Start The Web App
+Email: admin@digipandit.com
+Password: Admin@12345
 
-```bash
-cd web
-npm run dev
-```
+Demo Users:
 
-### 5. Start The Mobile App
+aarav.user@digipandit.demo / Demo@12345
+neha.astrologer@digipandit.demo / Demo@12345
 
-```bash
-cd mobile
-npm start
-```
 
-Expo shortcuts:
-
-- `a` for Android
-- `i` for iOS
-- `w` for web preview
-
-## Available Scripts
-
-### Backend
-
-```bash
-npm run dev
-npm start
+📱 Available Scripts
+Backend
+Bashnpm run dev          # Development
+npm start            # Production
 npm run seed:admin
 npm run seed:demo
-```
-
-### Web
-
-```bash
-npm run dev
+Web
+Bashnpm run dev
 npm run build
 npm run preview
-```
-
-### Mobile
-
-```bash
-npm start
+Mobile
+Bashnpm start
 npm run android
 npm run ios
-npm run web
-```
 
-## Default Admin Credentials
+📊 API Routes Summary
 
-Configured through backend environment variables:
+/api/auth — Authentication
+/api/users — User profile
+/api/pandits — Expert management
+/api/bookings — Booking system
+/api/store — E-commerce orders
+/api/chat — Real-time messaging
+/api/payments — Razorpay integration
+/api/admin — Admin operations
 
-- Email: `admin@digipandit.com`
-- Password: `Admin@12345`
 
-Change these before using the project outside local development.
+🚀 Deployment
 
-## Demo Credentials
+Backend: Vercel / Render / Railway
+Web: Vercel / Netlify
+Mobile: Expo EAS Build
+Database: MongoDB Atlas
+Media: Cloudinary
 
-After running `npm run seed:demo`, you can use the following sample accounts:
 
-### Users
+🤝 Contributing
+Contributions welcome! Please read our Contributing Guide before submitting a PR.
 
-- `aarav.user@digipandit.demo` / `Demo@12345`
-- `priya.user@digipandit.demo` / `Demo@12345`
+Fork the project
+Create your feature branch
+Commit your changes
+Push to the branch
+Open a Pull Request
 
-### Pandits / Astrologers
 
-- `neha.astrologer@digipandit.demo` / `Demo@12345`
-- `raghav.pandit@digipandit.demo` / `Demo@12345`
+📄 License
+MIT License
+Copyright © 2026 [Your Name / Organization]
+This project is open source and free to use.
 
-## Suggested Local Startup Order
+🙏 Acknowledgments
 
-If you want the smoothest local workflow:
+All the pandits and spiritual experts who inspired this platform
+Open source community
+Contributors & testers
 
-1. Start MongoDB
-2. Run backend seeds
-3. Start backend server
-4. Start web app
-5. Start mobile app
 
-## Deployment Notes
+📧 Support & Contact
 
-- The backend expects valid MongoDB, Razorpay, and Cloudinary credentials
-- The web app should point to the deployed backend API and socket host
-- The mobile app should use public API and socket URLs reachable from devices
-- Replace demo secrets and admin defaults before production deployment
+For issues: Open a GitHub Issue
+Business inquiries: hello@digipandit.in
+Follow updates on Twitter/X
 
-## Repository Purpose
 
-This repository is useful as:
-
-- A spiritual services marketplace product base
-- A full-stack portfolio project
-- A SaaS-style monorepo with web, mobile, admin, and backend layers
-- A starting point for marketplace, consultation, and devotional commerce workflows
-
-## License
-
-Add your preferred license here if you plan to open-source the project publicly.
+Made with ❤️ for the spiritual community
