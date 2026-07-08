@@ -1034,6 +1034,5 @@ If you found this project useful:
 Building technology that makes trusted religious services more accessible, transparent, and convenient.
 
 </p>
-| ![](docs/images/chat.png) | ![](docs/images/video.png) |
 
 ---
