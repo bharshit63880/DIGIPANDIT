@@ -15,6 +15,36 @@
 
 ## 🌟 Overview
 
+## Product Screenshots
+
+All captures below are cropped application screenshots: browser tabs, address bars, and local development controls have been removed. The signed-in views use the project’s seeded demo account. The payment screen is a safe status preview; no live payment credential or payment method is shown.
+
+| Home | Astrology |
+| --- | --- |
+| ![DigiPandit Hindi home page](docs/screenshots/home.png) | ![Astrology hub](docs/screenshots/astrology.png) |
+
+| Generated Kundali | Pandit booking |
+| --- | --- |
+| ![Generated Kundali result](docs/screenshots/kundali-result.png) | ![Pandit booking flow](docs/screenshots/pandit-booking.png) |
+
+| Hawan guide | Puja store |
+| --- | --- |
+| ![Hawan guide library](docs/screenshots/hawan-guide.png) | ![Puja store](docs/screenshots/puja-store.png) |
+
+| User dashboard | Bookings |
+| --- | --- |
+| ![User dashboard](docs/screenshots/dashboard.png) | ![User bookings](docs/screenshots/bookings.png) |
+
+| Expert chat | Profile |
+| --- | --- |
+| ![Real-time chat](docs/screenshots/chat.png) | ![User profile](docs/screenshots/profile.png) |
+
+| Payment status |  |
+| --- | --- |
+| ![Payment status screen](docs/screenshots/payment-status.png) |  |
+
+---
+
 **DigiPandit** is a modern digital platform that brings together **religious services, astrology consultations, guided rituals, devotional learning, online shopping, secure payments, and virtual experiences** into one unified ecosystem.
 
 Instead of visiting multiple platforms for booking Pandits, consulting astrologers, purchasing Puja materials, learning rituals, or participating in online ceremonies, DigiPandit provides everything in a single integrated application.
