@@ -36,10 +36,10 @@ const demoUsers = [
     addresses: [address({ city: "Delhi", state: "Delhi", line1: "B-24 Rohini Sector 9", pincode: "110085", landmark: "Near Metro Gate 2" })],
   },
   {
-    name: "Priya Verma",
-    email: "priya.user@digipandit.demo",
+    name: "Harshit Bhardwaj",
+    email: "harshit.user@digipandit.demo",
     phone: "9876501002",
-    gender: "Female",
+    gender: "Male",
     city: "Noida",
     state: "Uttar Pradesh",
     addresses: [address({ city: "Noida", state: "Uttar Pradesh", line1: "Tower 7, Sector 137", pincode: "201305", landmark: "Opposite Expressway" })],
@@ -603,7 +603,7 @@ const createBookings = async ({ users, panditUsers, profiles }) => {
     {
       bookingType: "ASTROLOGY_CHAT",
       status: "ACCEPTED",
-      user: userMap["priya.user@digipandit.demo"]._id,
+      user: userMap["harshit.user@digipandit.demo"]._id,
       pandit: panditMap["neha.astrologer@digipandit.demo"]._id,
       panditProfile: nehaProfile._id,
       service: findService(nehaProfile, "Astrology Chat Session"),
@@ -611,7 +611,7 @@ const createBookings = async ({ users, panditUsers, profiles }) => {
       durationInMinutes: 25,
       notes: "Marriage compatibility and timing guidance.",
       meetingMode: "ONLINE",
-      address: userMap["priya.user@digipandit.demo"].addresses[0],
+      address: userMap["harshit.user@digipandit.demo"].addresses[0],
       payment: {
         status: "PAID",
         gatewayOrderId: "demo_booking_order_2",
@@ -661,7 +661,7 @@ const createBookings = async ({ users, panditUsers, profiles }) => {
     {
       bookingType: "ASTROLOGY_CALL",
       status: "ACCEPTED",
-      user: userMap["priya.user@digipandit.demo"]._id,
+      user: userMap["harshit.user@digipandit.demo"]._id,
       pandit: panditMap["suresh.pandit@digipandit.demo"]._id,
       panditProfile: sureshProfile._id,
       service: findService(sureshProfile, "Family Astrology Call"),
@@ -669,7 +669,7 @@ const createBookings = async ({ users, panditUsers, profiles }) => {
       durationInMinutes: 45,
       notes: "Family planning and health remedies consultation.",
       meetingMode: "ONLINE",
-      address: userMap["priya.user@digipandit.demo"].addresses[0],
+      address: userMap["harshit.user@digipandit.demo"].addresses[0],
       payment: {
         status: "PAID",
         gatewayOrderId: "demo_booking_order_5",
@@ -730,12 +730,12 @@ const createStoreOrders = async ({ users, products }) => {
       paymentStatus: "PAID",
     },
     {
-      user: userMap["priya.user@digipandit.demo"]._id,
+      user: userMap["harshit.user@digipandit.demo"]._id,
       items: [
         { product: productMap["bhagavad-gita-pocket-edition"], quantity: 1 },
         { product: productMap["brass-ganesha-idol"], quantity: 1 },
       ],
-      shippingAddress: userMap["priya.user@digipandit.demo"].addresses[0],
+      shippingAddress: userMap["harshit.user@digipandit.demo"].addresses[0],
       orderStatus: "PROCESSING",
       paymentStatus: "PAID",
     },
@@ -784,14 +784,14 @@ const createChats = async ({ bookings, userMap, panditMap }) => {
 
   const roomOne = await ChatRoom.create({
     booking: astrologyBooking._id,
-    participants: [userMap["priya.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
+    participants: [userMap["harshit.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
     lastMessage: "Kal ke session ke pehle birth details bhej dijiye.",
     lastMessageAt: new Date("2026-03-29T10:15:00.000Z"),
   });
 
   const roomTwo = await ChatRoom.create({
     booking: familyCallBooking._id,
-    participants: [userMap["priya.user@digipandit.demo"]._id, panditMap["suresh.pandit@digipandit.demo"]._id],
+    participants: [userMap["harshit.user@digipandit.demo"]._id, panditMap["suresh.pandit@digipandit.demo"]._id],
     lastMessage: "Family consultation Sunday ko 2 baje confirm hai.",
     lastMessageAt: new Date("2026-03-29T11:20:00.000Z"),
   });
@@ -806,9 +806,9 @@ const createChats = async ({ bookings, userMap, panditMap }) => {
   await Message.insertMany([
     {
       room: roomOne._id,
-      sender: userMap["priya.user@digipandit.demo"]._id,
+      sender: userMap["harshit.user@digipandit.demo"]._id,
       content: "Namaste ji, mujhe marriage compatibility aur shubh mahurat par guidance chahiye.",
-      readBy: [userMap["priya.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
+      readBy: [userMap["harshit.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
       createdAt: new Date("2026-03-29T10:02:00.000Z"),
       updatedAt: new Date("2026-03-29T10:02:00.000Z"),
     },
@@ -816,7 +816,7 @@ const createChats = async ({ bookings, userMap, panditMap }) => {
       room: roomOne._id,
       sender: panditMap["neha.astrologer@digipandit.demo"]._id,
       content: "Bilkul. Aap birth date, time, aur place share kijiye. Main compatibility aur timing dono check kar dungi.",
-      readBy: [userMap["priya.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
+      readBy: [userMap["harshit.user@digipandit.demo"]._id, panditMap["neha.astrologer@digipandit.demo"]._id],
       createdAt: new Date("2026-03-29T10:05:00.000Z"),
       updatedAt: new Date("2026-03-29T10:05:00.000Z"),
     },
