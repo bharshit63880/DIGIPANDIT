@@ -6,6 +6,21 @@
     },
     "api/auth/register.js": {
       "maxDuration": 60
+    },
+    "api/auth/login.js": {
+      "maxDuration": 60
+    },
+    "api/auth/verify-email.js": {
+      "maxDuration": 60
+    },
+    "api/auth/request-verification.js": {
+      "maxDuration": 60
+    },
+    "api/auth/forgot-password.js": {
+      "maxDuration": 60
+    },
+    "api/auth/reset-password.js": {
+      "maxDuration": 60
     }
   }
 }

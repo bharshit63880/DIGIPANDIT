@@ -14,6 +14,7 @@ const router = express.Router();
 router.post("/register", validate(registerSchema), authController.register);
 router.post("/login", validate(loginSchema), authController.login);
 router.post("/verify-email/request", validate(requestOtpSchema), authController.requestEmailVerificationOtp);
+router.post("/request-verification", validate(requestOtpSchema), authController.requestEmailVerificationOtp);
 router.post("/verify-email", validate(otpSchema), authController.verifyEmail);
 router.post("/forgot-password", validate(requestOtpSchema), authController.forgotPassword);
 router.post("/reset-password", validate(resetPasswordSchema), authController.resetPassword);

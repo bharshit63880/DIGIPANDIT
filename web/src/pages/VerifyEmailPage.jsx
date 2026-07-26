@@ -32,7 +32,7 @@ export default function VerifyEmailPage() {
       setRequesting(true);
       setError("");
       setMessage("");
-      await postPublicForm("/auth/verify-email/request", { email });
+      await postPublicForm("/auth/request-verification", { email });
       setMessage("A verification code has been sent to your email.");
     } catch (requestError) {
       setError(requestError.message);
