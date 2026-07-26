@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "seed:admin": "node src/seeders/createAdmin.js",
     "seed:demo": "node src/seeders/seedDemoData.js",
+    "seed:catalog": "node src/seeders/seedShowcaseCatalog.js",
     "seed:hawans": "node src/seeders/seedHawans.js",
     "qa:smoke": "node src/qa/smokeTest.js",
     "qa:admin": "node src/qa/adminSmokeTest.js"
