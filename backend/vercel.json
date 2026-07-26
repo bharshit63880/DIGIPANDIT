@@ -21,6 +21,21 @@
     },
     "api/auth/reset-password.js": {
       "maxDuration": 60
+    },
+    "api/astrology/daily.js": {
+      "maxDuration": 60
+    },
+    "api/astrology/cities.js": {
+      "maxDuration": 60
+    },
+    "api/astrology/kundali.js": {
+      "maxDuration": 60
+    },
+    "api/astrology/matching.js": {
+      "maxDuration": 60
+    },
+    "api/astrology/numerology.js": {
+      "maxDuration": 60
     }
   }
 }
