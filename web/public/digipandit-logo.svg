@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 260" role="img" aria-labelledby="title desc">
+  <title id="title">DigiPandit logo</title>
+  <desc id="desc">DigiPandit wordmark with a digital diya brand mark.</desc>
+  <image href="/digipandit-mark.svg" x="18" y="18" width="224" height="224"/>
+  <text x="278" y="130" fill="#090909" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="700">
+    Digi<tspan fill="#525252">Pandit</tspan>
+  </text>
+  <path d="M282 154h526" stroke="#d7d7d7" stroke-width="3"/>
+  <text x="282" y="195" fill="#262626" font-family="Arial, sans-serif" font-size="23" font-weight="700" letter-spacing="5">
+    TRADITION, SIMPLIFIED
+  </text>
+</svg>

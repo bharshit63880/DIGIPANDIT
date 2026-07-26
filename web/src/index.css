@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: "Noto Sans Devanagari", "Plus Jakarta Sans", sans-serif;
+    color: #391607;
+    background: #fff4df;
+    color-scheme: light;
+  }
+
+  * {
+    @apply border-brand-sand;
+  }
+
+  body {
+    @apply min-h-screen bg-brand-cream text-brand-ink antialiased;
+    margin: 0;
+    background-image:
+      radial-gradient(circle at 8% 0%, rgba(231, 188, 99, 0.20), transparent 25rem),
+      radial-gradient(circle at 92% 18%, rgba(123, 45, 13, 0.10), transparent 30rem);
+  }
+
+  ::selection {
+    background: #7b2d0d;
+    color: #ffffff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Noto Serif Devanagari", "Cormorant Garamond", Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  button, a, input, select, textarea {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-forest focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream;
+  }
+
+  button {
+    @apply transition-all duration-300;
+    letter-spacing: -0.01em;
+  }
+
+}
+
+@layer utilities {
+  .container-shell {
+    @apply mx-auto w-full max-w-[80rem] px-5 sm:px-8 lg:px-10;
+  }
+
+  .surface-card {
+    @apply rounded-[28px] border border-brand-sand/80 bg-white/95 shadow-soft transition-all duration-300;
+  }
+
+  .surface-card:hover {
+    @apply -translate-y-1 border-brand-gold/40 shadow-lift;
+  }
+
+  .eyebrow {
+    @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-clay;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold;
+  }
+
+  .spiritual-flame {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 4.5rem;
+    border-radius: 9999px 9999px 9999px 9999px / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 28%, #fff8d6 0%, #f4c15d 35%, #db743f 68%, #7b2949 100%);
+    box-shadow: 0 0 35px rgba(219, 116, 63, 0.38);
+    transform-origin: center bottom;
+    animation: flame-flicker 1.7s ease-in-out infinite;
+  }
+
+  .spiritual-flame::after {
+    content: "";
+    position: absolute;
+    inset: 0.8rem 0.7rem 1.2rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 50% 30%, #ffffff 0%, #ffe49a 45%, rgba(255, 228, 154, 0) 100%);
+    opacity: 0.9;
+  }
+
+  .spiritual-particle {
+    position: absolute;
+    bottom: -5%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: rgba(244, 193, 93, 0.8);
+    box-shadow: 0 0 18px rgba(244, 193, 93, 0.45);
+    animation: spiritual-rise linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  header,
+  footer,
+  button,
+  nav {
+    display: none !important;
+  }
+
+  body,
+  #root {
+    background: #fff !important;
+    color: #171521 !important;
+  }
+
+  article,
+  section,
+  table {
+    break-inside: avoid;
+  }
+
+  .shadow-xl,
+  .shadow-2xl,
+  .shadow-soft {
+    box-shadow: none !important;
+  }
+}
+
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: translateY(0) scale(1) rotate(-2deg);
+  }
+
+  25% {
+    transform: translateY(-2px) scale(1.04) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(0.97) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateY(-1px) scale(1.03) rotate(1deg);
+  }
+}
+
+@keyframes spiritual-rise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.8);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate3d(0, -120vh, 0) scale(1.35);
+    opacity: 0;
+  }
+}
