@@ -32,7 +32,7 @@ const listPandits = asyncHandler(async (req, res) => {
 
   const [docs, total] = await Promise.all([
     PanditProfile.find(filter)
-      .populate("user", "name email phone city state avatar")
+      .populate("user", "name city state avatar")
       .sort({ ratingAverage: -1, createdAt: -1 })
       .skip(skip)
       .limit(limit),
@@ -48,7 +48,7 @@ const listPandits = asyncHandler(async (req, res) => {
 const getPanditById = asyncHandler(async (req, res) => {
   const profile = await PanditProfile.findById(req.params.panditId).populate(
     "user",
-    "name email phone city state avatar"
+    "name city state avatar"
   );
 
   if (!profile) {
