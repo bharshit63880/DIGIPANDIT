@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
-import { api } from "../lib/api";
+import { postPublicForm } from "../lib/api";
 
 export default function ForgotPasswordPage() {
   const location = useLocation();
@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
       setRequesting(true);
       setError("");
       setMessage("");
-      await api.post("/auth/forgot-password", { email });
+      await postPublicForm("/auth/forgot-password", { email });
       setMessage("A password reset code has been sent to your email.");
     } catch (requestError) {
       setError(requestError.message);
@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
       setResetting(true);
       setError("");
       setMessage("");
-      await api.post("/auth/reset-password", { email, otp, newPassword });
+      await postPublicForm("/auth/reset-password", { email, otp, newPassword });
       setMessage("Your password has been reset successfully. You can now sign in with your new password.");
       setTimeout(() => navigate("/login", { state: { email } }), 1200);
     } catch (requestError) {

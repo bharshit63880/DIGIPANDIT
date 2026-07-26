@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
-import { api } from "../lib/api";
+import { api, postPublicForm } from "../lib/api";
 import { fetchCurrentUser } from "../features/auth/authSlice";
 
 export default function VerifyEmailPage() {
@@ -32,7 +32,7 @@ export default function VerifyEmailPage() {
       setRequesting(true);
       setError("");
       setMessage("");
-      await api.post("/auth/verify-email/request", { email });
+      await postPublicForm("/auth/verify-email/request", { email });
       setMessage("A verification code has been sent to your email.");
     } catch (requestError) {
       setError(requestError.message);
@@ -48,7 +48,7 @@ export default function VerifyEmailPage() {
       setVerifying(true);
       setError("");
       setMessage("");
-      await api.post("/auth/verify-email", { email, otp });
+      await postPublicForm("/auth/verify-email", { email, otp });
       setMessage("Your email has been verified successfully.");
 
       if (localStorage.getItem("digipandit_token")) {

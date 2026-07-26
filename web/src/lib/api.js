@@ -9,7 +9,7 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("digipandit_token");
 
-  if (token) {
+  if (token && !config.url?.startsWith("/auth/")) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
@@ -29,3 +29,17 @@ api.interceptors.response.use(
     return Promise.reject(new Error(message));
   }
 );
+
+export const postPublicForm = (path, payload) => {
+  const body = new URLSearchParams();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      body.set(key, String(value));
+    }
+  });
+
+  return api.post(path, body, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+};

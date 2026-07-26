@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { api } from "../../lib/api";
+import { api, postPublicForm } from "../../lib/api";
 
 const savedToken = localStorage.getItem("digipandit_token");
 const savedUser = localStorage.getItem("digipandit_user");
@@ -12,12 +12,12 @@ const initialState = {
 };
 
 export const loginUser = createAsyncThunk("auth/login", async (payload) => {
-  const response = await api.post("/auth/login", payload);
+  const response = await postPublicForm("/auth/login", payload);
   return response.data.data;
 });
 
 export const registerUser = createAsyncThunk("auth/register", async (payload) => {
-  const response = await api.post("/auth/register", payload);
+  const response = await postPublicForm("/auth/register", payload);
   return response.data.data;
 });
 
