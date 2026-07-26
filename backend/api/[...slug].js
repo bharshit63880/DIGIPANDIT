@@ -1,4 +1,4 @@
-// Catch-all serverless entry for Express app on Vercel
+// Catch-all serverless entry for the DigiPandit Express API on Vercel.
 const app = require("../src/app");
 const connectDb = require("../src/db/connectDb");
 
