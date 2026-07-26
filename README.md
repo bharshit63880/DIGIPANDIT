@@ -45,6 +45,12 @@ The project is organised as a practical full-stack monorepo with a React fronten
 - Responsive Hindi user interface
 - Production deployment on Vercel with MongoDB Atlas
 
+## Realtime messaging
+
+Chat messages are stored in MongoDB through protected REST endpoints. The app also includes a **Socket.IO** event layer for live room updates, message delivery, and presence when the API is running on a persistent Node.js server.
+
+For local development, run the Express server with `npm run dev`; Socket.IO starts with it automatically. Vercel serverless functions do not keep persistent WebSocket connections, so production-grade live messaging should run the backend on a persistent host such as Render, Railway, Fly.io, or a dedicated Socket.IO-compatible service. The Vercel deployment continues to serve the REST API and web app.
+
 ## Product gallery
 
 All gallery images are cropped product screenshots.
@@ -209,6 +215,7 @@ The frontend and backend are independently deployed on Vercel:
 - Backend root directory: `backend`
 - Frontend variables: `VITE_API_URL`, `VITE_SOCKET_URL`
 - Backend variables: `MONGO_URI`, `CLIENT_URL`, `CORS_ORIGINS`, `JWT_SECRET`, and integration credentials as needed
+- For true live Socket.IO chat in production, deploy the backend on a persistent Node.js host and set `VITE_SOCKET_URL` to that backend URL
 
 Detailed instructions: [`docs/deployment/vercel.md`](docs/deployment/vercel.md)
 
