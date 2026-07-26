@@ -1,40 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
-    "api/[...slug].js": {
-      "maxDuration": 60
-    },
-    "api/auth/register.js": {
-      "maxDuration": 60
-    },
-    "api/auth/login.js": {
-      "maxDuration": 60
-    },
-    "api/auth/verify-email.js": {
-      "maxDuration": 60
-    },
-    "api/auth/request-verification.js": {
-      "maxDuration": 60
-    },
-    "api/auth/forgot-password.js": {
-      "maxDuration": 60
-    },
-    "api/auth/reset-password.js": {
-      "maxDuration": 60
-    },
-    "api/astrology/daily.js": {
-      "maxDuration": 60
-    },
-    "api/astrology/cities.js": {
-      "maxDuration": 60
-    },
-    "api/astrology/kundali.js": {
-      "maxDuration": 60
-    },
-    "api/astrology/matching.js": {
-      "maxDuration": 60
-    },
-    "api/astrology/numerology.js": {
+    "api/index.js": {
       "maxDuration": 60
     }
   },
