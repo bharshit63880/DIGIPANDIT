@@ -3,6 +3,9 @@
   "functions": {
     "api/[...slug].js": {
       "maxDuration": 60
+    },
+    "api/auth/register.js": {
+      "maxDuration": 60
     }
   }
 }
