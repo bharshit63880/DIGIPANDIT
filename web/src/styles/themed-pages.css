@@ -46,3 +46,67 @@
 
 /* Desktop proportions for the Pandit discovery hero. */
 @media(min-width:1024px){.dp-pandit-hero{grid-template-columns:minmax(0,1fr) 16rem;max-width:78rem;min-height:14rem;padding:1.8rem 2.25rem 1.6rem}.dp-pandit-hero h2{max-width:48rem;font-size:clamp(2.8rem,3.65vw,3.85rem);line-height:1.13}.dp-pandit-hero p:not(.eyebrow){max-width:51rem}.dp-shell--immersive .dp-nav-rail{gap:.25rem}.dp-shell--immersive .dp-nav-link{padding-inline:.8rem}}
+
+/* Shared temple system: keeps every routed experience in one DigiPandit world. */
+.dp-unified-shell,.dp-dashboard-shell{--dp-unified-bg:#080604;--dp-unified-panel:#140d09;--dp-unified-panel-soft:#1c120c;--dp-unified-gold:#d6a44a;--dp-unified-ivory:#f8ebcf;min-height:100svh;color:var(--dp-unified-ivory);background:radial-gradient(circle at 82% 8%,rgba(170,84,21,.2),transparent 28rem),radial-gradient(circle at 12% 58%,rgba(113,54,17,.12),transparent 28rem),linear-gradient(145deg,#070504,#130b07 48%,#080504)}
+.dp-unified-shell:before,.dp-dashboard-shell:before{content:"";position:fixed;z-index:0;inset:0;pointer-events:none;opacity:.28;background-image:linear-gradient(rgba(221,167,76,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(221,167,76,.025) 1px,transparent 1px),radial-gradient(circle,rgba(238,189,96,.34) 0 1px,transparent 1.5px);background-size:8rem 8rem,8rem 8rem,83px 83px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
+.dp-unified-shell>*,.dp-dashboard-shell>*{position:relative;z-index:1}
+.dp-unified-shell>.dp-navbar,.dp-dashboard-shell>.dp-navbar{position:sticky!important;top:0!important;z-index:50!important}
+.dp-unified-shell--home>.dp-navbar{position:fixed!important;inset-inline:0!important;top:0!important;z-index:50!important}
+.dp-unified-shell>.dp-navbar,.dp-dashboard-shell>.dp-navbar{border-bottom:1px solid rgba(214,164,74,.2)!important;background:rgba(9,6,7,.92)!important;color:var(--dp-unified-ivory);box-shadow:0 16px 46px rgba(0,0,0,.34);backdrop-filter:blur(18px)}
+.dp-unified-shell>.dp-navbar .text-brand-ink,.dp-unified-shell>.dp-navbar .text-brand-ink\/60,.dp-unified-shell>.dp-navbar .text-brand-ink\/70,.dp-dashboard-shell>.dp-navbar .text-brand-ink,.dp-dashboard-shell>.dp-navbar .text-brand-ink\/60,.dp-dashboard-shell>.dp-navbar .text-brand-ink\/70{color:var(--dp-unified-ivory)!important}
+.dp-unified-shell>.dp-navbar .text-brand-forest,.dp-dashboard-shell>.dp-navbar .text-brand-forest{color:rgba(226,190,116,.68)!important}
+.dp-unified-shell>.dp-navbar .bg-white,.dp-dashboard-shell>.dp-navbar .bg-white{border-color:rgba(214,164,74,.3)!important;background:rgba(255,255,255,.055)!important}
+.dp-unified-shell>.dp-navbar .border-brand-sand,.dp-dashboard-shell>.dp-navbar .border-brand-sand{border-color:rgba(214,164,74,.3)!important}
+.dp-unified-shell>.dp-navbar .dp-nav-rail,.dp-dashboard-shell>.dp-navbar .dp-nav-rail{border:1px solid rgba(214,164,74,.18);border-radius:999px;background:rgba(255,255,255,.035);box-shadow:inset 0 1px rgba(255,237,199,.04)}
+.dp-unified-shell>.dp-navbar .dp-nav-link,.dp-dashboard-shell>.dp-navbar .dp-nav-link{color:rgba(248,235,207,.65)}
+.dp-unified-shell>.dp-navbar .dp-nav-link:hover,.dp-dashboard-shell>.dp-navbar .dp-nav-link:hover{color:#f8ebcf;background:rgba(214,164,74,.09)}
+.dp-unified-shell>.dp-navbar .dp-nav-link.is-active,.dp-dashboard-shell>.dp-navbar .dp-nav-link.is-active{color:#160d07;background:linear-gradient(135deg,#f0c86b,#c78a2d);box-shadow:0 8px 24px rgba(191,116,31,.22)}
+.dp-unified-footer{border-color:rgba(214,164,74,.2)!important;background:radial-gradient(circle at 15% 0%,rgba(145,65,18,.16),transparent 25rem),#090605!important}
+.dp-unified-footer a{transition:color .2s ease}.dp-unified-footer a:hover{color:#e9bd64}
+.dp-unified-shell>main:not(.dp-theme),.dp-unified-shell>section:not(.dp-theme){color:var(--dp-unified-ivory)}
+.dp-unified-shell .surface-card,.dp-unified-shell .bg-white,.dp-dashboard-shell .surface-card,.dp-dashboard-shell .bg-white{border-color:rgba(214,164,74,.22)!important;background:linear-gradient(145deg,rgba(31,19,12,.95),rgba(13,9,7,.97))!important;color:var(--dp-unified-ivory);box-shadow:0 22px 55px rgba(0,0,0,.3),inset 0 1px rgba(255,232,181,.05)!important}
+.dp-unified-shell .bg-brand-cream,.dp-unified-shell .bg-brand-mist,.dp-dashboard-shell .bg-brand-cream,.dp-dashboard-shell .bg-brand-mist{background:rgba(255,224,166,.045)!important}
+.dp-unified-shell .text-brand-ink,.dp-dashboard-shell .text-brand-ink{color:var(--dp-unified-ivory)!important}
+.dp-unified-shell .text-brand-ink\/70,.dp-unified-shell .text-brand-ink\/65,.dp-unified-shell .text-brand-ink\/60,.dp-dashboard-shell .text-brand-ink\/70,.dp-dashboard-shell .text-brand-ink\/65,.dp-dashboard-shell .text-brand-ink\/60{color:rgba(248,235,207,.65)!important}
+.dp-unified-shell .text-brand-maroon,.dp-dashboard-shell .text-brand-maroon{color:#e9b95b!important}
+.dp-unified-shell input,.dp-unified-shell select,.dp-unified-shell textarea,.dp-dashboard-shell input,.dp-dashboard-shell select,.dp-dashboard-shell textarea{border-color:rgba(214,164,74,.3)!important;background:rgba(5,4,3,.62)!important;color:#fff1d5!important}
+.dp-unified-shell input::placeholder,.dp-unified-shell textarea::placeholder,.dp-dashboard-shell input::placeholder,.dp-dashboard-shell textarea::placeholder{color:rgba(248,235,207,.4)}
+.dp-unified-shell select option,.dp-dashboard-shell select option{color:#f8ebcf;background:#120c08}
+.dp-dashboard-shell{background-attachment:fixed}
+.dp-dashboard-nav{border-color:rgba(214,164,74,.23)!important;background:linear-gradient(160deg,rgba(31,19,12,.92),rgba(12,8,6,.96))!important;box-shadow:0 24px 60px rgba(0,0,0,.35)!important}
+.dp-dashboard-nav>div:first-child{border:1px solid rgba(214,164,74,.2);background:radial-gradient(circle at 80% 0%,rgba(209,133,36,.2),transparent 12rem),linear-gradient(145deg,#1d120c,#2c160d)!important}
+.dp-dashboard-link{color:rgba(248,235,207,.62)}.dp-dashboard-link:hover{color:#f8ebcf;background:rgba(214,164,74,.08)}
+.dp-dashboard-link--active{color:#1a0e07;background:linear-gradient(135deg,#efc668,#c8892c);box-shadow:0 8px 22px rgba(172,95,24,.2)}
+@media(max-width:1023px){.dp-unified-shell>.dp-navbar .dp-nav-rail,.dp-dashboard-shell>.dp-navbar .dp-nav-rail{border:0;background:transparent}.dp-dashboard-nav{overflow:hidden}}
+
+/* Strict black and antique-gold palette across every page and interaction. */
+.dp-unified-shell,.dp-dashboard-shell{--dp-black:#070503;--dp-black-soft:#0d0906;--dp-brown:#1b1009;--dp-gold:#d7a346;--dp-gold-bright:#efc76b;--dp-ivory:#f8ebcf}
+.dp-unified-shell .dp-theme::before{background:radial-gradient(circle at 78% 8%,rgba(194,121,30,.17),transparent 28rem),radial-gradient(circle at 18% 45%,rgba(112,61,22,.11),transparent 30rem),linear-gradient(145deg,#060403,#130b06 54%,#080503)!important}
+.dp-unified-shell .dp-theme::after{background-image:radial-gradient(circle,rgba(224,174,78,.42) 0 1px,transparent 1.5px)!important}
+.dp-unified-shell .dp-astrology-theme section:first-child,.dp-unified-shell .dp-astrology-theme main:before{background:radial-gradient(circle at 76% 38%,rgba(209,148,48,.15),transparent 25rem),linear-gradient(145deg,#070504,#171007)!important}
+.dp-unified-shell .dp-astrology-theme section:first-child::after{border-color:rgba(229,182,84,.31);box-shadow:0 0 0 2.4rem rgba(229,182,84,.025),0 0 0 5rem rgba(229,182,84,.018);background:repeating-conic-gradient(from 0deg,rgba(229,182,84,.23) 0 1deg,transparent 1deg 30deg)}
+.dp-unified-shell .dp-astrology-theme .dp-cosmic-panel,.dp-unified-shell .dp-astrology-theme .dp-cosmic-consult{background:radial-gradient(circle at 88% 8%,rgba(207,137,43,.18),transparent 23rem),linear-gradient(135deg,#171008,#261409 58%,#0b0705)!important}
+.dp-unified-shell .dp-astrology-theme .text-violet-200,.dp-unified-shell .dp-astrology-theme .text-violet-300,.dp-unified-shell .dp-astrology-theme .text-violet-600,.dp-unified-shell .dp-astrology-theme .text-violet-700,.dp-unified-shell .dp-astrology-theme .text-cyan-300{color:var(--dp-gold-bright)!important}
+.dp-unified-shell .dp-astrology-theme [class*="from-violet"],.dp-unified-shell .dp-astrology-theme [class*="from-cyan"],.dp-unified-shell .dp-astrology-theme [class*="from-blue"]{background:linear-gradient(145deg,#6f3b14,#d09a3e)!important}
+.dp-unified-shell .dp-auth-form button[type=submit]{border:1px solid var(--dp-gold);background:linear-gradient(135deg,#efc76b,#be7c25)!important;color:#160d06}
+.dp-unified-shell .panditji-trigger{border-color:rgba(232,187,92,.42);background:linear-gradient(135deg,#261307,#a9691f)!important;color:#fff1d2}
+.dp-unified-shell :where(button,[role=button]){--tw-ring-color:rgba(225,174,76,.52)}
+.dp-unified-shell :where(button,[role=button]):not(:disabled){border-color:rgba(215,163,70,.34)}
+.dp-unified-shell .bg-brand-maroon,.dp-dashboard-shell .bg-brand-maroon{background-color:#171008!important;background-image:linear-gradient(135deg,#211309,#704014)!important}
+.dp-unified-shell .bg-brand-forest,.dp-dashboard-shell .bg-brand-forest{background-color:#171008!important}
+.dp-unified-shell .bg-brand-blush,.dp-dashboard-shell .bg-brand-blush{background-color:rgba(215,163,70,.11)!important}
+.dp-unified-shell .border-brand-sand,.dp-dashboard-shell .border-brand-sand{border-color:rgba(215,163,70,.25)!important}
+.dp-unified-shell .text-brand-clay,.dp-unified-shell .text-brand-forest,.dp-dashboard-shell .text-brand-clay,.dp-dashboard-shell .text-brand-forest{color:#dca94e!important}
+.dp-unified-shell .hover\:bg-white:hover,.dp-dashboard-shell .hover\:bg-white:hover{background-color:rgba(215,163,70,.13)!important}
+.dp-unified-shell .focus\:border-brand-clay:focus,.dp-dashboard-shell .focus\:border-brand-clay:focus{border-color:var(--dp-gold-bright)!important}
+.dp-unified-shell--home .cinematic-home{--night:#070503;--plum:#170c07;--indigo:#21140b;--gold:#e5b653;--ember:#b96a22;background:#070503}
+.dp-unified-shell--home .gateway-section,.dp-unified-shell--home .gateway-world,.dp-unified-shell--home .journey-scene--hero{background:radial-gradient(circle at 72% 42%,#6a3516 0,#241108 31%,#070503 72%)!important}
+.dp-unified-shell--home .discovery-section,.dp-unified-shell--home .journey-scene--discovery{background:radial-gradient(circle at 68% 46%,#34200f 0,#160d08 38%,#060403 78%)!important}
+.dp-unified-shell--home .journey-scene--astrology{background:radial-gradient(circle at 72% 42%,#261b0d 0,#100b06 42%,#050403 80%)!important}
+.dp-unified-shell--home .journey-scene--astrology .journey-stage:after{background:linear-gradient(90deg,rgba(5,3,2,.92),transparent 52%),linear-gradient(0deg,rgba(5,3,2,.75),transparent 35%)}
+.dp-unified-shell--home .cosmic-stars i{background:#f5d789;box-shadow:0 0 8px #d9a33e}.dp-unified-shell--home .zodiac-rings i{border-color:rgba(229,182,83,.34)}.dp-unified-shell--home .zodiac-rings i:nth-child(3){box-shadow:0 0 70px rgba(218,150,48,.14)}
+.dp-unified-shell--home .journey-scene--hawan{background:radial-gradient(circle at 35% 70%,#5f2508 0,#1f0d05 27%,#070504 68%)!important}.dp-unified-shell--home .journey-scene--store{background:radial-gradient(circle at 72% 56%,#4b270e 0,#170d07 38%,#070503 80%)!important}
+.dp-unified-shell--home .discovery-card{border-color:rgba(225,174,76,.24);background:linear-gradient(145deg,rgba(38,23,12,.9),rgba(10,7,5,.9))}
+#root>main,#root>.min-h-screen:not(.dp-unified-shell):not(.dp-dashboard-shell){min-height:100svh;color:#f8ebcf;background:radial-gradient(circle at 75% 8%,rgba(191,119,29,.16),transparent 28rem),#080604}
+@media(prefers-reduced-motion:reduce){.dp-unified-shell *,.dp-dashboard-shell *{scroll-behavior:auto}}

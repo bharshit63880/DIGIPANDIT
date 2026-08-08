@@ -7,9 +7,9 @@
 @layer base {
   :root {
     font-family: "Noto Sans Devanagari", "Plus Jakarta Sans", sans-serif;
-    color: #391607;
-    background: #fff4df;
-    color-scheme: light;
+    color: #f8ebcf;
+    background: #080604;
+    color-scheme: dark;
   }
 
   * {
@@ -17,11 +17,13 @@
   }
 
   body {
-    @apply min-h-screen bg-brand-cream text-brand-ink antialiased;
+    @apply min-h-screen antialiased;
     margin: 0;
+    color: #f8ebcf;
+    background-color: #080604;
     background-image:
-      radial-gradient(circle at 8% 0%, rgba(231, 188, 99, 0.20), transparent 25rem),
-      radial-gradient(circle at 92% 18%, rgba(123, 45, 13, 0.10), transparent 30rem);
+      radial-gradient(circle at 8% 0%, rgba(214, 164, 74, 0.13), transparent 25rem),
+      radial-gradient(circle at 92% 18%, rgba(114, 59, 18, 0.12), transparent 30rem);
   }
 
   ::selection {

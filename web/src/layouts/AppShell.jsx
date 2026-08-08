@@ -4,12 +4,11 @@ import { Navbar } from "../components/Navbar";
 export default function AppShell() {
   const { pathname } = useLocation();
   const isCinematicHome = pathname === "/";
-  const isImmersivePage = ["/login", "/register", "/astrology", "/hawan-guide", "/store", "/cart", "/pandits"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
   return (
-    <div className={`min-h-screen ${isCinematicHome ? "bg-[#130b25]" : "bg-brand-cream"} ${isImmersivePage ? "dp-shell--immersive" : ""}`}>
+    <div className={`dp-unified-shell min-h-screen ${isCinematicHome ? "dp-unified-shell--home" : "dp-shell--immersive"}`}>
       <Navbar />
       <Outlet />
-      <footer className={`${isCinematicHome ? "mt-0 border-white/10 bg-[#0d0818]" : "mt-16 border-brand-sand bg-brand-maroon"} border-t py-12 text-white`}>
+      <footer className="dp-unified-footer mt-0 border-t py-12 text-white">
         <div className="container-shell grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
           <div>
             <div className="flex items-center gap-3">

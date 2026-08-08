@@ -23,10 +23,10 @@ export default function DashboardLayout() {
   const initial = user?.name?.trim()?.charAt(0)?.toUpperCase() || "उ";
 
   return (
-    <div className="min-h-screen bg-brand-mist">
+    <div className="dp-dashboard-shell min-h-screen">
       <Navbar />
       <div className="container-shell grid gap-6 py-7 lg:grid-cols-[210px_minmax(0,1fr)] lg:py-10">
-        <aside className="self-start rounded-[28px] border border-white/70 bg-white/80 p-3 shadow-soft backdrop-blur lg:sticky lg:top-24">
+        <aside className="dp-dashboard-nav self-start rounded-[28px] border p-3 shadow-soft backdrop-blur lg:sticky lg:top-24">
           <div className="rounded-[20px] bg-gradient-to-br from-brand-ink to-brand-maroon p-4 text-white">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-gold text-lg font-bold text-brand-ink">{initial}</div>
@@ -48,7 +48,7 @@ export default function DashboardLayout() {
                   end={item.to === "/dashboard"}
                   className={({ isActive }) =>
                     `flex shrink-0 items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold transition ${
-                      isActive ? "bg-brand-blush text-brand-maroon" : "text-brand-ink/65 hover:bg-brand-cream hover:text-brand-ink"
+                      isActive ? "dp-dashboard-link--active" : "dp-dashboard-link"
                     }`
                   }
                 >
