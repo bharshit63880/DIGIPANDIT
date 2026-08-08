@@ -110,3 +110,9 @@
 .dp-unified-shell--home .discovery-card{border-color:rgba(225,174,76,.24);background:linear-gradient(145deg,rgba(38,23,12,.9),rgba(10,7,5,.9))}
 #root>main,#root>.min-h-screen:not(.dp-unified-shell):not(.dp-dashboard-shell){min-height:100svh;color:#f8ebcf;background:radial-gradient(circle at 75% 8%,rgba(191,119,29,.16),transparent 28rem),#080604}
 @media(prefers-reduced-motion:reduce){.dp-unified-shell *,.dp-dashboard-shell *{scroll-behavior:auto}}
+
+/* Swipeable Pandit discovery rail. */
+.dp-pandit-card-rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(20rem,24rem);gap:1.1rem;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.25rem .15rem 1.25rem;scroll-snap-type:x mandatory;scroll-padding-inline:.15rem;overscroll-behavior-inline:contain;scrollbar-width:thin;scrollbar-color:#d6a44a rgba(214,164,74,.1);-webkit-overflow-scrolling:touch}
+.dp-pandit-card-rail::-webkit-scrollbar{height:.5rem}.dp-pandit-card-rail::-webkit-scrollbar-track{border-radius:999px;background:rgba(214,164,74,.08)}.dp-pandit-card-rail::-webkit-scrollbar-thumb{border-radius:999px;background:linear-gradient(90deg,#9f6422,#e7ba60)}
+.dp-pandit-card-rail>*{min-width:0;scroll-snap-align:start;scroll-snap-stop:always}.dp-pandit-card-rail .dp-pandit-card,.dp-pandit-card-rail .dp-pandit-card-skeleton,.dp-pandit-card-rail .dp-pandit-card-skeleton>*{height:100%}.dp-pandit-card-rail .dp-pandit-card{display:flex;flex-direction:column}.dp-pandit-card-rail .dp-pandit-card>div{display:flex;flex:1;flex-direction:column}.dp-pandit-card-rail .dp-pandit-card>div>.space-y-3{margin-top:auto;padding-top:1.25rem}
+@media(max-width:480px){.dp-pandit-card-rail{grid-auto-columns:minmax(17rem,86vw);gap:.85rem;padding-bottom:1rem}}

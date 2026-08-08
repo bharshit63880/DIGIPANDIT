@@ -256,7 +256,7 @@ export default function PanditsPage() {
       ) : null}
 
       <div className="mt-8 grid gap-8 xl:grid-cols-[1.08fr_0.92fr]">
-        <div>
+        <div className="min-w-0">
           <div className="grid gap-4 rounded-[30px] bg-white p-5 shadow-soft md:grid-cols-[1fr_1fr_auto]">
             <Input label="शहर" value={filters.city} onChange={(event) => setFilters((current) => ({ ...current, city: event.target.value }))} />
 
@@ -282,11 +282,15 @@ export default function PanditsPage() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className="dp-pandit-card-rail mt-8" aria-label="पंडित सूची">
             {loading
-              ? Array.from({ length: 4 }).map((_, index) => <LoadingCard key={index} />)
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="dp-pandit-card-skeleton">
+                    <LoadingCard />
+                  </div>
+                ))
               : profiles.map((profile) => (
-                  <article key={profile._id} className="overflow-hidden rounded-[28px] bg-white shadow-soft">
+                  <article key={profile._id} className="dp-pandit-card overflow-hidden rounded-[28px] bg-white shadow-soft">
                     <img
                       src={getExpertImage({
                         user: {

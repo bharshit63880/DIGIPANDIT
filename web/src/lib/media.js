@@ -33,6 +33,7 @@ const productPhotoMap = {
 };
 
 const isGeneratedAvatar = (url = "") => url.includes("ui-avatars.com");
+const defaultExpertImage = "/cinematic/digipandit-guide.webp";
 const isPlaceholderProduct = (url = "") => url.includes("via.placeholder.com");
 const categoryLabelMap = {
   PUJA_KIT: "Puja Kit",
@@ -74,7 +75,11 @@ export const getExpertImage = (expert) => {
     return mapped;
   }
 
-  return current || mapped || "https://randomuser.me/api/portraits/lego/1.jpg";
+  if (current && !isGeneratedAvatar(current)) {
+    return current;
+  }
+
+  return mapped || defaultExpertImage;
 };
 
 export const getProductImage = (product) => {
