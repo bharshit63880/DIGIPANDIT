@@ -51,34 +51,6 @@ Chat messages are stored in MongoDB through protected REST endpoints. The app al
 
 For local development, run the Express server with `npm run dev`; Socket.IO starts with it automatically. Vercel serverless functions do not keep persistent WebSocket connections, so production-grade live messaging should run the backend on a persistent host such as Render, Railway, Fly.io, or a dedicated Socket.IO-compatible service. The Vercel deployment continues to serve the REST API and web app.
 
-## Product gallery
-
-All gallery images are cropped product screenshots.
-
-| Home | Astrology |
-| --- | --- |
-| ![DigiPandit home page](docs/screenshots/home.png) | ![Astrology hub](docs/screenshots/astrology.png) |
-
-| Kundali | Pandit booking |
-| --- | --- |
-| ![Generated Kundali](docs/screenshots/kundali-result.png) | ![Pandit booking flow](docs/screenshots/pandit-booking.png) |
-
-| Hawan guide | Puja store |
-| --- | --- |
-| ![Hawan guide library](docs/screenshots/hawan-guide.png) | ![Puja store](docs/screenshots/puja-store.png) |
-
-| Dashboard | Bookings |
-| --- | --- |
-| ![User dashboard](docs/screenshots/dashboard.png) | ![User bookings](docs/screenshots/bookings.png) |
-
-| Chat | Profile |
-| --- | --- |
-| ![Chat experience](docs/screenshots/chat.png) | ![User profile](docs/screenshots/profile.png) |
-
-| Payment status |
-| --- |
-| ![Payment status](docs/screenshots/payment-status.png) |
-
 ## Architecture
 
 ```text
