@@ -14,7 +14,7 @@ export default function AppShell() {
           <div>
             <div className="flex items-center gap-3">
               <img src="/digipandit-mark.svg" alt="" className="h-10 w-10" />
-              <p className="font-serif text-2xl">Digi<span className="text-brand-gold">Pandit</span></p>
+              <p data-no-translate className="font-serif text-2xl">Digi<span className="text-brand-gold">Pandit</span></p>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-7 text-white/75">
               मार्गदर्शन, अनुष्ठान और पूजा सामग्री—आपकी आध्यात्मिक यात्रा के लिए एक सरल डिजिटल स्थान।

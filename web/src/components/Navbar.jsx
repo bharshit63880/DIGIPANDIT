@@ -74,7 +74,7 @@ export function Navbar() {
         <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4">
           <Link to="/" className="dp-brand flex min-w-0 items-center gap-3" aria-label="डिजीपंडित होम">
             <img src="/digipandit-mark.svg" alt="" width="48" height="48" className="dp-brand__mark h-12 w-12 shrink-0" />
-            <div className="min-w-0 leading-none"><p className={`font-serif text-xl font-semibold ${navText}`}>Digi<span className={isCinematicHome ? "text-brand-gold" : "text-brand-clay"}>Pandit</span></p><p className={`mt-1 text-[.58rem] font-bold tracking-[.15em] ${isCinematicHome ? "text-white/55" : "text-brand-forest"}`}>परंपरा, सरल रूप में</p></div>
+            <div className="min-w-0 leading-none"><p data-no-translate className={`font-serif text-xl font-semibold ${navText}`}>Digi<span className={isCinematicHome ? "text-brand-gold" : "text-brand-clay"}>Pandit</span></p><p className={`mt-1 text-[.58rem] font-bold tracking-[.15em] ${isCinematicHome ? "text-white/55" : "text-brand-forest"}`}>परंपरा, सरल रूप में</p></div>
           </Link>
           <nav className="hidden items-center justify-center lg:flex" aria-label="मुख्य नेविगेशन"><div className="dp-nav-rail flex items-center gap-1">
             {visibleItems.map((item) => <NavLink key={item.to} to={item.to} onClick={() => handleJourneyNavigation(item)} className={`dp-nav-link ${isItemActive(item) ? "is-active" : ""}`}>{item.label}</NavLink>)}

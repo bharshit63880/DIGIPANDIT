@@ -23,11 +23,11 @@ const fadeUp = {
 
 const modules = [
   { id: "kundali", title: "जन्म कुंडली", text: "चार्ट, ग्रह, दशाएँ और जीवन की विस्तृत रिपोर्ट।", icon: Orbit, tone: "from-brand-maroon to-brand-clay" },
-  { id: "matching", title: "Kundali Matching", text: "36 Gun Milan and relationship compatibility.", icon: HeartHandshake, tone: "from-brand-clay to-brand-gold" },
-  { id: "numerology", title: "Numerology", text: "Life path, destiny and personal number guidance.", icon: CircleGauge, tone: "from-brand-forest to-brand-maroon" },
-  { id: "remedies", title: "Dosh & Remedies", text: "Readable screening with practical spiritual guidance.", icon: ShieldCheck, tone: "from-amber-500 to-orange-600" },
-  { id: "dashas", title: "Mahadasha", text: "A clear timeline of major planetary periods.", icon: ChartNoAxesCombined, tone: "from-brand-forest to-brand-clay" },
-  { id: "consultations", title: "Ask an Astrologer", text: "Chat, audio or video guidance with verified experts.", icon: Bot, tone: "from-brand-maroon to-brand-forest", href: "/astrology/consultations" },
+  { id: "matching", title: "कुंडली मिलान", text: "छत्तीस गुणों और संबंधों की अनुकूलता का स्पष्ट विश्लेषण।", icon: HeartHandshake, tone: "from-brand-clay to-brand-gold" },
+  { id: "numerology", title: "अंक ज्योतिष", text: "जीवन पथ, भाग्यांक और व्यक्तित्व अंक का मार्गदर्शन।", icon: CircleGauge, tone: "from-brand-forest to-brand-maroon" },
+  { id: "remedies", title: "दोष और उपाय", text: "सरल दोष जाँच और व्यावहारिक आध्यात्मिक मार्गदर्शन।", icon: ShieldCheck, tone: "from-amber-500 to-orange-600" },
+  { id: "dashas", title: "महादशा", text: "प्रमुख ग्रह दशाओं की सरल और स्पष्ट समयरेखा।", icon: ChartNoAxesCombined, tone: "from-brand-forest to-brand-clay" },
+  { id: "consultations", title: "ज्योतिषाचार्य से पूछें", text: "सत्यापित विशेषज्ञ से बातचीत, ध्वनि या दृश्य परामर्श।", icon: Bot, tone: "from-brand-maroon to-brand-forest", href: "/astrology/consultations" },
 ];
 
 const defaultPerson = {
@@ -307,12 +307,12 @@ function NumerologyWorkspace() {
   const mutation = useMutation({ mutationFn: async (values) => (await api.post("/astrology/numerology", values)).data.data, onSuccess: setResult });
   return (
     <section id="numerology" className="scroll-mt-28 py-20">
-      <div className="rounded-[36px] bg-gradient-to-br from-brand-forest via-brand-ink to-brand-maroon p-7 text-white md:p-10">
-        <SectionHeading eyebrow="Numbers with meaning" title="Personal Numerology" description="Discover the recurring numbers and themes connected to your name and birth date." />
+      <div className="dp-cosmic-panel rounded-[36px] bg-gradient-to-br from-brand-forest via-brand-ink to-brand-maroon p-7 text-white md:p-10">
+        <SectionHeading eyebrow="अंकों में छिपे संकेत" title="व्यक्तिगत अंक ज्योतिष" description="अपने नाम और जन्म तिथि से जुड़े अंकों और जीवन संकेतों को समझें।" />
         <div className="mt-10 grid gap-8 lg:grid-cols-[.7fr_1.3fr]">
           <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="rounded-[28px] bg-white/10 p-6 backdrop-blur">
-            <div className="grid gap-5"><Field label="Full name" {...register("fullName", { required: true })} /><Field label="Birth date" type="date" {...register("birthDate", { required: true })} /></div>
-            <Button type="submit" className="mt-6 w-full bg-brand-gold text-brand-ink hover:bg-white">Calculate my numbers</Button>
+            <div className="grid gap-5"><Field label="पूरा नाम" {...register("fullName", { required: true })} /><Field label="जन्म तिथि" type="date" {...register("birthDate", { required: true })} /></div>
+            <Button type="submit" className="mt-6 w-full bg-brand-gold text-brand-ink hover:bg-white">मेरे अंक ज्ञात करें</Button>
           </form>
           {result ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Life path", result.lifePath], ["Destiny", result.destiny], ["Soul", result.soul], ["Personality", result.personality]].map(([label, value]) => <div key={label} className="rounded-[26px] bg-white/10 p-6 text-center"><p className="text-5xl font-black text-cyan-300">{value}</p><p className="mt-3 text-sm font-bold uppercase tracking-wider text-white/70">{label}</p></div>)}<p className="sm:col-span-2 lg:col-span-4 rounded-[26px] bg-white/10 p-6 leading-7">{result.prediction} Lucky color: <strong>{result.luckyColor}</strong>.</p></div> : <div className="grid place-items-center rounded-[28px] border border-white/10 bg-white/5 p-10 text-center text-white/65">Your personal number map will appear here.</div>}
         </div>
@@ -356,7 +356,7 @@ export default function AstrologyHubPage() {
 
         <main className="container-shell">
           <section className="py-20">
-            <SectionHeading eyebrow="Explore" title="One universe of guidance" description="Every tool shares one visual language and keeps the next action simple." />
+            <SectionHeading eyebrow="खोजें" title="मार्गदर्शन का एक संपूर्ण संसार" description="सभी ज्योतिष सुविधाएँ एक ही सरल और सुसंगत अनुभव में उपलब्ध हैं।" />
             <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">{modules.map((item, index) => { const Icon = item.icon; const content = <motion.article variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group h-full rounded-[30px] border border-slate-200/80 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,.06)] transition hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-white/5"><div className={`grid h-14 w-14 place-items-center rounded-[20px] bg-gradient-to-br ${item.tone} text-white shadow-lg`}><Icon className="h-6 w-6" /></div><h3 className="mt-6 text-2xl font-bold dark:text-white">{item.title}</h3><p className="mt-3 leading-7 text-slate-600 dark:text-slate-300">{item.text}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-700 dark:text-violet-300">Explore <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></span></motion.article>; return item.href ? <Link key={item.id} to={item.href}>{content}</Link> : <a key={item.id} href={`#${item.id}`}>{content}</a>; })}</div>
           </section>
 
@@ -367,7 +367,7 @@ export default function AstrologyHubPage() {
           <NumerologyWorkspace />
 
           <section className="py-20">
-            <div className="rounded-[38px] bg-gradient-to-br from-brand-maroon to-brand-forest p-8 text-white md:p-12">
+            <div className="dp-cosmic-consult rounded-[38px] bg-gradient-to-br from-brand-maroon to-brand-forest p-8 text-white md:p-12">
               <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_.8fr]"><div><p className="text-xs font-bold uppercase tracking-[.24em] text-violet-200">Human wisdom, when you need it</p><h2 className="mt-4 text-5xl font-bold leading-none">Take your chart into a live conversation.</h2><p className="mt-5 max-w-xl leading-8 text-white/75">Connect with verified astrologers through chat, audio, or video. Wallet billing and current consultation flows remain fully preserved.</p><Link to="/astrology/consultations"><Button className="mt-7 bg-white text-violet-950 hover:bg-violet-100">Browse astrologers <ArrowRight className="ml-2 h-5 w-5" /></Button></Link></div><div className="grid gap-4">{[["Chat guidance", "Fast, focused questions", Bot], ["Career reading", "Timing and professional direction", BriefcaseBusiness], ["Relationship clarity", "Compatibility and communication", Users]].map(([title, copy, Icon]) => <div key={title} className="flex gap-4 rounded-[24px] bg-white/10 p-5 backdrop-blur"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-violet-700"><Icon className="h-5 w-5" /></div><div><strong>{title}</strong><p className="mt-1 text-sm text-white/65">{copy}</p></div></div>)}</div></div>
             </div>
           </section>
