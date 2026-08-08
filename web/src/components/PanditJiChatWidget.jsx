@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bot, MessageCircle, SendHorizontal, Sparkles, X } from "lucide-react";
+import { Bot, MessageCircle, SendHorizontal, Sparkles, Trash2, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "./Button";
 import { hindiContent } from "../lib/hindi";
 
-const STORAGE_KEY = "digipandit_panditji_messages";
+const STORAGE_KEY = "digipandit_panditji_messages_v2";
 
 const defaultMessages = [
   {
@@ -22,6 +23,7 @@ const quickPrompts = [
 ];
 
 export function PanditJiChatWidget() {
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,12 +60,20 @@ export function PanditJiChatWidget() {
     setLoading(true);
 
     try {
-      const response = await api.post("/ai/panditji-chat", { message: content });
+      const conversationHistory = [...messages, userMessage]
+        .slice(-10)
+        .map(({ role, content: messageContent }) => ({ role, content: messageContent }));
+      const response = await api.post("/ai/panditji-chat", {
+        message: content,
+        history: conversationHistory,
+        pathname,
+      });
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
         content: hindiContent(response.data.data.reply, "आपके प्रश्न का उत्तर अभी हिन्दी में उपलब्ध नहीं हो सका। कृपया प्रश्न सरल शब्दों में दोबारा पूछें।"),
         suggestions: (response.data.data.suggestions || []).map((item) => hindiContent(item, "अधिक जानकारी")),
+        route: response.data.data.route,
       };
 
       setMessages((current) => [...current, assistantMessage]);
@@ -80,6 +90,11 @@ export function PanditJiChatWidget() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearConversation = () => {
+    setMessages(defaultMessages);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
@@ -103,6 +118,9 @@ export function PanditJiChatWidget() {
                 <p className="text-lg font-bold">PanditJi</p>
                 <p className="text-xs uppercase tracking-[0.2em] text-white/75">आध्यात्मिक सहायक</p>
               </div>
+              <button type="button" onClick={clearConversation} className="ml-auto rounded-xl p-2 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="बातचीत साफ करें" title="बातचीत साफ करें">
+                <Trash2 className="h-4 w-4" />
+              </button>
             </div>
           </div>
 
@@ -129,6 +147,11 @@ export function PanditJiChatWidget() {
                       </button>
                     ))}
                   </div>
+                ) : null}
+                {message.role === "assistant" && message.route ? (
+                  <Link to={message.route} onClick={() => setOpen(false)} className="mt-3 inline-flex rounded-full border border-brand-gold/40 px-3 py-1 text-xs font-bold text-brand-maroon">
+                    संबंधित पृष्ठ खोलें
+                  </Link>
                 ) : null}
               </div>
             ))}
@@ -159,6 +182,12 @@ export function PanditJiChatWidget() {
                 rows={2}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    if (canSend) sendMessage(draft);
+                  }
+                }}
                 placeholder="अपना प्रश्न लिखें—अनुष्ठान, मंत्र, समय या सामग्री"
                 className="min-h-[52px] flex-1 resize-none rounded-[20px] border border-brand-sand px-4 py-3 text-sm outline-none focus:border-brand-clay"
               />
