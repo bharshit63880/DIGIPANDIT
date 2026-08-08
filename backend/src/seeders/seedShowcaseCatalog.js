@@ -6,148 +6,228 @@ const PanditProfile = require("../models/PanditProfile");
 const Product = require("../models/Product");
 const { ROLES } = require("../constants/roles");
 
-// This seeder deliberately creates only public-facing catalogue records. It never
-// creates customer accounts, bookings, orders, chats, wallets, or admin credentials.
+// केवल सार्वजनिक कैटलॉग रिकॉर्ड। यह seeder ग्राहक, बुकिंग, भुगतान, चैट या एडमिन रिकॉर्ड नहीं बनाता।
 const avatar = (name) =>
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=542047&color=ffffff&size=256&bold=true`;
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=171008&color=e9b85c&size=256&bold=true`;
+
+const slots = (...days) => days.map(([day, startTime, endTime]) => ({ day, startTime, endTime, isAvailable: true }));
+const service = (name, category, serviceType, description, durationInMinutes, price, costs = {}) => ({
+  name, category, serviceType, description, durationInMinutes, price,
+  travelCharge: costs.travelCharge || 0,
+  samagriCost: costs.samagriCost || 0,
+  extraDakshina: costs.extraDakshina || 0,
+  videoDakshinaFee: costs.videoDakshinaFee || 0,
+  isActive: true,
+});
+const profile = (bio, experienceInYears, specialization, languages, serviceCities, services, availability, isOnline = false) => ({
+  bio, experienceInYears, specialization, languages, serviceCities, services, availability, isOnline,
+  ratingAverage: 0, totalReviews: 0, totalBookings: 0,
+});
 
 const showcasePandits = [
   {
-    user: { name: "Pt. Raghav Shastri", email: "raghav.shastri@showcase.digipandit.demo", phone: "9876502001", city: "Delhi", state: "Delhi" },
-    profile: {
-      bio: "Vedic karmkand specialist for griha pravesh, Satyanarayan katha, and family ceremonies.",
-      experienceInYears: 14,
-      specialization: ["Griha Pravesh", "Satyanarayan Katha", "Kundli Guidance"],
-      languages: ["Hindi", "English", "Sanskrit"],
-      serviceCities: ["Delhi", "Noida", "Gurugram"],
-      ratingAverage: 4.9,
-      totalReviews: 128,
-      services: [
-        { name: "Griha Pravesh Puja", category: "PUJA", serviceType: "PUJA", description: "Home-entry puja with samagri guidance.", durationInMinutes: 150, price: 5100 },
-        { name: "Personal Astrology Chat", category: "ASTROLOGY_CHAT", serviceType: "CONSULTATION", description: "Kundli, career, marriage and finance consultation.", durationInMinutes: 30, price: 799 },
-      ],
-    },
+    user: { name: "पं. सुरेश कुलकर्णी", email: "suresh.kulkarni@showcase.digipandit.demo", phone: "9876502101", city: "पुणे", state: "महाराष्ट्र" },
+    profile: profile("पं. सुरेश कुलकर्णी पिछले 18 वर्षों से गृह प्रवेश, सत्यनारायण कथा और पारिवारिक संस्कारों का संचालन कर रहे हैं। वे पूजा की तैयारी परिवार को पहले से सरल भाषा में समझाते हैं।", 18, ["गृह प्रवेश पूजा", "सत्यनारायण कथा", "विवाह संस्कार", "नामकरण संस्कार"], ["हिंदी", "मराठी", "संस्कृत"], ["पुणे", "पिंपरी-चिंचवड़", "मुंबई"], [
+      service("गृह प्रवेश पूजा", "PUJA", "PUJA", "नए घर में प्रवेश के लिए संकल्प, गणेश पूजन और वास्तु शांति सहित पारिवारिक पूजा।", 150, 2100, { travelCharge: 500, samagriCost: 1100 }),
+      service("सत्यनारायण कथा", "PUJA", "KATHA", "परिवार के साथ कथा, पूजन और आरती का सुव्यवस्थित आयोजन।", 120, 1501, { samagriCost: 701 }),
+    ], slots(["MON", "07:00", "13:00"], ["THU", "08:00", "17:00"], ["SUN", "07:00", "15:00"])),
   },
   {
-    user: { name: "Acharya Devendra Mishra", email: "devendra.mishra@showcase.digipandit.demo", phone: "9876502002", city: "Lucknow", state: "Uttar Pradesh" },
-    profile: {
-      bio: "Traditional puja acharya for vivah sanskar, mundan, naamkaran, and family ceremonies.",
-      experienceInYears: 18,
-      specialization: ["Vivah Sanskar", "Mundan", "Naamkaran"],
-      languages: ["Hindi", "Awadhi"],
-      serviceCities: ["Lucknow", "Kanpur"],
-      ratingAverage: 4.8,
-      totalReviews: 96,
-      services: [
-        { name: "Wedding Ceremony Puja", category: "PUJA", serviceType: "PUJA", description: "Wedding ritual support for complete family events.", durationInMinutes: 240, price: 11000 },
-        { name: "Naamkaran Puja", category: "PUJA", serviceType: "PUJA", description: "Traditional naming ceremony with family participation.", durationInMinutes: 90, price: 3500 },
-      ],
-    },
+    user: { name: "आचार्य देवेंद्र मिश्र", email: "devendra.mishra@showcase.digipandit.demo", phone: "9876502102", city: "वाराणसी", state: "उत्तर प्रदेश" },
+    profile: profile("आचार्य देवेंद्र मिश्र काशी की वैदिक परंपरा में रुद्राभिषेक, नवग्रह शांति और महामृत्युंजय जाप कराते हैं। विस्तृत अनुष्ठान में वे आवश्यक समय और सामग्री पहले स्पष्ट करते हैं।", 21, ["रुद्राभिषेक", "नवग्रह शांति", "महामृत्युंजय जाप", "शुभ मुहूर्त परामर्श"], ["हिंदी", "संस्कृत", "भोजपुरी"], ["वाराणसी", "प्रयागराज", "मिर्जापुर"], [
+      service("रुद्राभिषेक", "PUJA", "PUJA", "शिव पूजन और अभिषेक का पारंपरिक आयोजन; सामग्री की सूची बुकिंग से पहले साझा की जाती है।", 180, 3100, { samagriCost: 1200 }),
+      service("महामृत्युंजय जाप", "PUJA", "PUJA", "संकल्प के अनुसार जाप और पूजन हेतु विस्तृत सेवा।", 240, 5100, { samagriCost: 1500, extraDakshina: 501 }),
+    ], slots(["MON", "06:00", "14:00"], ["WED", "06:00", "12:00"], ["SAT", "07:00", "16:00"])),
   },
   {
-    user: { name: "Astrologer Neha Joshi", email: "neha.joshi@showcase.digipandit.demo", phone: "9876502003", city: "Jaipur", state: "Rajasthan" },
-    profile: {
-      bio: "Vedic astrology consultant for kundli matching, relationship guidance, and practical remedies.",
-      experienceInYears: 11,
-      specialization: ["Kundli Matching", "Relationship Guidance", "Remedies"],
-      languages: ["Hindi", "English"],
-      serviceCities: ["Jaipur", "Remote"],
-      ratingAverage: 4.9,
-      totalReviews: 174,
-      services: [
-        { name: "Astrology Chat Session", category: "ASTROLOGY_CHAT", serviceType: "CONSULTATION", description: "Text consultation for family and marriage compatibility.", durationInMinutes: 25, price: 699 },
-        { name: "Astrology Call Consultation", category: "ASTROLOGY_CALL", serviceType: "CONSULTATION", description: "Voice consultation with actionable guidance.", durationInMinutes: 40, price: 1299 },
-      ],
-    },
+    user: { name: "पं. ओम त्रिपाठी", email: "om.tripathi@showcase.digipandit.demo", phone: "9876502103", city: "प्रयागराज", state: "उत्तर प्रदेश" },
+    profile: profile("पं. ओम त्रिपाठी श्राद्ध, तर्पण और धार्मिक कथा से जुड़े पारिवारिक अनुष्ठानों में अनुभव रखते हैं। वे परिवार की परंपरा और स्थान की परिस्थितियों के अनुसार तैयारी बताते हैं।", 16, ["श्राद्ध एवं तर्पण", "धार्मिक कथा", "पिंडदान मार्गदर्शन"], ["हिंदी", "संस्कृत", "अवधी"], ["प्रयागराज", "प्रतापगढ़", "कौशांबी"], [
+      service("श्राद्ध एवं तर्पण", "PUJA", "PUJA", "परिवार की परंपरा के अनुरूप तर्पण और श्राद्ध कर्म के लिए पंडित सेवा।", 150, 2501, { samagriCost: 801 }),
+      service("धार्मिक कथा पाठ", "PUJA", "KATHA", "चयनित कथा का पाठ, संकल्प और समापन आरती।", 180, 2100),
+    ], slots(["TUE", "06:30", "13:30"], ["FRI", "07:00", "15:00"])),
   },
   {
-    user: { name: "Pt. Omkar Tripathi", email: "omkar.tripathi@showcase.digipandit.demo", phone: "9876502004", city: "Varanasi", state: "Uttar Pradesh" },
-    profile: {
-      bio: "Varanasi-based pandit for Rudrabhishek, Maha Mrityunjaya Jaap, and temple-tradition ceremonies.",
-      experienceInYears: 22,
-      specialization: ["Rudrabhishek", "Maha Mrityunjaya Jaap", "Temple Rituals"],
-      languages: ["Hindi", "Sanskrit", "Bhojpuri"],
-      serviceCities: ["Varanasi", "Prayagraj"],
-      ratingAverage: 4.7,
-      totalReviews: 88,
-      services: [{ name: "Rudrabhishek Puja", category: "PUJA", serviceType: "PUJA", description: "Detailed Shiva puja for spiritual observance.", durationInMinutes: 180, price: 6500 }],
-    },
+    user: { name: "आचार्य राजेश शर्मा", email: "rajesh.sharma@showcase.digipandit.demo", phone: "9876502104", city: "उज्जैन", state: "मध्य प्रदेश" },
+    profile: profile("आचार्य राजेश शर्मा नवग्रह शांति, वास्तु शांति और भूमि पूजन कराते हैं। वे गृहस्थ परिवारों और छोटे व्यावसायिक प्रतिष्ठानों—दोनों के अनुष्ठान संभालते हैं।", 19, ["नवग्रह शांति", "वास्तु शांति", "भूमि पूजन", "गणेश पूजा"], ["हिंदी", "संस्कृत", "मालवी"], ["उज्जैन", "इंदौर", "देवास"], [
+      service("नवग्रह शांति पूजा", "PUJA", "PUJA", "नवग्रह पूजन और शांति पाठ के साथ नियोजित अनुष्ठान।", 210, 4100, { samagriCost: 1300 }),
+      service("भूमि पूजन", "PUJA", "PUJA", "निर्माण आरंभ से पहले भूमि पूजन और संकल्प की सेवा।", 120, 2501, { travelCharge: 601, samagriCost: 901 }),
+    ], slots(["WED", "08:00", "18:00"], ["SAT", "07:00", "16:00"], ["SUN", "08:00", "14:00"])),
   },
   {
-    user: { name: "Dr. Kavya Bhardwaj", email: "kavya.bhardwaj@showcase.digipandit.demo", phone: "9876502005", city: "Mumbai", state: "Maharashtra" },
-    profile: {
-      bio: "Vedic astrologer focused on career planning, business timing, and structured consultations.",
-      experienceInYears: 9,
-      specialization: ["Career Astrology", "Business Timing", "Numerology Insights"],
-      languages: ["Hindi", "English", "Marathi"],
-      serviceCities: ["Mumbai", "Remote"],
-      ratingAverage: 4.8,
-      totalReviews: 142,
-      services: [
-        { name: "Career Astrology Chat", category: "ASTROLOGY_CHAT", serviceType: "CONSULTATION", description: "Consultation for job, business, and timing questions.", durationInMinutes: 30, price: 899 },
-        { name: "Numerology Call Consultation", category: "ASTROLOGY_CALL", serviceType: "CONSULTATION", description: "Call session for life-path and compatibility guidance.", durationInMinutes: 35, price: 1499 },
-      ],
-    },
+    user: { name: "पं. नितिन जोशी", email: "nitin.joshi@showcase.digipandit.demo", phone: "9876502105", city: "नासिक", state: "महाराष्ट्र" },
+    profile: profile("पं. नितिन जोशी विवाह, नामकरण और मुंडन जैसे संस्कार मराठी तथा हिंदी परिवारों के लिए कराते हैं। वे कार्यक्रम की समय-सारणी और परिवार की सहभागिता पर विशेष ध्यान देते हैं।", 13, ["विवाह संस्कार", "नामकरण संस्कार", "मुंडन संस्कार", "गणेश पूजा"], ["हिंदी", "मराठी", "संस्कृत"], ["नासिक", "शिर्डी", "सिन्नर"], [
+      service("विवाह संस्कार", "PUJA", "PUJA", "विवाह के प्रमुख वैदिक चरणों और परिवार की सहभागिता सहित विस्तृत सेवा।", 300, 7100, { travelCharge: 900, samagriCost: 1800 }),
+      service("नामकरण संस्कार", "PUJA", "PUJA", "शिशु के नामकरण हेतु संकल्प, पूजन और आशीर्वचन।", 75, 1101, { samagriCost: 401 }),
+    ], slots(["MON", "09:00", "17:00"], ["THU", "09:00", "18:00"], ["SUN", "08:00", "16:00"])),
   },
   {
-    user: { name: "Pt. Suresh Kulkarni", email: "suresh.kulkarni@showcase.digipandit.demo", phone: "9876502006", city: "Pune", state: "Maharashtra" },
-    profile: {
-      bio: "Spiritual guide for vastu puja, Ganesh sthapana, and family-friendly consultation support.",
-      experienceInYears: 13,
-      specialization: ["Ganesh Puja", "Vastu Shanti", "Family Guidance"],
-      languages: ["Hindi", "Marathi", "English"],
-      serviceCities: ["Pune", "Mumbai"],
-      ratingAverage: 4.8,
-      totalReviews: 109,
-      services: [
-        { name: "Ganesh Sthapana Puja", category: "PUJA", serviceType: "PUJA", description: "Festival-ready Ganesh sthapana guidance.", durationInMinutes: 120, price: 4200 },
-        { name: "Family Astrology Call", category: "ASTROLOGY_CALL", serviceType: "CONSULTATION", description: "Joint family call for planning and guidance.", durationInMinutes: 45, price: 1599 },
-      ],
-    },
+    user: { name: "आचार्य मोहन उपाध्याय", email: "mohan.upadhyay@showcase.digipandit.demo", phone: "9876502106", city: "हरिद्वार", state: "उत्तराखंड" },
+    profile: profile("आचार्य मोहन उपाध्याय सुंदरकांड, हनुमान पूजा और पारिवारिक शांति पाठ कराते हैं। सामूहिक पाठ और छोटे घरेलू आयोजन दोनों में उनकी सेवा उपलब्ध है।", 24, ["सुंदरकांड पाठ", "हनुमान पूजा", "गृह शांति", "धार्मिक कथा"], ["हिंदी", "संस्कृत", "गढ़वाली"], ["हरिद्वार", "ऋषिकेश", "देहरादून"], [
+      service("सुंदरकांड पाठ", "PUJA", "KATHA", "घर या सामुदायिक स्थल पर सुंदरकांड पाठ और आरती।", 150, 1501),
+      service("हनुमान पूजा", "PUJA", "PUJA", "हनुमान पूजन, चालीसा पाठ और आरती का घरेलू आयोजन।", 90, 1101, { samagriCost: 351 }),
+    ], slots(["TUE", "07:00", "16:00"], ["SAT", "06:00", "18:00"])),
+  },
+  {
+    user: { name: "पं. रविकांत शुक्ल", email: "ravikant.shukla@showcase.digipandit.demo", phone: "9876502107", city: "लखनऊ", state: "उत्तर प्रदेश" },
+    profile: profile("पं. रविकांत शुक्ल गृह प्रवेश, लक्ष्मी पूजा और जन्मदिन विशेष पूजा जैसे घरेलू आयोजनों में सेवा देते हैं। उनका ध्यान कम समय में व्यवस्थित और स्पष्ट तैयारी पर रहता है।", 11, ["गृह प्रवेश पूजा", "लक्ष्मी पूजा", "जन्मदिन विशेष पूजा", "सत्यनारायण कथा"], ["हिंदी", "अवधी"], ["लखनऊ", "बाराबंकी", "सीतापुर"], [
+      service("लक्ष्मी पूजा", "PUJA", "PUJA", "घर या प्रतिष्ठान के लिए लक्ष्मी-गणेश पूजन और आरती।", 90, 1101, { samagriCost: 501 }),
+      service("जन्मदिन विशेष पूजा", "PUJA", "PUJA", "परिवार के साथ संकल्प, गणेश पूजन और आयुष प्रार्थना।", 75, 901, { samagriCost: 301 }),
+    ], slots(["WED", "10:00", "19:00"], ["FRI", "10:00", "20:00"], ["SUN", "08:00", "15:00"])),
+  },
+  {
+    user: { name: "आचार्य हेमंत व्यास", email: "hemant.vyas@showcase.digipandit.demo", phone: "9876502108", city: "जयपुर", state: "राजस्थान" },
+    profile: profile("आचार्य हेमंत व्यास वास्तु शांति, भूमि पूजन और व्यापारिक प्रतिष्ठान के उद्घाटन पूजन में अनुभव रखते हैं। वे हिंदी और राजस्थानी में परिवार को विधि समझाते हैं।", 17, ["वास्तु शांति", "भूमि पूजन", "गणेश पूजा", "लक्ष्मी पूजा"], ["हिंदी", "संस्कृत", "राजस्थानी"], ["जयपुर", "अजमेर", "दौसा"], [
+      service("वास्तु शांति पूजा", "PUJA", "PUJA", "निवास या कार्यस्थल के लिए वास्तु शांति और गणेश पूजन।", 180, 3100, { travelCharge: 501, samagriCost: 1200 }),
+      service("प्रतिष्ठान पूजन", "PUJA", "PUJA", "नई दुकान या कार्यालय के शुभारंभ हेतु गणेश-लक्ष्मी पूजन।", 105, 1501, { samagriCost: 601 }),
+    ], slots(["MON", "08:00", "17:00"], ["THU", "08:00", "17:00"], ["SAT", "09:00", "15:00"])),
+  },
+  {
+    user: { name: "पं. गोपाल चतुर्वेदी", email: "gopal.chaturvedi@showcase.digipandit.demo", phone: "9876502109", city: "मथुरा", state: "उत्तर प्रदेश" },
+    profile: profile("पं. गोपाल चतुर्वेदी भागवत कथा से जुड़े पूजन, नामकरण और पारिवारिक धार्मिक आयोजनों में सेवा देते हैं। ब्रज क्षेत्र की परंपराओं से उनका विशेष परिचय है।", 20, ["धार्मिक कथा", "नामकरण संस्कार", "सत्यनारायण कथा", "गणेश पूजा"], ["हिंदी", "संस्कृत", "ब्रज भाषा"], ["मथुरा", "वृंदावन", "आगरा"], [
+      service("सत्यनारायण कथा एवं पूजन", "PUJA", "KATHA", "संकल्प, पूजन, कथा और आरती सहित पारिवारिक आयोजन।", 135, 1801, { samagriCost: 701 }),
+      service("नामकरण एवं आशीर्वचन", "PUJA", "PUJA", "नामकरण संस्कार और परिवार के साथ आशीर्वचन।", 75, 1001),
+    ], slots(["TUE", "07:00", "14:00"], ["FRI", "07:00", "14:00"], ["SUN", "06:00", "12:00"])),
+  },
+  {
+    user: { name: "आचार्य विवेक तिवारी", email: "vivek.tiwari@showcase.digipandit.demo", phone: "9876502110", city: "भोपाल", state: "मध्य प्रदेश" },
+    profile: profile("आचार्य विवेक तिवारी हवन, गृह शांति और संस्कार पूजन कराते हैं। अग्नि से जुड़े अनुष्ठानों में वे स्थान की तैयारी और सुरक्षा निर्देश पहले साझा करते हैं।", 15, ["गृह शांति हवन", "गणेश हवन", "वास्तु शांति", "गृह प्रवेश पूजा"], ["हिंदी", "संस्कृत"], ["भोपाल", "सीहोर", "विदिशा"], [
+      service("गृह शांति हवन", "PUJA", "HAWAN", "योग्य स्थान पर पंडित की उपस्थिति में गृह शांति पूजन और हवन।", 180, 3100, { samagriCost: 1400 }),
+      service("गणेश हवन", "PUJA", "HAWAN", "गणेश पूजन के साथ सीमित अवधि का हवन आयोजन।", 120, 2100, { samagriCost: 1001 }),
+    ], slots(["WED", "08:00", "16:00"], ["SAT", "08:00", "17:00"])),
+  },
+  {
+    user: { name: "आचार्य रोहित शुक्ल", email: "rohit.shukla@showcase.digipandit.demo", phone: "9876502121", city: "लखनऊ", state: "उत्तर प्रदेश" },
+    profile: profile("आचार्य रोहित शुक्ल वैदिक ज्योतिष और जन्म कुंडली विश्लेषण में 15 वर्षों से परामर्श दे रहे हैं। वे करियर और विवाह संबंधी प्रश्नों पर संरचित ऑडियो व वीडियो सत्र लेते हैं।", 15, ["वैदिक ज्योतिष", "जन्म कुंडली विश्लेषण", "करियर परामर्श"], ["हिंदी", "अंग्रेज़ी"], ["लखनऊ", "ऑनलाइन"], [
+      service("जन्म कुंडली परामर्श", "ASTROLOGY_VIDEO", "CONSULTATION", "जन्म विवरण के आधार पर प्रमुख ग्रह स्थितियों और जीवन विषयों पर वीडियो परामर्श।", 40, 599, { videoDakshinaFee: 100 }),
+      service("करियर ज्योतिष ऑडियो परामर्श", "ASTROLOGY_CALL", "CONSULTATION", "नौकरी, बदलाव और व्यावसायिक दिशा से जुड़े प्रश्नों पर केंद्रित सत्र।", 30, 449),
+    ], slots(["MON", "18:00", "22:00"], ["WED", "18:00", "22:00"], ["SAT", "10:00", "18:00"]), true),
+  },
+  {
+    user: { name: "ज्योतिषाचार्या नेहा जोशी", email: "neha.joshi@showcase.digipandit.demo", phone: "9876502122", city: "जयपुर", state: "राजस्थान" },
+    profile: profile("ज्योतिषाचार्या नेहा जोशी विवाह मिलान और संबंध परामर्श पर काम करती हैं। वे दोनों पक्षों की जन्म जानकारी देखकर गुण मिलान के साथ व्यावहारिक संवाद-बिंदु समझाती हैं।", 12, ["विवाह मिलान", "जन्म कुंडली विश्लेषण", "गोचर विश्लेषण"], ["हिंदी", "अंग्रेज़ी", "राजस्थानी"], ["जयपुर", "ऑनलाइन"], [
+      service("विवाह मिलान वीडियो परामर्श", "ASTROLOGY_VIDEO", "CONSULTATION", "दोनों जन्म विवरणों के आधार पर गुण मिलान और प्रमुख संगति विषयों की चर्चा।", 45, 699, { videoDakshinaFee: 100 }),
+      service("गोचर प्रश्न चैट", "ASTROLOGY_CHAT", "CONSULTATION", "वर्तमान गोचर से जुड़े एक केंद्रित प्रश्न के लिए लिखित परामर्श।", 25, 349),
+    ], slots(["TUE", "17:00", "21:00"], ["FRI", "17:00", "22:00"], ["SUN", "11:00", "16:00"]), true),
+  },
+  {
+    user: { name: "आचार्य प्रतीक देशमुख", email: "prateek.deshmukh@showcase.digipandit.demo", phone: "9876502123", city: "इंदौर", state: "मध्य प्रदेश" },
+    profile: profile("आचार्य प्रतीक देशमुख व्यवसाय मार्गदर्शन, गोचर और शुभ समय परामर्श देते हैं। छोटे व्यवसायों और स्वतंत्र पेशेवरों के प्रश्नों पर उनका विशेष ध्यान है।", 10, ["व्यवसाय मार्गदर्शन", "गोचर विश्लेषण", "मुहूर्त परामर्श"], ["हिंदी", "मराठी", "अंग्रेज़ी"], ["इंदौर", "उज्जैन", "ऑनलाइन"], [
+      service("व्यवसाय ज्योतिष परामर्श", "ASTROLOGY_CALL", "CONSULTATION", "व्यवसाय की दिशा, कार्य समय और प्रमुख निर्णयों पर ऑडियो सत्र।", 35, 499),
+      service("मुहूर्त चयन चैट", "ASTROLOGY_CHAT", "CONSULTATION", "उपलब्ध तिथियों में से उपयुक्त समय पर संक्षिप्त लिखित मार्गदर्शन।", 20, 299),
+    ], slots(["MON", "19:00", "22:00"], ["THU", "19:00", "22:00"], ["SUN", "09:00", "13:00"]), true),
+  },
+  {
+    user: { name: "ज्योतिषाचार्य अनिरुद्ध पांडेय", email: "aniruddh.pandey@showcase.digipandit.demo", phone: "9876502124", city: "वाराणसी", state: "उत्तर प्रदेश" },
+    profile: profile("ज्योतिषाचार्य अनिरुद्ध पांडेय दशा, अंतर्दशा और गोचर के संयुक्त अध्ययन पर परामर्श देते हैं। उनका सत्र दीर्घकालिक समय-रेखा को सरल हिंदी में समझाने पर केंद्रित रहता है।", 18, ["वैदिक ज्योतिष", "दशा विश्लेषण", "गोचर विश्लेषण"], ["हिंदी", "संस्कृत", "भोजपुरी"], ["वाराणसी", "ऑनलाइन"], [
+      service("दशा एवं गोचर विश्लेषण", "ASTROLOGY_VIDEO", "CONSULTATION", "जन्म कुंडली की प्रमुख दशाओं और वर्तमान गोचर पर विस्तृत वीडियो चर्चा।", 50, 799, { videoDakshinaFee: 100 }),
+    ], slots(["WED", "16:00", "21:00"], ["SAT", "09:00", "15:00"]), false),
+  },
+  {
+    user: { name: "अंक ज्योतिष विशेषज्ञ काव्या भारद्वाज", email: "kavya.bhardwaj@showcase.digipandit.demo", phone: "9876502125", city: "दिल्ली", state: "दिल्ली" },
+    profile: profile("काव्या भारद्वाज अंक ज्योतिष और नामांक आधारित परामर्श देती हैं। वे व्यक्तिगत और व्यावसायिक नामों से जुड़े प्रश्नों को बिना अतिरंजित दावों के स्पष्ट रूप में समझाती हैं।", 8, ["अंक ज्योतिष", "नामांक विश्लेषण", "व्यवसाय मार्गदर्शन"], ["हिंदी", "अंग्रेज़ी"], ["दिल्ली", "गुरुग्राम", "ऑनलाइन"], [
+      service("व्यक्तिगत अंक ज्योतिष सत्र", "ASTROLOGY_VIDEO", "CONSULTATION", "जन्मतिथि और नाम के आधार पर मूलांक व भाग्यांक की व्याख्या।", 35, 499),
+      service("नामांक प्रश्न चैट", "ASTROLOGY_CHAT", "CONSULTATION", "नामांक से जुड़े सीमित प्रश्न पर लिखित परामर्श।", 20, 299),
+    ], slots(["TUE", "18:00", "22:00"], ["THU", "18:00", "22:00"], ["SAT", "12:00", "18:00"]), true),
+  },
+  {
+    user: { name: "आचार्य सौरभ जोशी", email: "saurabh.joshi@showcase.digipandit.demo", phone: "9876502126", city: "ऋषिकेश", state: "उत्तराखंड" },
+    profile: profile("आचार्य सौरभ जोशी कुंडली और वास्तु के संयुक्त परामर्श में अनुभव रखते हैं। वे घर या कार्यस्थल के व्यावहारिक उपयोग को ध्यान में रखकर सुझावों पर चर्चा करते हैं।", 14, ["वास्तु परामर्श", "जन्म कुंडली विश्लेषण", "मुहूर्त परामर्श"], ["हिंदी", "अंग्रेज़ी", "गढ़वाली"], ["ऋषिकेश", "देहरादून", "ऑनलाइन"], [
+      service("वास्तु परामर्श वीडियो सत्र", "ASTROLOGY_VIDEO", "CONSULTATION", "उपलब्ध नक्शे और दिशा विवरण के आधार पर प्रारंभिक वास्तु चर्चा।", 45, 749, { videoDakshinaFee: 100 }),
+      service("शुभ मुहूर्त ऑडियो सत्र", "ASTROLOGY_CALL", "CONSULTATION", "कार्य और उपलब्ध तिथियों के अनुसार मुहूर्त पर चर्चा।", 25, 399),
+    ], slots(["MON", "17:00", "20:00"], ["FRI", "17:00", "21:00"]), false),
+  },
+  {
+    user: { name: "ज्योतिषाचार्या मीनाक्षी राव", email: "meenakshi.rao@showcase.digipandit.demo", phone: "9876502127", city: "पुणे", state: "महाराष्ट्र" },
+    profile: profile("ज्योतिषाचार्या मीनाक्षी राव करियर, शिक्षा और विदेश अध्ययन से जुड़े समय-विषयों पर परामर्श देती हैं। वे हिंदी, मराठी और अंग्रेज़ी में ऑनलाइन सत्र लेती हैं।", 13, ["करियर परामर्श", "शिक्षा मार्गदर्शन", "गोचर विश्लेषण"], ["हिंदी", "मराठी", "अंग्रेज़ी"], ["पुणे", "मुंबई", "ऑनलाइन"], [
+      service("करियर एवं शिक्षा परामर्श", "ASTROLOGY_VIDEO", "CONSULTATION", "करियर विकल्प, अध्ययन और समय-संबंधी प्रश्नों पर कुंडली आधारित चर्चा।", 40, 649),
+      service("त्वरित करियर चैट", "ASTROLOGY_CHAT", "CONSULTATION", "एक स्पष्ट करियर प्रश्न पर सीमित लिखित परामर्श।", 20, 349),
+    ], slots(["WED", "18:00", "22:00"], ["SAT", "10:00", "17:00"], ["SUN", "10:00", "14:00"]), true),
+  },
+  {
+    user: { name: "आचार्य संजय पाठक", email: "sanjay.pathak@showcase.digipandit.demo", phone: "9876502128", city: "भोपाल", state: "मध्य प्रदेश" },
+    profile: profile("आचार्य संजय पाठक विवाह, परिवार और गृहस्थ जीवन से जुड़े कुंडली प्रश्नों पर परामर्श देते हैं। वे सत्र में ग्रह स्थितियों के साथ संवाद और निर्णय के व्यावहारिक पहलुओं पर भी बात करते हैं।", 17, ["विवाह मिलान", "पारिवारिक परामर्श", "जन्म कुंडली विश्लेषण"], ["हिंदी", "संस्कृत"], ["भोपाल", "ऑनलाइन"], [
+      service("विवाह एवं परिवार परामर्श", "ASTROLOGY_CALL", "CONSULTATION", "विवाह और पारिवारिक विषयों पर जन्म कुंडली आधारित ऑडियो चर्चा।", 40, 599),
+    ], slots(["TUE", "16:00", "21:00"], ["FRI", "16:00", "21:00"]), true),
+  },
+  {
+    user: { name: "ज्योतिषाचार्य आलोक भट्ट", email: "alok.bhatt@showcase.digipandit.demo", phone: "9876502129", city: "हरिद्वार", state: "उत्तराखंड" },
+    profile: profile("ज्योतिषाचार्य आलोक भट्ट पंचांग, मुहूर्त और धार्मिक आयोजन की तिथि चयन में परामर्श देते हैं। वे उपलब्ध स्थानीय समय और कार्यक्रम की वास्तविक सीमाओं को ध्यान में रखते हैं।", 22, ["मुहूर्त परामर्श", "पंचांग परामर्श", "गोचर विश्लेषण"], ["हिंदी", "संस्कृत"], ["हरिद्वार", "ऋषिकेश", "ऑनलाइन"], [
+      service("मुहूर्त एवं पंचांग परामर्श", "ASTROLOGY_CALL", "CONSULTATION", "विवाह, गृह प्रवेश या अन्य आयोजन के लिए उपलब्ध तिथियों पर चर्चा।", 30, 499),
+      service("मुहूर्त प्रश्न चैट", "ASTROLOGY_CHAT", "CONSULTATION", "एक आयोजन और सीमित तिथियों के लिए लिखित उत्तर।", 20, 299),
+    ], slots(["MON", "06:00", "11:00"], ["THU", "06:00", "11:00"], ["SUN", "07:00", "12:00"]), false),
+  },
+  {
+    user: { name: "वास्तु एवं ज्योतिष सलाहकार रचना मेहता", email: "rachna.mehta@showcase.digipandit.demo", phone: "9876502130", city: "नासिक", state: "महाराष्ट्र" },
+    profile: profile("रचना मेहता छोटे घरों, कार्यालयों और दुकान के लिए प्रारंभिक वास्तु तथा व्यवसाय समय परामर्श देती हैं। उनका सत्र उपलब्ध नक्शे और उपयोग की जरूरतों पर आधारित रहता है।", 9, ["वास्तु परामर्श", "व्यवसाय मार्गदर्शन", "अंक ज्योतिष"], ["हिंदी", "मराठी", "अंग्रेज़ी"], ["नासिक", "पुणे", "ऑनलाइन"], [
+      service("घर एवं कार्यालय वास्तु सत्र", "ASTROLOGY_VIDEO", "CONSULTATION", "दिशा और नक्शे के आधार पर प्रारंभिक वास्तु समीक्षा।", 40, 699, { videoDakshinaFee: 100 }),
+      service("व्यवसाय समय परामर्श", "ASTROLOGY_CALL", "CONSULTATION", "व्यवसाय के प्रमुख निर्णय और समय से जुड़े प्रश्नों पर ऑडियो सत्र।", 30, 449),
+    ], slots(["WED", "17:00", "21:00"], ["SAT", "11:00", "18:00"]), true),
   },
 ];
 
-const products = [
-  ["Complete Satyanarayan Puja Kit", "complete-satyanarayan-puja-kit", "PUJA_KIT", "Curated essentials for a family Satyanarayan puja.", 1499, 1799, 34, ["satyanarayan", "family", "festival"], 4.7],
-  ["Navgraha Puja Samagri Box", "navgraha-puja-samagri-box", "PUJA_KIT", "Ready-to-use samagri box for Navgraha observance.", 2199, 2599, 18, ["navgraha", "shanti", "samagri"], 4.8],
-  ["Rudrabhishek Samagri Kit", "rudrabhishek-samagri-kit", "PUJA_KIT", "Selected puja essentials for Shiva observance.", 1699, 1999, 26, ["shiva", "rudrabhishek", "puja"], 4.8],
-  ["Brass Ganesha Idol", "brass-ganesha-idol", "IDOL", "Hand-finished brass idol for a home mandir.", 1899, 2299, 22, ["ganesha", "brass", "home temple"], 4.8],
-  ["Marble Shiva Lingam Idol", "marble-shiva-lingam-idol", "IDOL", "Temple-finish marble lingam for home worship.", 1299, 1599, 16, ["shiva", "marble", "abhishek"], 4.7],
-  ["Brass Diya Set of 2", "brass-diya-set-of-2", "IDOL", "Compact brass diyas for daily aarti and festive décor.", 549, 649, 40, ["diya", "brass", "aarti"], 4.6],
-  ["Premium Sandal Incense Sticks", "premium-sandal-incense-sticks", "INCENSE", "Long-lasting sandal fragrance for daily puja.", 249, 299, 100, ["incense", "daily puja", "sandal"], 4.6],
-  ["Dhoop Cone Devotional Pack", "dhoop-cone-devotional-pack", "INCENSE", "Mixed fragrance dhoop cones for evening prayer.", 199, 249, 80, ["dhoop", "fragrance", "meditation"], 4.5],
-  ["Bhagavad Gita Pocket Edition", "bhagavad-gita-pocket-edition", "BOOK", "Compact Hindi-English edition for daily reading.", 399, 499, 50, ["gita", "book", "devotional"], 4.9],
-  ["Hanuman Chalisa Hardbound", "hanuman-chalisa-hardbound", "BOOK", "Hardbound devotional edition with aarti sections.", 299, 349, 60, ["hanuman", "chalisa", "prayer"], 4.8],
-].map(([name, slug, category, description, price, compareAtPrice, stock, tags, averageRating]) => ({
-  name, slug, category, description, price, compareAtPrice, stock, tags, averageRating,
-  images: [{ url: `https://placehold.co/720x720/f8f1e8/542047?text=${encodeURIComponent(name)}`, publicId: null }],
+const rawProducts = [
+  ["पीतल पूजा थाली सेट", "peetal-puja-thali-set", "PUJA_KIT", "दैनिक पूजा, आरती और विशेष अनुष्ठानों में पात्र व्यवस्थित रखने के लिए उपयोगी पीतल पूजा थाली सेट।", 1299, 18, ["पूजा पात्र", "पीतल", "आरती"]],
+  ["तांबे का कलश", "tambe-ka-kalash", "PUJA_KIT", "गृह पूजा, कलश स्थापना और पारिवारिक अनुष्ठानों के लिए मध्यम आकार का तांबे का कलश।", 699, 26, ["पूजा पात्र", "तांबा", "कलश"]],
+  ["पीतल पंचमुखी दीपक", "peetal-panchmukhi-deepak", "IDOL", "आरती और त्योहारों में पाँच बत्तियाँ रखने के लिए स्थिर आधार वाला पीतल दीपक।", 899, 14, ["दीप एवं आरती", "पीतल", "दीपक"]],
+  ["कपूर आरती दीप", "kapoor-aarti-deep", "IDOL", "कपूर से आरती करने के लिए लंबे हत्थे वाला धातु दीप, जिससे उपयोग के समय दूरी बनाए रखना आसान हो।", 349, 32, ["दीप एवं आरती", "कपूर", "आरती"]],
+  ["रुद्राक्ष माला 108 मनके", "rudraksha-mala-108", "IDOL", "जप और ध्यान के लिए 108 मनकों वाली रुद्राक्ष माला; मनकों का आकार प्राकृतिक रूप से थोड़ा भिन्न हो सकता है।", 499, 40, ["माला", "रुद्राक्ष", "जप"]],
+  ["तुलसी जप माला", "tulsi-jap-mala", "IDOL", "दैनिक नाम-जप और साधना के लिए हल्की तुलसी माला, सुरक्षित रखने हेतु छोटी थैली के साथ।", 199, 55, ["माला", "तुलसी", "जप"]],
+  ["चंदन माला", "chandan-mala", "IDOL", "पूजा और ध्यान में उपयोग के लिए चंदन की माला, सरल सूती धागे में पिरोई हुई।", 349, 28, ["माला", "चंदन", "ध्यान"]],
+  ["हवन सामग्री मिश्रण", "hawan-samagri-mishran", "PUJA_KIT", "घरेलू हवन में पंडित के निर्देशानुसार उपयोग के लिए सूखी हवन सामग्री का मिश्रण।", 249, 70, ["हवन सामग्री", "मिश्रण", "अनुष्ठान"]],
+  ["समिधा पैक", "samidha-pack", "PUJA_KIT", "हवन के लिए सूखी समिधा का पैक। अग्नि-सुरक्षा और स्थानीय नियमों का पालन करते हुए केवल योग्य मार्गदर्शन में उपयोग करें।", 199, 48, ["हवन सामग्री", "समिधा", "अग्नि सुरक्षा"]],
+  ["शुद्ध कपूर डिब्बी", "shuddh-kapoor-dibbi", "INCENSE", "दैनिक आरती के लिए कपूर की छोटी डिब्बी; सूखी और सुरक्षित जगह पर रखें।", 149, 90, ["कपूर", "आरती", "पूजा सामग्री"]],
+  ["रोली-कुमकुम सेट", "roli-kumkum-set", "PUJA_KIT", "पूजा, तिलक और मंगल अवसरों के लिए अलग डिब्बियों में रोली और कुमकुम का सेट।", 99, 85, ["तिलक एवं चंदन", "रोली", "कुमकुम"]],
+  ["चंदन तिलक पेस्ट", "chandan-tilak-paste", "PUJA_KIT", "दैनिक पूजा और तिलक के लिए तैयार चंदन पेस्ट की छोटी डिब्बी।", 149, 64, ["तिलक एवं चंदन", "चंदन", "दैनिक पूजा"]],
+  ["गंगाजल बोतल", "gangajal-bottle", "PUJA_KIT", "पूजा और धार्मिक उपयोग के लिए सीलबंद छोटी बोतल; लेबल पर दिए भंडारण निर्देशों का पालन करें।", 99, 120, ["पूजा सामग्री", "गंगाजल", "कलश"]],
+  ["लोबान धूप बत्ती", "loban-dhoop-batti", "INCENSE", "संध्या पूजा के लिए लोबान सुगंध वाली धूप बत्तियाँ; हवादार स्थान में उपयोग करें।", 149, 75, ["धूप एवं अगरबत्ती", "लोबान", "सुगंध"]],
+  ["चंदन अगरबत्ती", "chandan-agarbatti", "INCENSE", "दैनिक पूजा और ध्यान के लिए हल्की चंदन सुगंध वाली अगरबत्ती का पैक।", 99, 110, ["धूप एवं अगरबत्ती", "चंदन", "दैनिक पूजा"]],
+  ["पीतल पूजा घंटी", "peetal-puja-ghanti", "IDOL", "घर के पूजा स्थान के लिए संतुलित पकड़ और स्पष्ट ध्वनि वाली छोटी पीतल घंटी।", 499, 22, ["पूजा पात्र", "पीतल", "घंटी"]],
+  ["पंचपात्र एवं आचमनी सेट", "panchpatra-achmani-set", "PUJA_KIT", "पूजा में जल रखने और आचमन संबंधी व्यवस्था के लिए धातु का पंचपात्र-आचमनी सेट।", 699, 19, ["पूजा पात्र", "पंचपात्र", "आचमनी"]],
+  ["पूजा शंख", "puja-shankh", "IDOL", "पूजा स्थान की सज्जा और परंपरागत उपयोग के लिए प्राकृतिक शंख; आकार और रंग में हल्का अंतर संभव है।", 899, 12, ["पूजा पात्र", "शंख", "आरती"]],
+  ["लाल सूती पूजा आसन", "lal-suti-puja-aasan", "PUJA_KIT", "दैनिक पूजा और जप के लिए मोड़कर रखने योग्य लाल सूती आसन।", 349, 35, ["वस्त्र", "आसन", "जप"]],
+  ["पीला पूजा वस्त्र सेट", "peela-puja-vastra-set", "PUJA_KIT", "पूजा चौकी या कलश व्यवस्था में उपयोग के लिए दो आकारों का पीला सूती वस्त्र सेट।", 249, 42, ["वस्त्र", "पूजा चौकी", "कलश"]],
+  ["सुंदरकांड पुस्तक", "sunderkand-pustak", "BOOK", "स्पष्ट देवनागरी मुद्रण वाली सुंदरकांड पुस्तक, नियमित पाठ और पारिवारिक आयोजन के लिए।", 199, 60, ["धार्मिक पुस्तकें", "सुंदरकांड", "हिंदी"]],
+  ["हनुमान चालीसा पुस्तक", "hanuman-chalisa-pustak", "BOOK", "हनुमान चालीसा, आरती और संक्षिप्त पाठ क्रम वाली हिंदी पुस्तिका।", 99, 95, ["धार्मिक पुस्तकें", "हनुमान चालीसा", "हिंदी"]],
+  ["श्रीमद्भगवद्गीता पॉकेट संस्करण", "gita-pocket-hindi", "BOOK", "यात्रा और दैनिक अध्ययन के लिए छोटा हिंदी पॉकेट संस्करण, पढ़ने योग्य देवनागरी मुद्रण के साथ।", 249, 50, ["धार्मिक पुस्तकें", "गीता", "हिंदी"]],
+  ["दैनिक पूजा सामग्री कॉम्बो", "dainik-puja-samagri-combo", "PUJA_KIT", "रोली, कुमकुम, मौली, कपूर और छोटी अगरबत्ती सहित दैनिक पूजा की मूल सामग्री का कॉम्बो।", 349, 46, ["पूजा सामग्री", "दैनिक पूजा", "कॉम्बो"]],
+  ["सत्यनारायण पूजा सामग्री किट", "satyanarayan-puja-kit", "PUJA_KIT", "सत्यनारायण पूजा की सामान्य तैयारी के लिए चुनी गई सामग्री। स्थानीय परंपरा के अनुसार अतिरिक्त सामग्री पंडित से पूछें।", 899, 24, ["पूजा सामग्री", "सत्यनारायण कथा", "किट"]],
+  ["रुद्राभिषेक पात्र सेट", "rudrabhishek-patra-set", "PUJA_KIT", "रुद्राभिषेक में जल या अन्य स्वीकृत द्रव्य व्यवस्थित रखने के लिए धातु पात्रों का सेट।", 1299, 15, ["पूजा पात्र", "रुद्राभिषेक", "शिव पूजा"]],
+  ["गणेश पूजा सामग्री किट", "ganesh-puja-samagri-kit", "PUJA_KIT", "गणेश पूजन की सामान्य सामग्री का सुव्यवस्थित पैक; प्रतिमा या ताज़े पुष्प इसमें शामिल नहीं हैं।", 699, 30, ["पूजा सामग्री", "गणेश पूजा", "किट"]],
+  ["पीतल गणेश प्रतिमा", "peetal-ganesh-pratima", "IDOL", "घर के मंदिर या पूजा चौकी के लिए छोटी पीतल गणेश प्रतिमा, स्थिर चौकोर आधार के साथ।", 1799, 10, ["मूर्ति", "गणेश", "पीतल"]],
+];
+
+const products = rawProducts.map(([name, slug, category, description, price, stock, tags]) => ({
+  name, slug, category, description, price, stock, tags,
+  averageRating: 0,
+  images: [{ url: `https://placehold.co/720x720/171008/e9b85c?text=${encodeURIComponent(name)}`, publicId: null }],
   isActive: true,
 }));
 
 async function upsertPandit(item) {
   let user = await User.findOne({ email: item.user.email });
-  if (!user) {
-    user = new User({ ...item.user, password: crypto.randomBytes(32).toString("base64url"), role: ROLES.PANDIT, emailVerified: true });
-  } else {
-    Object.assign(user, { ...item.user, role: ROLES.PANDIT, emailVerified: true });
-  }
+  if (!user) user = new User({ ...item.user, password: crypto.randomBytes(32).toString("base64url"), role: ROLES.PANDIT, emailVerified: true });
+  else Object.assign(user, { ...item.user, role: ROLES.PANDIT, emailVerified: true });
   user.avatar = { url: avatar(item.user.name), publicId: null };
   await user.save();
 
   await PanditProfile.findOneAndUpdate(
     { user: user._id },
-    { $set: { ...item.profile, user: user._id, profileCompleted: true, approvalStatus: "APPROVED", approvalNotes: "Showcase catalogue record", image: { url: avatar(item.user.name), publicId: null } } },
-    { new: true, upsert: true, setDefaultsOnInsert: true }
+    { $set: { ...item.profile, user: user._id, profileCompleted: true, approvalStatus: "APPROVED", approvalNotes: "सार्वजनिक प्रदर्शन कैटलॉग रिकॉर्ड", image: { url: avatar(item.user.name), publicId: null } } },
+    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true }
   );
 }
 
 async function run() {
   await connectDb();
-  await Promise.all(showcasePandits.map(upsertPandit));
-  await Promise.all(products.map((product) => Product.findOneAndUpdate({ slug: product.slug }, { $set: product }, { new: true, upsert: true, setDefaultsOnInsert: true })));
-  console.log(`Showcase catalogue ready: ${showcasePandits.length} pandits, ${products.length} products.`);
+  for (const item of showcasePandits) await upsertPandit(item);
+  for (const item of products) await Product.findOneAndUpdate({ slug: item.slug }, { $set: item, $unset: { compareAtPrice: 1 } }, { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true });
+  console.log(`सार्वजनिक कैटलॉग तैयार: ${showcasePandits.length} पंडित/ज्योतिषी, ${products.length} उत्पाद।`);
 }
 
-run()
-  .catch((error) => { console.error("Showcase catalogue seed failed:", error); process.exitCode = 1; })
-  .finally(async () => { await mongoose.connection.close(); });
+if (require.main === module) {
+  run()
+    .catch((error) => { console.error("सार्वजनिक कैटलॉग seed विफल:", error); process.exitCode = 1; })
+    .finally(async () => { await mongoose.connection.close(); });
+}
+
+module.exports = { showcasePandits, products, run };
