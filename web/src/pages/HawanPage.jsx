@@ -37,7 +37,15 @@ function SankalpMandala({ value, onChange }) {
 }
 
 function RecommendedHawan({ hawan, pending, onDetailedRecommendation }) {
-  if (!hawan) return <div className="hj-recommendation hj-recommendation--empty"><p>विशेषज्ञ समीक्षा जारी है</p><h2>इस संकल्प के लिए सत्यापित हवन गाइड अभी उपलब्ध नहीं है।</h2><span>कोई विधि, मंत्र या दावा अनुमान से नहीं दिखाया गया है।</span><button type="button" onClick={onDetailedRecommendation}>दूसरा संकल्प चुनें</button></div>;
+  if (!hawan) return <div className="hj-recommendation hj-recommendation--empty">
+    <div className="hj-empty-copy">
+      <p><span aria-hidden="true">✦</span> सत्यापन प्रक्रिया</p>
+      <h2>सही मार्गदर्शन<br />तैयार किया जा रहा है।</h2>
+      <span>इस संकल्प के लिए प्रमाणित विधि अभी प्रकाशित नहीं हुई है। हम अनुमानित मंत्र या धार्मिक दावा नहीं दिखाते।</span>
+      <div className="hj-empty-actions"><button type="button" onClick={onDetailedRecommendation}>दूसरा संकल्प चुनें</button><Link to="/pandits">पंडित से मार्गदर्शन लें</Link></div>
+    </div>
+    <div className="hj-empty-visual" aria-hidden="true"><div className="hj-empty-rings"><i /><i /><i /><strong>ॐ</strong></div><span>स्रोत जाँच</span><span>विशेषज्ञ समीक्षा</span><span>प्रकाशन</span></div>
+  </div>;
   return <article className="hj-recommendation">
     <div className="hj-recommendation-index">01</div>
     <div><p>{verificationLabels[hawan.verificationStatus] || "स्थिति उपलब्ध नहीं"}</p><h2>{hawan.title}</h2><span>{hawan.shortDescription}</span></div>
