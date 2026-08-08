@@ -12,7 +12,7 @@ import {
   TimerReset,
   Video,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
@@ -212,7 +212,7 @@ export default function AstrologyPage() {
         title: `Wallet topup of ${formatCurrency(walletAmount)}`,
         customer: user,
       });
-      setWalletMessage("Wallet topup successful.");
+      setWalletMessage("वॉलेट में राशि सफलतापूर्वक जुड़ गई।");
       await loadWallet();
       await dispatch(fetchCurrentUser());
     } catch (error) {
@@ -330,7 +330,7 @@ export default function AstrologyPage() {
               {insightCards.map((card) => {
                 const Icon = card.icon;
                 return (
-                  <div key={card.title} className="rounded-[28px] bg-white/85 p-5 shadow-soft backdrop-blur">
+                  <div key={card.title} className="dp-consultation-insight rounded-[28px] bg-white/85 p-5 shadow-soft backdrop-blur">
                     <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-maroon text-white">
                       <Icon className="h-5 w-5" />
                     </div>
@@ -396,7 +396,7 @@ export default function AstrologyPage() {
               </div>
             </div>
 
-            <div className="rounded-[34px] bg-brand-maroon p-6 text-white shadow-soft">
+            {activeSession || sessionActionError ? <div className="dp-live-session-panel rounded-[34px] bg-brand-maroon p-6 text-white shadow-soft">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.26em] text-white/70">लाइव सत्र</p>
@@ -420,7 +420,7 @@ export default function AstrologyPage() {
                     </div>
                     <div className="rounded-[22px] bg-white/10 px-4 py-4">
                       <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/65">दर</p>
-                      <p className="mt-2 text-lg font-semibold">{formatCurrency(activeSession.pricePerMinute)}/min</p>
+                      <p className="mt-2 text-lg font-semibold">{formatCurrency(activeSession.pricePerMinute)}/मिनट</p>
                     </div>
                   </div>
 
@@ -444,7 +444,7 @@ export default function AstrologyPage() {
               )}
 
               {sessionActionError ? <p className="mt-4 text-sm font-medium text-brand-gold">{sessionActionError}</p> : null}
-            </div>
+            </div> : null}
           </div>
         </div>
       </section>
@@ -493,7 +493,7 @@ export default function AstrologyPage() {
             : astrologers.map((astrologer) => {
                 const currentService = astrologer.astrologyServices.find((service) => service.sessionType === consultationMode);
                 return (
-                  <article key={astrologer._id} className="flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-soft">
+                  <article key={astrologer._id} className="dp-astrologer-card flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-soft">
                     <img
                       src={getExpertImage({
                         user: {
@@ -522,7 +522,7 @@ export default function AstrologyPage() {
                         </div>
                       </div>
 
-                      <p className="mt-4 text-sm leading-7 text-brand-ink/70">{astrologer.bio || "Specialist astrologer for live guidance and remedies."}</p>
+                      <p className="dp-astrologer-bio mt-4 text-sm leading-7 text-brand-ink/70">{astrologer.bio || "लाइव मार्गदर्शन और सरल उपायों के लिए अनुभवी ज्योतिषाचार्य।"}</p>
 
                       <div className="mt-4 flex flex-wrap gap-2">
                         {(astrologer.specialization || []).slice(0, 3).map((item) => (
@@ -534,21 +534,21 @@ export default function AstrologyPage() {
 
                       <div className="mt-5 rounded-[24px] bg-brand-cream/70 p-4">
                         <div className="flex items-center justify-between gap-3">
-                          <p className="text-sm font-bold text-brand-ink">{currentService?.name || "Service unavailable"}</p>
+                          <p className="text-sm font-bold text-brand-ink">{currentService?.name || "यह सेवा उपलब्ध नहीं है"}</p>
                           <p className="text-sm font-semibold text-brand-maroon">
-                            {currentService ? `${formatCurrency(currentService.pricePerMinute)}/min` : "Unavailable"}
+                            {currentService ? `${formatCurrency(currentService.pricePerMinute)}/मिनट` : "उपलब्ध नहीं"}
                           </p>
                         </div>
                         <p className="mt-2 text-sm leading-6 text-brand-ink/70">
-                          {currentService?.description || "Switch mode to view this astrologer's live consultation options."}
+                          {currentService?.description || "इस ज्योतिषाचार्य की दूसरी लाइव परामर्श सेवा चुनें।"}
                         </p>
                       </div>
 
                       <div className="mt-5 flex flex-wrap gap-3">
                         
-                        <Link to="/dashboard/chat" className="inline-flex">
-                          <Button variant="secondary">चैट खोलें</Button>
-                        </Link>
+                        <Button disabled={!currentService} onClick={() => currentService && handleStartSession(astrologer, currentService)}>
+                          {currentService ? `${getSessionTypeMeta(consultationMode).label} शुरू करें` : "दूसरी सेवा चुनें"}
+                        </Button>
                       </div>
                     </div>
                   </article>
@@ -564,7 +564,7 @@ export default function AstrologyPage() {
         ) : null}
       </section>
 
-      <section className="container-shell py-6">
+      {false ? <section className="container-shell py-6">
         <SectionTitle
           eyebrow="Kundali + Prediction"
           title="Generate kundali without leaving the astrology page"
@@ -776,7 +776,7 @@ export default function AstrologyPage() {
             </div>
           </div>
         )}
-      </section>
+      </section> : null}
     </div>
   );
 }

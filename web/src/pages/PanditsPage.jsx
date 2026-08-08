@@ -9,7 +9,6 @@ import { BookingReceiptCard } from "../components/BookingReceiptCard";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { LoadingCard } from "../components/LoadingCard";
-import { SectionTitle } from "../components/SectionTitle";
 import { hindiContent, hindiError, hindiLabel } from "../lib/hindi";
 
 const serviceTypeTabs = [
@@ -66,6 +65,7 @@ export default function PanditsPage() {
     serviceType: searchParams.get("serviceType") || "",
   });
   const [profiles, setProfiles] = useState([]);
+  const [expandedProfiles, setExpandedProfiles] = useState(() => new Set());
   const [loading, setLoading] = useState(true);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [bookingForm, setBookingForm] = useState(DEFAULT_BOOKING_FORM);
@@ -136,6 +136,15 @@ export default function PanditsPage() {
       notes: hawanContext.title
         ? `हवन: ${hawanContext.title}\nपसंदीदा भाषा: हिन्दी\nशेष सामग्री: ${hawanContext.materials || "पुष्टि शेष"}`
         : "",
+    });
+  };
+
+  const toggleProfileDetails = (profileId) => {
+    setExpandedProfiles((current) => {
+      const next = new Set(current);
+      if (next.has(profileId)) next.delete(profileId);
+      else next.add(profileId);
+      return next;
     });
   };
 
@@ -235,17 +244,17 @@ export default function PanditsPage() {
     </div>
     <div className="container-shell py-12 dp-pandit-content">
       <section className="dp-pandit-hero">
-      <SectionTitle
-        eyebrow="पंडित बुकिंग"
-        title="स्पष्ट पता और कीमत के साथ पूजा, हवन और कथा की बुकिंग करें"
-        description="पंडित बुकिंग, ज्योतिष परामर्श से अलग है। इसमें निश्चित सेवा शुल्क के साथ यात्रा, सामग्री और दक्षिणा शुल्क शामिल हो सकते हैं।"
-      />
-      <div className="dp-pandit-assurance" aria-label="सेवा की विशेषताएँ">
-        <span>✦ सत्यापित पंडित</span>
-        <span>☆ स्पष्ट मूल्य</span>
-        <span>▣ सुरक्षित भुगतान</span>
-        <span>◌ सहायता उपलब्ध</span>
-      </div>
+        <div className="dp-pandit-hero-copy">
+          <h1 className="dp-pandit-typewriter">
+            <span>स्पष्ट पता और कीमत के साथ पूजा,</span>
+            <span>हवन और कथा की बुकिंग करें</span>
+          </h1>
+          <p>निश्चित सेवा शुल्क के साथ यात्रा, सामग्री और दक्षिणा का स्पष्ट विवरण एक ही स्थान पर देखें।</p>
+        </div>
+        <div className="dp-pandit-floating-figure" aria-hidden="true">
+          <span className="dp-pandit-floating-halo" />
+          <img src="/cinematic/digipandit-floating.png" alt="" />
+        </div>
       </section>
       {hawanContext.title ? (
         <div className="mt-6 rounded-[24px] border border-brand-gold/30 bg-amber-50 p-5">
@@ -289,7 +298,9 @@ export default function PanditsPage() {
                     <LoadingCard />
                   </div>
                 ))
-              : profiles.map((profile) => (
+              : profiles.map((profile) => {
+                const isExpanded = expandedProfiles.has(profile._id);
+                return (
                   <article key={profile._id} className="dp-pandit-card overflow-hidden rounded-[28px] bg-white shadow-soft">
                     <img
                       src={getExpertImage({
@@ -313,9 +324,18 @@ export default function PanditsPage() {
                         </div>
                       </div>
 
-                      <p className="mt-4 text-sm leading-7 text-brand-ink/70">{hindiContent(profile.bio, "पूजा, हवन और विधिवत अनुष्ठान के लिए सत्यापित पंडित उपलब्ध हैं।")}</p>
+                      <p className="dp-pandit-card-bio mt-4 text-sm leading-7 text-brand-ink/70">{hindiContent(profile.bio, "पूजा, हवन और विधिवत अनुष्ठान के लिए सत्यापित पंडित उपलब्ध हैं।")}</p>
 
-                      <div className="mt-5 space-y-3">
+                      <button
+                        type="button"
+                        className="dp-pandit-details-toggle"
+                        aria-expanded={isExpanded}
+                        onClick={() => toggleProfileDetails(profile._id)}
+                      >
+                        {isExpanded ? "विवरण छिपाएँ" : "विवरण देखें"}
+                      </button>
+
+                      {isExpanded ? <div className="dp-pandit-services mt-5 space-y-3">
                         {profile.services.map((service) => (
                           <div key={service.serviceId} className="rounded-[24px] bg-brand-cream/65 p-4">
                             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -343,10 +363,11 @@ export default function PanditsPage() {
                             </div>
                           </div>
                         ))}
-                      </div>
+                      </div> : null}
                     </div>
                   </article>
-                ))}
+                );
+              })}
           </div>
 
           {!loading && !profiles.length ? (
@@ -359,7 +380,7 @@ export default function PanditsPage() {
           ) : null}
         </div>
 
-        <aside className="h-fit rounded-[32px] bg-white p-6 shadow-soft xl:sticky xl:top-28">
+        <aside className="dp-booking-desk h-fit rounded-[32px] bg-white p-6 shadow-soft xl:sticky xl:top-28">
           <p className="text-xs font-bold uppercase tracking-[0.26em] text-brand-clay">बुकिंग डेस्क</p>
           <h2 className="mt-2 text-3xl font-bold text-brand-ink">
             {selectedOffer ? selectedOffer.service.name : "पंडित सेवा चुनें"}
@@ -526,7 +547,7 @@ export default function PanditsPage() {
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.text} className="flex items-start gap-3 rounded-[22px] bg-brand-cream/70 px-4 py-4">
+                  <div key={item.text} className="dp-booking-benefit flex items-start gap-3 rounded-[22px] bg-brand-cream/70 px-4 py-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-brand-maroon">
                       <Icon className="h-5 w-5" />
                     </div>

@@ -156,7 +156,7 @@ function KundaliWorkspace() {
   const [result, setResult] = useState(null);
   const [resultOpen, setResultOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(null);
-  const [language, setLanguage] = useState("hi");
+  const [language] = useState("hi");
   const { register, handleSubmit, setError, clearErrors, setValue, formState: { errors } } = useForm({ defaultValues: defaultPerson });
   const kundaliMutation = useMutation({
     mutationFn: async (values) => (await api.post("/astrology/kundali", {
@@ -183,11 +183,6 @@ function KundaliWorkspace() {
           title={language === "hi" ? "संपूर्ण जन्म कुंडली" : "Professional Janam Kundali"}
           description={language === "hi" ? "सटीक जन्म विवरण भरकर ग्रह स्थिति, भाव, दशा, दोष और जीवन से जुड़ा सरल विश्लेषण देखें।" : "Enter exact birth details to generate sidereal planetary positions, chart houses, dasha timeline, dosh screening, and an easy-to-read life report."}
         />
-        <div className="inline-flex rounded-2xl border border-black/10 bg-white p-1 shadow-soft" aria-label="Kundali language">
-          {[["hi", "हिंदी"], ["en", "English"]].map(([value, label]) => (
-            <button key={value} type="button" onClick={() => setLanguage(value)} className={`rounded-xl px-5 py-2.5 text-sm font-bold ${language === value ? "bg-black text-white shadow-md" : "text-black/55 hover:bg-black/5"}`} aria-pressed={language === value}>{label}</button>
-          ))}
-        </div>
       </div>
       <div className="mt-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr]">
         <form onSubmit={handleSubmit((values) => {
@@ -318,24 +313,24 @@ function MatchingWorkspace() {
   });
   return (
     <section id="matching" className="scroll-mt-28 py-20">
-      <SectionHeading eyebrow="Relationship intelligence" title="36 Gun Kundali Matching" description="A structured compatibility view with classical factors and practical relationship dimensions." />
+      <SectionHeading eyebrow="वैवाहिक अनुकूलता" title="छत्तीस गुण कुंडली मिलान" description="शास्त्रीय गुणों और व्यावहारिक संबंध आयामों के साथ दोनों जन्म विवरणों का स्पष्ट मिलान।" />
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
         <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="rounded-[32px] bg-white p-7 shadow-xl dark:bg-white/5">
           {["bride", "groom"].map((person) => (
             <fieldset key={person} className="mb-7 grid gap-4 sm:grid-cols-2">
-              <legend className="mb-4 text-2xl font-bold capitalize text-slate-950 dark:text-white">{person}'s details</legend>
-              <div className="sm:col-span-2"><Field label="Full name" {...register(`${person}Name`, { required: true })} error={errors[`${person}Name`] ? "Required" : ""} /></div>
-              <Field label="Birth date" type="date" {...register(`${person}Date`, { required: true })} error={errors[`${person}Date`] ? "Required" : ""} />
-              <Field label="Birth time" type="time" {...register(`${person}Time`, { required: true })} error={errors[`${person}Time`] ? "Required" : ""} />
-              <div className="sm:col-span-2"><Field label="Birth place" {...register(`${person}Place`, { required: true })} error={errors[`${person}Place`] ? "Required" : ""} /></div>
+              <legend className="mb-4 text-2xl font-bold capitalize text-slate-950 dark:text-white">{person === "bride" ? "वधू का विवरण" : "वर का विवरण"}</legend>
+              <div className="sm:col-span-2"><Field label="पूरा नाम" {...register(`${person}Name`, { required: true })} error={errors[`${person}Name`] ? "यह जानकारी आवश्यक है" : ""} /></div>
+              <Field label="जन्म तिथि" type="date" {...register(`${person}Date`, { required: true })} error={errors[`${person}Date`] ? "यह जानकारी आवश्यक है" : ""} />
+              <Field label="जन्म समय" type="time" {...register(`${person}Time`, { required: true })} error={errors[`${person}Time`] ? "यह जानकारी आवश्यक है" : ""} />
+              <div className="sm:col-span-2"><Field label="जन्म स्थान" {...register(`${person}Place`, { required: true })} error={errors[`${person}Place`] ? "यह जानकारी आवश्यक है" : ""} /></div>
             </fieldset>
           ))}
-          <Button type="submit" disabled={mutation.isPending} className="w-full bg-gradient-to-r from-brand-maroon to-brand-clay py-4">{mutation.isPending ? "Matching charts..." : "Check compatibility"}</Button>
+          <Button type="submit" disabled={mutation.isPending} className="w-full bg-gradient-to-r from-brand-maroon to-brand-clay py-4">{mutation.isPending ? "कुंडलियाँ मिलाई जा रही हैं..." : "अनुकूलता जाँचें"}</Button>
         </form>
         <div>
-          {!result ? <div className="grid min-h-[420px] place-items-center rounded-[32px] border border-dashed border-rose-200 bg-rose-50/60 p-8 text-center dark:bg-rose-500/5"><div><HeartHandshake className="mx-auto h-14 w-14 text-rose-500" /><h3 className="mt-5 text-3xl font-bold dark:text-white">Compatibility result</h3><p className="mt-2 text-slate-600 dark:text-slate-300">Both birth profiles combine here into one clear report.</p></div></div> : (
+            {!result ? <div className="dp-matching-placeholder grid min-h-[420px] place-items-center rounded-[32px] p-8 text-center"><div><HeartHandshake className="mx-auto h-14 w-14" /><h3 className="mt-5 text-3xl font-bold">मिलान परिणाम</h3><p className="mt-2">दोनों जन्म विवरणों का संयुक्त विश्लेषण यहाँ दिखाई देगा।</p></div></div> : (
             <motion.div initial="hidden" animate="visible" variants={fadeUp} className="rounded-[32px] bg-gradient-to-br from-brand-maroon to-brand-forest p-7 text-white shadow-2xl">
-              <div className="flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-widest text-rose-200">Gun Milan</p><p className="mt-2 text-6xl font-extrabold">{result.total}<span className="text-2xl text-white/50">/36</span></p></div><ScoreRing label="match" value={result.compatibility} /></div>
+              <div className="flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-widest text-rose-200">गुण मिलान</p><p className="mt-2 text-6xl font-extrabold">{result.total}<span className="text-2xl text-white/50">/36</span></p></div><ScoreRing label="अनुकूलता" value={result.compatibility} /></div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2">{result.factors.map((factor) => <div key={factor.name} className="flex justify-between rounded-2xl bg-white/10 p-4"><span>{factor.name}</span><strong>{factor.score}/{factor.maxScore}</strong></div>)}</div>
               <p className="mt-6 rounded-2xl bg-white/10 p-4 leading-7">{result.recommendation}</p>
             </motion.div>
@@ -359,7 +354,7 @@ function NumerologyWorkspace() {
             <div className="grid gap-5"><Field label="पूरा नाम" {...register("fullName", { required: true })} /><Field label="जन्म तिथि" type="date" {...register("birthDate", { required: true })} /></div>
             <Button type="submit" className="mt-6 w-full bg-brand-gold text-brand-ink hover:bg-white">मेरे अंक ज्ञात करें</Button>
           </form>
-          {result ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Life path", result.lifePath], ["Destiny", result.destiny], ["Soul", result.soul], ["Personality", result.personality]].map(([label, value]) => <div key={label} className="rounded-[26px] bg-white/10 p-6 text-center"><p className="text-5xl font-black text-cyan-300">{value}</p><p className="mt-3 text-sm font-bold uppercase tracking-wider text-white/70">{label}</p></div>)}<p className="sm:col-span-2 lg:col-span-4 rounded-[26px] bg-white/10 p-6 leading-7">{result.prediction} Lucky color: <strong>{result.luckyColor}</strong>.</p></div> : <div className="grid place-items-center rounded-[28px] border border-white/10 bg-white/5 p-10 text-center text-white/65">Your personal number map will appear here.</div>}
+          {result ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["जीवन पथ", result.lifePath], ["भाग्यांक", result.destiny], ["आत्मांक", result.soul], ["व्यक्तित्व", result.personality]].map(([label, value]) => <div key={label} className="rounded-[26px] bg-white/10 p-6 text-center"><p className="text-5xl font-black text-cyan-300">{value}</p><p className="mt-3 text-sm font-bold uppercase tracking-wider text-white/70">{label}</p></div>)}<p className="sm:col-span-2 lg:col-span-4 rounded-[26px] bg-white/10 p-6 leading-7">{result.prediction} शुभ रंग: <strong>{result.luckyColor}</strong>।</p></div> : <div className="grid place-items-center rounded-[28px] border border-white/10 bg-white/5 p-10 text-center text-white/65">आपका व्यक्तिगत अंक मानचित्र यहाँ दिखाई देगा।</div>}
         </div>
       </div>
     </section>
@@ -371,10 +366,10 @@ export default function AstrologyHubPage() {
   const dailyQuery = useQuery({ queryKey: ["astrology-daily"], queryFn: async () => (await api.get("/astrology/daily")).data.data });
   const daily = dailyQuery.data;
   const faq = useMemo(() => [
-    ["How accurate are the calculations?", "Planetary positions use the project's astronomical calculation engine. Interpretations are guidance and depend on accurate birth details."],
-    ["Is my birth information private?", "The public calculator processes the submitted details for the report. Avoid entering information you do not wish to process."],
-    ["Can astrology replace professional advice?", "No. Astrology must not replace medical, legal, financial, or mental-health advice."],
-    ["Can I speak with a real astrologer?", "Yes. DigiPandit keeps verified chat, audio, and video consultations available in a dedicated workspace."],
+    ["गणना कितनी सटीक है?", "ग्रह स्थिति की गणना परियोजना के खगोलीय गणना तंत्र से होती है। सही परिणाम के लिए जन्म विवरण का सटीक होना आवश्यक है।"],
+    ["क्या मेरी जन्म जानकारी सुरक्षित है?", "दिए गए विवरण केवल रिपोर्ट तैयार करने के लिए संसाधित किए जाते हैं। अनावश्यक निजी जानकारी दर्ज न करें।"],
+    ["क्या ज्योतिष पेशेवर सलाह का विकल्प है?", "नहीं। ज्योतिष चिकित्सा, कानूनी, वित्तीय या मानसिक स्वास्थ्य सलाह का विकल्प नहीं है।"],
+    ["क्या मैं वास्तविक ज्योतिषाचार्य से बात कर सकता हूँ?", "हाँ। DigiPandit पर सत्यापित बातचीत, ध्वनि और दृश्य परामर्श उपलब्ध हैं।"],
   ], []);
 
   return (
@@ -384,8 +379,7 @@ export default function AstrologyHubPage() {
           <div className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(circle_at_80%_20%,rgba(255,255,255,.13),transparent_25%),radial-gradient(circle_at_13%_87%,rgba(255,255,255,.07),transparent_27%)]" />
           <div className="container-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.2em] text-brand-gold backdrop-blur"><Sparkles className="h-4 w-4" /> वैदिक मार्गदर्शन, सरल रूप में</div>
-              <h1 className="mt-7 max-w-3xl text-5xl font-semibold leading-[.96] text-white md:text-7xl">अपनी कुंडली समझें।<br />स्पष्टता से आगे बढ़ें।</h1>
+              <h1 className="dp-astro-typewriter max-w-3xl text-5xl font-semibold leading-[.96] text-white md:text-7xl"><span>अपनी कुंडली समझें।</span><span>स्पष्टता से आगे बढ़ें।</span></h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">कुंडली, पंचांग, मिलान, महादशा, उपाय और विश्वसनीय ज्योतिषाचार्य—सब एक सहज DigiPandit अनुभव में।</p>
               <div className="mt-8 flex flex-wrap gap-4"><a href="#kundali"><Button className="bg-brand-gold px-7 py-4 text-brand-ink hover:bg-white">निःशुल्क कुंडली बनाएँ <ArrowRight className="ml-2 h-5 w-5" /></Button></a><Link to="/astrology/consultations"><Button variant="secondary" className="px-7 py-4">ज्योतिषी से बात करें</Button></Link></div>
               <div className="mt-7 flex flex-wrap gap-5 text-sm font-semibold text-white/55">{["साइन-अप जरूरी नहीं", "क्रमबद्ध गणना", "आपकी गोपनीयता सुरक्षित"].map((item) => <span key={item} className="flex items-center gap-2"><Check className="h-4 w-4 text-brand-gold" />{item}</span>)}</div>
@@ -410,12 +404,12 @@ export default function AstrologyHubPage() {
 
           <section className="py-20">
             <div className="dp-cosmic-consult rounded-[38px] bg-gradient-to-br from-brand-maroon to-brand-forest p-8 text-white md:p-12">
-              <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_.8fr]"><div><p className="text-xs font-bold uppercase tracking-[.24em] text-violet-200">Human wisdom, when you need it</p><h2 className="mt-4 text-5xl font-bold leading-none">Take your chart into a live conversation.</h2><p className="mt-5 max-w-xl leading-8 text-white/75">Connect with verified astrologers through chat, audio, or video. Wallet billing and current consultation flows remain fully preserved.</p><Link to="/astrology/consultations"><Button className="mt-7 bg-white text-violet-950 hover:bg-violet-100">Browse astrologers <ArrowRight className="ml-2 h-5 w-5" /></Button></Link></div><div className="grid gap-4">{[["Chat guidance", "Fast, focused questions", Bot], ["Career reading", "Timing and professional direction", BriefcaseBusiness], ["Relationship clarity", "Compatibility and communication", Users]].map(([title, copy, Icon]) => <div key={title} className="flex gap-4 rounded-[24px] bg-white/10 p-5 backdrop-blur"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-violet-700"><Icon className="h-5 w-5" /></div><div><strong>{title}</strong><p className="mt-1 text-sm text-white/65">{copy}</p></div></div>)}</div></div>
+              <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_.8fr]"><div><p className="text-xs font-bold uppercase tracking-[.24em] text-violet-200">जब मानवीय मार्गदर्शन चाहिए</p><h2 className="mt-4 text-5xl font-bold leading-none">अपनी कुंडली पर सीधे ज्योतिषाचार्य से चर्चा करें।</h2><p className="mt-5 max-w-xl leading-8 text-white/75">सत्यापित विशेषज्ञों से बातचीत, ध्वनि या दृश्य परामर्श लें। मौजूदा भुगतान और परामर्श प्रक्रिया पूरी तरह सुरक्षित रहेगी।</p><Link to="/astrology/consultations"><Button className="mt-7 bg-white text-violet-950 hover:bg-violet-100">ज्योतिषाचार्य देखें <ArrowRight className="ml-2 h-5 w-5" /></Button></Link></div><div className="grid gap-4">{[["बातचीत मार्गदर्शन", "तेज़ और केंद्रित प्रश्न", Bot], ["व्यवसाय मार्गदर्शन", "समय और पेशेवर दिशा", BriefcaseBusiness], ["संबंध स्पष्टता", "अनुकूलता और संवाद", Users]].map(([title, copy, Icon]) => <div key={title} className="flex gap-4 rounded-[24px] bg-white/10 p-5 backdrop-blur"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-violet-700"><Icon className="h-5 w-5" /></div><div><strong>{title}</strong><p className="mt-1 text-sm text-white/65">{copy}</p></div></div>)}</div></div>
             </div>
           </section>
 
           <section className="py-20">
-            <SectionHeading eyebrow="Common questions" title="Clear before you begin" />
+            <SectionHeading eyebrow="सामान्य प्रश्न" title="शुरू करने से पहले जानें" />
             <div className="mt-8 grid gap-3">{faq.map(([question, answer], index) => <div key={question} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} className="flex w-full items-center justify-between gap-4 p-5 text-left font-bold" aria-expanded={openFaq === index}>{question}<ChevronDown className={`h-5 w-5 transition ${openFaq === index ? "rotate-180" : ""}`} /></button><AnimatePresence>{openFaq === index ? <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden px-5 pb-5 leading-7 text-slate-600 dark:text-slate-300">{answer}</motion.p> : null}</AnimatePresence></div>)}</div>
           </section>
         </main>
