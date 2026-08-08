@@ -15,6 +15,7 @@ const navItems = [
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const headerRef = useRef(null);
   const menuButtonRef = useRef(null);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -30,14 +31,23 @@ export function Navbar() {
 
   useEffect(() => setIsMenuOpen(false), [location.pathname, location.hash]);
   useEffect(() => {
-    if (!isCinematicHome) return undefined;
     let frame = 0;
-    const update = () => { frame = 0; setIsScrolled(window.scrollY > 72); };
+    let lastY = window.scrollY;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const velocity = Math.max(-16, Math.min(16, y - lastY));
+      lastY = y;
+      setIsScrolled(y > 24);
+      headerRef.current?.style.setProperty("--prism-rx", `${Math.sin(y / 210) * 2.1 - velocity * .035}deg`);
+      headerRef.current?.style.setProperty("--prism-rz", `${Math.sin(y / 420) * .72}deg`);
+      headerRef.current?.style.setProperty("--prism-lift", `${y > 24 ? 5 : 0}px`);
+    };
     const onScroll = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); if (frame) window.cancelAnimationFrame(frame); };
-  }, [isCinematicHome]);
+  }, []);
   useEffect(() => {
     if (!isMenuOpen) return undefined;
     const onKeyDown = (event) => {
@@ -49,7 +59,7 @@ export function Navbar() {
 
   const navText = "text-white";
   return (
-    <header className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? `fixed ${isScrolled ? "is-scrolled" : ""}` : "sticky"}`}>
+    <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container-shell">
         <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4">
           <Link to="/" className="dp-brand flex min-w-0 items-center gap-3" aria-label="डिजीपंडित होम">

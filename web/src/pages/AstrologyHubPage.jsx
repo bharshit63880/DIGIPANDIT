@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight, Bot, BriefcaseBusiness, CalendarDays, ChartNoAxesCombined, Check, ChevronDown,
   CircleGauge, Compass, Download, Gem, HeartHandshake, LoaderCircle, Moon, Orbit, Search,
-  ShieldCheck, Sparkles, Star, Sun, Users, WandSparkles, Zap,
+  ShieldCheck, Sparkles, Star, Sun, Users, WandSparkles, X, Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
@@ -29,6 +29,29 @@ const modules = [
   { id: "dashas", title: "महादशा", text: "प्रमुख ग्रह दशाओं की सरल और स्पष्ट समयरेखा।", icon: ChartNoAxesCombined, tone: "from-brand-forest to-brand-clay" },
   { id: "consultations", title: "ज्योतिषाचार्य से पूछें", text: "सत्यापित विशेषज्ञ से बातचीत, ध्वनि या दृश्य परामर्श।", icon: Bot, tone: "from-brand-maroon to-brand-forest", href: "/astrology/consultations" },
 ];
+
+const orbitPlanets = [
+  ["सूर्य", "☉"], ["चंद्र", "☾"], ["मंगल", "♂"], ["बुध", "☿"],
+  ["गुरु", "♃"], ["शुक्र", "♀"], ["शनि", "♄"], ["राहु", "◉"],
+];
+
+function PlanetaryOrbit({ daily, loading }) {
+  return (
+    <div className="dp-planetarium" aria-label="गतिशील नवग्रह मंडल">
+      <div className="dp-planetarium-glow" />
+      {[0, 1, 2].map((ring) => <span key={ring} className={`dp-orbit-ring dp-orbit-ring--${ring + 1}`} />)}
+      <div className="dp-orbit-core">
+        <span>ॐ</span>
+        <strong>{daily?.panchang?.nakshatra || (loading ? "गणना" : "नक्षत्र")}</strong>
+      </div>
+      {orbitPlanets.map(([name, symbol], index) => (
+        <span key={name} className="dp-orbit-planet" style={{ "--planet-index": index }}>
+          <i>{symbol}</i><small>{name}</small>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 const defaultPerson = {
   fullName: "", gender: "Prefer not to say", birthDate: "", birthTime: "", placeName: "",
@@ -131,6 +154,7 @@ function SectionHeading({ eyebrow, title, description }) {
 
 function KundaliWorkspace() {
   const [result, setResult] = useState(null);
+  const [resultOpen, setResultOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(null);
   const [language, setLanguage] = useState("hi");
   const { register, handleSubmit, setError, clearErrors, setValue, formState: { errors } } = useForm({ defaultValues: defaultPerson });
@@ -140,8 +164,16 @@ function KundaliWorkspace() {
       latitude: Number(values.latitude),
       longitude: Number(values.longitude),
     })).data.data,
-    onSuccess: setResult,
+    onSuccess: (data) => { setResult(data); setResultOpen(true); },
   });
+  useEffect(() => {
+    if (!resultOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setResultOpen(false); };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", closeOnEscape); };
+  }, [resultOpen]);
 
   return (
     <section id="kundali" className="scroll-mt-28 py-20">
@@ -201,9 +233,20 @@ function KundaliWorkspace() {
               </div>
             </div>
           ) : null}
+          {result && !resultOpen && !kundaliMutation.isPending ? (
+            <div className="dp-kundali-ready">
+              <Orbit className="h-10 w-10" />
+              <h3>{language === "hi" ? "आपकी कुंडली तैयार है" : "Your Kundali is ready"}</h3>
+              <p>{language === "hi" ? "पूरा परिणाम एक सुव्यवस्थित रिपोर्ट में देखें।" : "Open the complete report in a focused view."}</p>
+              <Button type="button" onClick={() => setResultOpen(true)}>{language === "hi" ? "कुंडली परिणाम देखें" : "View Kundali result"}</Button>
+            </div>
+          ) : null}
           {kundaliMutation.isPending ? <div className="grid gap-4"><SkeletonCard /><SkeletonCard /><SkeletonCard /></div> : null}
-          {result ? (
-            <motion.div initial="hidden" animate="visible" variants={fadeUp} className="space-y-8">
+          {result && resultOpen ? (
+            <div className="dp-kundali-dialog" role="dialog" aria-modal="true" aria-label={language === "hi" ? "कुंडली परिणाम" : "Kundali result"} onMouseDown={(event) => { if (event.target === event.currentTarget) setResultOpen(false); }}>
+              <div className="dp-kundali-dialog-shell">
+                <button type="button" className="dp-kundali-dialog-close" onClick={() => setResultOpen(false)} aria-label={language === "hi" ? "परिणाम बंद करें" : "Close result"}><X /></button>
+                <motion.div initial="hidden" animate="visible" variants={fadeUp} className="space-y-8">
               <div className="rounded-[32px] bg-gradient-to-br from-brand-ink via-brand-maroon to-brand-forest p-7 text-white shadow-2xl">
                 <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-violet-300">{language === "hi" ? "ज्योतिषीय पहचान" : "Cosmic identity"}</p>
                 <h3 className="mt-3 text-4xl font-bold">{result.kundali.input.fullName}</h3>
@@ -253,7 +296,9 @@ function KundaliWorkspace() {
                 </div>
               </div>
               <Button type="button" onClick={() => window.print()} className="w-full py-4"><Download className="mr-2 h-5 w-5" /> {language === "hi" ? "कुंडली डाउनलोड / प्रिंट करें" : "Download / Print professional report"}</Button>
-            </motion.div>
+                </motion.div>
+              </div>
+            </div>
           ) : null}
         </div>
       </div>
@@ -341,15 +386,12 @@ export default function AstrologyHubPage() {
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
               <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.2em] text-brand-gold backdrop-blur"><Sparkles className="h-4 w-4" /> वैदिक मार्गदर्शन, सरल रूप में</div>
               <h1 className="mt-7 max-w-3xl text-5xl font-semibold leading-[.96] text-white md:text-7xl">अपनी कुंडली समझें।<br />स्पष्टता से आगे बढ़ें।</h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">Kundali, Panchang, matching, dashas, remedies and trusted astrologers—together in one simple DigiPandit experience.</p>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">कुंडली, पंचांग, मिलान, महादशा, उपाय और विश्वसनीय ज्योतिषाचार्य—सब एक सहज DigiPandit अनुभव में।</p>
               <div className="mt-8 flex flex-wrap gap-4"><a href="#kundali"><Button className="bg-brand-gold px-7 py-4 text-brand-ink hover:bg-white">निःशुल्क कुंडली बनाएँ <ArrowRight className="ml-2 h-5 w-5" /></Button></a><Link to="/astrology/consultations"><Button variant="secondary" className="px-7 py-4">ज्योतिषी से बात करें</Button></Link></div>
               <div className="mt-7 flex flex-wrap gap-5 text-sm font-semibold text-white/55">{["साइन-अप जरूरी नहीं", "क्रमबद्ध गणना", "आपकी गोपनीयता सुरक्षित"].map((item) => <span key={item} className="flex items-center gap-2"><Check className="h-4 w-4 text-brand-gold" />{item}</span>)}</div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55 }} className="relative">
-              <div className="relative rounded-[34px] border border-white/10 bg-white/[.07] p-6 shadow-[0_28px_80px_rgba(0,0,0,.22)] backdrop-blur-xl">
-                <div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-widest text-brand-gold">आज का ब्रह्मांडीय संकेत</p><h2 className="mt-2 text-3xl font-bold text-white">{daily?.panchang.nakshatra || (dailyQuery.isError ? "अभी उपलब्ध नहीं" : "गणना हो रही है")}</h2></div><div className="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 text-brand-gold"><Moon /></div></div>
-                {dailyQuery.isLoading ? <div className="mt-7 grid gap-4"><div className="h-32 animate-pulse rounded-[24px] bg-white/10" /><div className="h-20 animate-pulse rounded-[24px] bg-white/10" /></div> : dailyQuery.isError ? <div className="mt-6 rounded-[24px] border border-white/10 bg-white/5 p-5 text-sm leading-7 text-white/70">Daily Panchang could not load. Please confirm that the backend is running, then refresh this page.</div> : <><div className="mt-7 grid grid-cols-2 gap-4"><div className="rounded-[24px] bg-white/10 p-5"><Moon className="h-6 w-6 text-brand-gold" /><p className="mt-7 text-xs uppercase text-white/50">Moon phase</p><strong className="mt-1 block text-white">{daily.moonPhase}</strong></div><div className="rounded-[24px] bg-white/10 p-5"><Compass className="h-6 w-6 text-brand-gold" /><p className="mt-7 text-xs uppercase text-white/50">Lucky direction</p><strong className="mt-1 block text-white">{daily.lucky.direction}</strong></div></div><div className="mt-4 rounded-[24px] bg-white/10 p-5"><p className="text-xs font-bold uppercase tracking-wider text-brand-gold">Current transit</p><p className="mt-2 text-sm leading-6 text-white/70">{daily.transit}</p></div></>}
-              </div>
+            <motion.div initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .7 }} className="relative">
+              <PlanetaryOrbit daily={daily} loading={dailyQuery.isLoading} />
             </motion.div>
           </div>
         </section>
@@ -357,10 +399,10 @@ export default function AstrologyHubPage() {
         <main className="container-shell">
           <section className="py-20">
             <SectionHeading eyebrow="खोजें" title="मार्गदर्शन का एक संपूर्ण संसार" description="सभी ज्योतिष सुविधाएँ एक ही सरल और सुसंगत अनुभव में उपलब्ध हैं।" />
-            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">{modules.map((item, index) => { const Icon = item.icon; const content = <motion.article variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group h-full rounded-[30px] border border-slate-200/80 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,.06)] transition hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-white/5"><div className={`grid h-14 w-14 place-items-center rounded-[20px] bg-gradient-to-br ${item.tone} text-white shadow-lg`}><Icon className="h-6 w-6" /></div><h3 className="mt-6 text-2xl font-bold dark:text-white">{item.title}</h3><p className="mt-3 leading-7 text-slate-600 dark:text-slate-300">{item.text}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-700 dark:text-violet-300">Explore <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></span></motion.article>; return item.href ? <Link key={item.id} to={item.href}>{content}</Link> : <a key={item.id} href={`#${item.id}`}>{content}</a>; })}</div>
+            <div className="dp-astro-marquee mt-12"><div className="dp-astro-marquee-track">{[...modules, ...modules].map((item, index) => { const Icon = item.icon; const duplicate = index >= modules.length; const content = <article className="dp-astro-module-card group"><div className={`dp-astro-module-icon bg-gradient-to-br ${item.tone}`}><Icon /></div><h3>{item.title}</h3><p>{item.text}</p><span>विस्तार से देखें <ArrowRight /></span></article>; return item.href ? <Link aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} to={item.href}>{content}</Link> : <a aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} href={`#${item.id}`}>{content}</a>; })}</div></div>
           </section>
 
-          {daily ? <section className="py-12"><SectionHeading eyebrow="Daily guidance" title="Panchang at a glance" /><div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Sunrise", daily.panchang.sunrise, Sun], ["Tithi", daily.panchang.tithi, CalendarDays], ["Rahu Kaal", daily.panchang.rahuKaal, Zap], ["Abhijit Muhurat", daily.panchang.abhijitMuhurat, Star]].map(([label, value, Icon]) => <article key={label} className="rounded-[26px] bg-white p-5 shadow-lg dark:bg-white/5"><Icon className="h-5 w-5 text-violet-600" /><p className="mt-5 text-xs font-bold uppercase tracking-wider text-slate-400">{label}</p><p className="mt-2 font-bold dark:text-white">{value}</p></article>)}</div><div className="mt-5 grid gap-4 md:grid-cols-3">{daily.horoscope.slice(0, 3).map((item) => <article key={item.sign} className="rounded-[26px] border border-slate-200 p-5 dark:border-white/10"><div className="flex justify-between"><h3 className="text-2xl dark:text-white">{item.sign}</h3><strong className="text-violet-600">{item.score}%</strong></div><p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{item.summary}</p></article>)}</div></section> : null}
+          {daily ? <section className="dp-panchang-spiral-section py-16"><SectionHeading eyebrow="आज का वैदिक संकेत" title="एक दृष्टि में पंचांग" /><div className="dp-panchang-spiral"><div className="dp-panchang-center"><span>ॐ</span><strong>{daily.panchang.nakshatra}</strong></div>{[["सूर्योदय", daily.panchang.sunrise, Sun], ["तिथि", daily.panchang.tithi, CalendarDays], ["राहु काल", daily.panchang.rahuKaal, Zap], ["अभिजित मुहूर्त", daily.panchang.abhijitMuhurat, Star]].map(([label, value, Icon], index) => <article key={label} className="dp-panchang-node" style={{ "--node-index": index }}><Icon /><div><small>{label}</small><strong>{value}</strong></div></article>)}</div><div className="dp-horoscope-ribbon">{daily.horoscope.slice(0, 3).map((item) => <article key={item.sign}><div><h3>{item.sign}</h3><strong>{item.score}%</strong></div><p>{item.summary}</p></article>)}</div></section> : null}
 
           <KundaliWorkspace />
           <MatchingWorkspace />
