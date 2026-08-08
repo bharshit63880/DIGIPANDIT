@@ -12,9 +12,9 @@ export default function LoginPage() {
   const location = useLocation();
   const { status, error } = useSelector((state) => state.auth);
   const expiredMessage =
-    location.state?.reason === "expired" ? "Your session has expired. Please sign in again to continue." : "";
+    location.state?.reason === "expired" ? "आपका सत्र समाप्त हो गया है। आगे बढ़ने के लिए दोबारा प्रवेश करें।" : "";
   const resetMessage =
-    location.state?.email ? `Your password has been reset successfully. Sign in with ${location.state.email}.` : "";
+    location.state?.email ? `आपका कूटशब्द सफलतापूर्वक बदल गया है। ${location.state.email} से प्रवेश करें।` : "";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,13 +44,13 @@ export default function LoginPage() {
 
         <section className="dp-auth-card" aria-labelledby="login-heading">
           <p className="dp-auth-kicker">स्वागतम्</p>
-          <h1 id="login-heading">Welcome back</h1>
-          <p className="dp-auth-copy">Sign in to manage bookings, chat, store orders, and dashboard access.</p>
+          <h1 id="login-heading">पुनः स्वागत है</h1>
+          <p className="dp-auth-copy">अपनी बुकिंग, बातचीत, सामग्री के आदेश और व्यक्तिगत पटल को एक स्थान से सँभालें।</p>
 
         <form onSubmit={handleSubmit} className="dp-auth-form mt-8 space-y-4">
-          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <Input label="ईमेल" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <Input
-            label="Password"
+            label="कूटशब्द"
             type="password"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -61,23 +61,23 @@ export default function LoginPage() {
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <Button type="submit" className="w-full" disabled={status === "loading"}>
-            {status === "loading" ? "Signing in..." : "Sign in"}
+            {status === "loading" ? "प्रवेश हो रहा है..." : "प्रवेश करें"}
           </Button>
         </form>
 
         <div className="dp-auth-links mt-5 flex flex-wrap gap-4 text-sm">
           <Link to="/forgot-password" state={{ email: form.email }} className="font-semibold text-brand-maroon">
-            Forgot your password?
+            कूटशब्द भूल गए?
           </Link>
           <Link to="/verify-email" state={{ email: form.email }} className="font-semibold text-brand-maroon">
-            Verify your email
+            ईमेल सत्यापित करें
           </Link>
         </div>
 
         <p className="dp-auth-switch mt-6 text-sm">
-          New here?{" "}
+          पहली बार आए हैं?{" "}
           <Link to="/register" className="font-semibold text-brand-maroon">
-            Create an account
+            खाता बनाएँ
           </Link>
         </p>
         </section>

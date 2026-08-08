@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, MessageCircle, SendHorizontal, Sparkles, X } from "lucide-react";
 import { api } from "../lib/api";
 import { Button } from "./Button";
+import { hindiContent } from "../lib/hindi";
 
 const STORAGE_KEY = "digipandit_panditji_messages";
 
@@ -10,14 +11,14 @@ const defaultMessages = [
     id: "welcome",
     role: "assistant",
     content:
-      "Namaste. Main PanditJi hoon. Aap puja booking, astrology consultation, payment, store order, ya pandit onboarding ke baare me puchh sakte hain.",
+      "नमस्ते। मैं पंडितजी हूँ। आप पूजा बुकिंग, ज्योतिष परामर्श, भुगतान, सामग्री आदेश या पंडित पंजीकरण के बारे में पूछ सकते हैं।",
   },
 ];
 
 const quickPrompts = [
-  "Astrology consultation kaise book karu?",
-  "Puja booking steps batao",
-  "Store order kaise place karu?",
+  "ज्योतिष परामर्श कैसे बुक करूँ?",
+  "पूजा बुकिंग के चरण बताएँ",
+  "पूजा सामग्री का आदेश कैसे दूँ?",
 ];
 
 export function PanditJiChatWidget() {
@@ -61,8 +62,8 @@ export function PanditJiChatWidget() {
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: response.data.data.reply,
-        suggestions: response.data.data.suggestions || [],
+        content: hindiContent(response.data.data.reply, "आपके प्रश्न का उत्तर अभी हिन्दी में उपलब्ध नहीं हो सका। कृपया प्रश्न सरल शब्दों में दोबारा पूछें।"),
+        suggestions: (response.data.data.suggestions || []).map((item) => hindiContent(item, "अधिक जानकारी")),
       };
 
       setMessages((current) => [...current, assistantMessage]);
@@ -72,8 +73,8 @@ export function PanditJiChatWidget() {
         {
           id: `assistant-${Date.now()}`,
           role: "assistant",
-          content: "PanditJi abhi thoda vyast hain. Thodi der baad fir try kijiye.",
-          suggestions: ["Book puja", "Astrology consultation", "Open store"],
+          content: "पंडितजी अभी व्यस्त हैं। कृपया थोड़ी देर बाद पुनः प्रयास करें।",
+          suggestions: ["पूजा बुक करें", "ज्योतिष परामर्श", "पूजा सामग्री देखें"],
         },
       ]);
     } finally {
@@ -100,7 +101,7 @@ export function PanditJiChatWidget() {
               </div>
               <div>
                 <p className="text-lg font-bold">PanditJi</p>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/75">AI Spiritual Assistant</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/75">आध्यात्मिक सहायक</p>
               </div>
             </div>
           </div>
@@ -134,7 +135,7 @@ export function PanditJiChatWidget() {
 
             {loading ? (
               <div className="max-w-[85%] rounded-[24px] bg-white px-4 py-3 text-sm text-brand-ink shadow-soft">
-                PanditJi soch rahe hain...
+                पंडितजी विचार कर रहे हैं...
               </div>
             ) : null}
           </div>
@@ -158,7 +159,7 @@ export function PanditJiChatWidget() {
                 rows={2}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="Apna sawaal likhiye (ritual, mantra, timing, samagri)"
+                placeholder="अपना प्रश्न लिखें—अनुष्ठान, मंत्र, समय या सामग्री"
                 className="min-h-[52px] flex-1 resize-none rounded-[20px] border border-brand-sand px-4 py-3 text-sm outline-none focus:border-brand-clay"
               />
               <Button onClick={() => sendMessage(draft)} disabled={!canSend} className="h-[52px] w-[52px] rounded-2xl px-0">

@@ -23,7 +23,7 @@ export default function StorePage() {
         setProducts(response.data.data.filter((product) => allowedStoreCategories.includes(product.category)));
       } catch (requestError) {
         setProducts([]);
-        setError(requestError.message || "Store products could not be loaded.");
+        setError("पूजा सामग्री अभी उपलब्ध नहीं हो सकी। कृपया पुनः प्रयास करें।");
       } finally {
         setLoading(false);
       }

@@ -10,7 +10,7 @@ export function SafetyConfirmation({ instructions, onConfirm, onClose }) {
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-800"><AlertTriangle className="h-6 w-6" /></div>
             <div><p className="eyebrow">Mandatory safety check</p><h2 id="safety-title" className="mt-2 text-3xl text-brand-ink">Before you light any flame</h2></div>
           </div>
-          <button type="button" onClick={onClose} className="rounded-xl p-2 hover:bg-brand-mist" aria-label="Close safety instructions"><X className="h-5 w-5" /></button>
+          <button type="button" onClick={onClose} className="rounded-xl p-2 hover:bg-brand-mist" aria-label="सुरक्षा निर्देश बंद करें"><X className="h-5 w-5" /></button>
         </div>
         <ul className="mt-6 grid gap-3">
           {instructions.map((item) => <li key={item} className="flex gap-3 rounded-2xl bg-brand-mist p-4 text-sm leading-6 text-brand-ink/80"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-forest" />{item}</li>)}

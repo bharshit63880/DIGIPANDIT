@@ -46,28 +46,28 @@ export default function RegisterPage() {
 
         <section className="dp-auth-card dp-auth-card--wide" aria-labelledby="register-heading">
         <p className="dp-auth-kicker">नवीन आरंभ</p>
-        <h1 id="register-heading">Create your DigiPandit account</h1>
+        <h1 id="register-heading">अपना DigiPandit खाता बनाएँ</h1>
         <p className="dp-auth-copy">
-          Register as a customer or pandit. Email verification will be available as the next step after registration.
+          श्रद्धालु या पंडित के रूप में पंजीकरण करें। अगले चरण में ईमेल सत्यापन पूरा करें।
         </p>
 
         <form onSubmit={handleSubmit} className="dp-auth-form mt-8 grid gap-4 md:grid-cols-2">
-          <Input label="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <Input label="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          <Input label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          <Input label="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-          <Input label="State" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
+          <Input label="पूरा नाम" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <Input label="ईमेल" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <Input label="दूरभाष क्रमांक" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          <Input label="कूटशब्द" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <Input label="शहर" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+          <Input label="राज्य" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
 
           <label className="dp-auth-select flex flex-col gap-2 text-sm font-medium md:col-span-2">
-            <span>Account type</span>
+            <span>खाते का प्रकार</span>
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
               className="rounded-2xl border border-brand-sand bg-white px-4 py-3 outline-none"
             >
-              <option value="USER">User</option>
-              <option value="PANDIT">Pandit / Astrologer</option>
+              <option value="USER">श्रद्धालु</option>
+              <option value="PANDIT">पंडित / ज्योतिषाचार्य</option>
             </select>
           </label>
 
@@ -75,21 +75,21 @@ export default function RegisterPage() {
 
           <div className="md:col-span-2">
             <Button type="submit" className="w-full" disabled={status === "loading"}>
-              {status === "loading" ? "Creating account..." : "Create account"}
+              {status === "loading" ? "खाता बनाया जा रहा है..." : "खाता बनाएँ"}
             </Button>
           </div>
         </form>
 
         <p className="dp-auth-switch mt-6 text-sm">
-          Already have an account?{" "}
+          पहले से खाता है?{" "}
           <Link to="/login" className="font-semibold text-brand-maroon">
-            Sign in
+            प्रवेश करें
           </Link>
         </p>
         <p className="dp-auth-switch mt-2 text-sm">
-          Need a new verification code?{" "}
+          नया सत्यापन संकेत चाहिए?{" "}
           <Link to="/verify-email" state={{ email: form.email }} className="font-semibold text-brand-maroon">
-            Verify your email
+            ईमेल सत्यापित करें
           </Link>
         </p>
         </section>

@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
       setError("");
       setMessage("");
       await postPublicForm("/auth/forgot-password", { email });
-      setMessage("A password reset code has been sent to your email.");
+      setMessage("कूटशब्द बदलने का संकेत आपके ईमेल पर भेज दिया गया है।");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
       setError("");
       setMessage("");
       await postPublicForm("/auth/reset-password", { email, otp, newPassword });
-      setMessage("Your password has been reset successfully. You can now sign in with your new password.");
+      setMessage("आपका कूटशब्द सफलतापूर्वक बदल गया है। अब नए कूटशब्द से प्रवेश करें।");
       setTimeout(() => navigate("/login", { state: { email } }), 1200);
     } catch (requestError) {
       setError(requestError.message);
@@ -51,14 +51,14 @@ export default function ForgotPasswordPage() {
   return (
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
-        <h1 className="text-4xl font-bold text-brand-ink">Forgot password</h1>
-        <p className="mt-3 text-brand-ink/65">Reset your password using the email verification code sent to you.</p>
+        <h1 className="text-4xl font-bold text-brand-ink">कूटशब्द भूल गए</h1>
+        <p className="mt-3 text-brand-ink/65">ईमेल पर भेजे गए सत्यापन संकेत से अपना कूटशब्द बदलें।</p>
 
         <form onSubmit={handleReset} className="mt-8 space-y-4">
-          <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <Input label="6 digit OTP" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
+          <Input label="ईमेल" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <Input label="छह अंकों का सत्यापन संकेत" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
           <Input
-            label="New password"
+            label="नया कूटशब्द"
             type="password"
             value={newPassword}
             onChange={(event) => setNewPassword(event.target.value)}
@@ -69,18 +69,18 @@ export default function ForgotPasswordPage() {
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="secondary" className="w-full" onClick={handleRequestOtp} disabled={requesting || !email}>
-              {requesting ? "Sending code..." : "Send or resend code"}
+              {requesting ? "संकेत भेजा जा रहा है..." : "संकेत भेजें या पुनः भेजें"}
             </Button>
             <Button type="submit" className="w-full" disabled={resetting || !email || otp.length !== 6 || newPassword.length < 6}>
-              {resetting ? "Resetting..." : "Reset password"}
+              {resetting ? "कूटशब्द बदला जा रहा है..." : "कूटशब्द बदलें"}
             </Button>
           </div>
         </form>
 
         <p className="mt-6 text-sm text-brand-ink/70">
-          Need to sign in or verify your email?{" "}
+          प्रवेश या ईमेल सत्यापन करना है?{" "}
           <Link to="/login" className="font-semibold text-brand-maroon">
-            Back to sign in
+            प्रवेश पर लौटें
           </Link>
         </p>
       </div>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { hindiError } from "./hindi";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -25,8 +26,7 @@ api.interceptors.response.use(
       window.dispatchEvent(new CustomEvent("digipandit:auth-expired"));
     }
 
-    const message = error.response?.data?.message || "Something went wrong";
-    return Promise.reject(new Error(message));
+    return Promise.reject(new Error(hindiError(error)));
   }
 );
 

@@ -22,7 +22,7 @@ export default function VerifyEmailPage() {
   const [verifying, setVerifying] = useState(false);
   const [message, setMessage] = useState(
     location.state?.email
-      ? "A verification code has been sent automatically."
+      ? "सत्यापन संकेत स्वतः भेज दिया गया है।"
       : ""
   );
   const [error, setError] = useState("");
@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
       setError("");
       setMessage("");
       await postPublicForm("/auth/request-verification", { email });
-      setMessage("A verification code has been sent to your email.");
+      setMessage("आपके ईमेल पर सत्यापन संकेत भेज दिया गया है।");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -49,7 +49,7 @@ export default function VerifyEmailPage() {
       setError("");
       setMessage("");
       await postPublicForm("/auth/verify-email", { email, otp });
-      setMessage("Your email has been verified successfully.");
+      setMessage("आपका ईमेल सफलतापूर्वक सत्यापित हो गया है।");
 
       if (localStorage.getItem("digipandit_token")) {
         await dispatch(fetchCurrentUser());
@@ -66,30 +66,30 @@ export default function VerifyEmailPage() {
   return (
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
-        <h1 className="text-4xl font-bold text-brand-ink">Verify your email</h1>
-        <p className="mt-3 text-brand-ink/65">Complete your email verification here using the code sent to you.</p>
+        <h1 className="text-4xl font-bold text-brand-ink">अपना ईमेल सत्यापित करें</h1>
+        <p className="mt-3 text-brand-ink/65">आपको भेजे गए संकेत से ईमेल सत्यापन पूरा करें।</p>
 
         <form onSubmit={handleVerify} className="mt-8 space-y-4">
-          <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <Input label="6 digit OTP" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
+          <Input label="ईमेल" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <Input label="छह अंकों का सत्यापन संकेत" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
 
           {message ? <p className="text-sm text-brand-forest">{message}</p> : null}
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="secondary" className="w-full" onClick={handleRequestOtp} disabled={requesting || !email}>
-              {requesting ? "Sending code..." : "Send or resend code"}
+              {requesting ? "संकेत भेजा जा रहा है..." : "संकेत भेजें या पुनः भेजें"}
             </Button>
             <Button type="submit" className="w-full" disabled={verifying || !email || otp.length !== 6}>
-              {verifying ? "Verifying..." : "Verify email"}
+              {verifying ? "सत्यापन हो रहा है..." : "ईमेल सत्यापित करें"}
             </Button>
           </div>
         </form>
 
         <p className="mt-6 text-sm text-brand-ink/70">
-          Want to return to the sign-in page?{" "}
+          प्रवेश पृष्ठ पर लौटना चाहते हैं?{" "}
           <Link to="/login" className="font-semibold text-brand-maroon">
-            Back to sign in
+            प्रवेश पर लौटें
           </Link>
         </p>
       </div>

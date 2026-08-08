@@ -1,7 +1,7 @@
 import { Clock3, IndianRupee, Sparkles, UserRoundCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const difficultyLabels = { BEGINNER: "Beginner friendly", INTERMEDIATE: "Some guidance helpful", ADVANCED: "Pandit guidance advised" };
+const difficultyLabels = { BEGINNER: "आरंभ करने वालों के लिए सरल", INTERMEDIATE: "थोड़ा मार्गदर्शन उपयोगी", ADVANCED: "पंडित मार्गदर्शन उचित" };
 
 export function HawanCard({ hawan, reason }) {
   return (
@@ -16,13 +16,13 @@ export function HawanCard({ hawan, reason }) {
         {reason ? <p className="mb-3 rounded-2xl bg-brand-blush px-4 py-3 text-sm font-medium text-brand-maroon">{reason}</p> : null}
         <p className="text-sm leading-7 text-brand-ink/70">{hawan.shortDescription}</p>
         <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-semibold text-brand-ink/70">
-          <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-brand-clay" />{hawan.durationMinutes} min</span>
+          <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-brand-clay" />{hawan.durationMinutes} मिनट</span>
           <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-brand-clay" />{difficultyLabels[hawan.difficulty]}</span>
           <span className="flex items-center gap-2"><IndianRupee className="h-4 w-4 text-brand-clay" />{hawan.estimatedCostRange?.min}–{hawan.estimatedCostRange?.max}</span>
-          <span className="flex items-center gap-2"><UserRoundCheck className="h-4 w-4 text-brand-clay" />{hawan.panditRecommended ? "Pandit advised" : "Optional support"}</span>
+          <span className="flex items-center gap-2"><UserRoundCheck className="h-4 w-4 text-brand-clay" />{hawan.panditRecommended ? "पंडित की सलाह उचित" : "वैकल्पिक सहायता"}</span>
         </div>
         <Link to={`/hawan-guide/${hawan.slug}`} className="mt-6 inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand-maroon px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-ink">
-          View guided ritual
+          निर्देशित अनुष्ठान देखें
         </Link>
       </div>
     </article>

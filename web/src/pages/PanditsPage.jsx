@@ -10,6 +10,7 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { LoadingCard } from "../components/LoadingCard";
 import { SectionTitle } from "../components/SectionTitle";
+import { hindiContent, hindiError, hindiLabel } from "../lib/hindi";
 
 const serviceTypeTabs = [
   { label: "सभी सेवाएँ", value: "" },
@@ -133,7 +134,7 @@ export default function PanditsPage() {
       videoDakshinaFee: String(service.addons?.videoDakshinaFee || 0),
       scheduleAt: toLocalInputValue(new Date(Date.now() + 24 * 60 * 60 * 1000)),
       notes: hawanContext.title
-        ? `Hawan: ${hawanContext.title}\nPreferred language: ${hawanContext.language}\nMaterials still required: ${hawanContext.materials || "To be confirmed"}`
+        ? `हवन: ${hawanContext.title}\nपसंदीदा भाषा: हिन्दी\nशेष सामग्री: ${hawanContext.materials || "पुष्टि शेष"}`
         : "",
     });
   };
@@ -169,7 +170,7 @@ export default function PanditsPage() {
     }
 
     if (!bookingForm.scheduleAt) {
-      setBookingError("Please choose a date and time for the service.");
+      setBookingError("कृपया सेवा की तिथि और समय चुनें।");
       return;
     }
 
@@ -215,10 +216,10 @@ export default function PanditsPage() {
         customer: user,
       });
 
-      setBookingSuccess("Pandit booking created and payment completed successfully.");
+      setBookingSuccess("पंडित बुकिंग और भुगतान सफलतापूर्वक पूरा हुआ।");
       setRecentReceipt(paymentResult.entity);
     } catch (error) {
-      setBookingError(error.message);
+      setBookingError(hindiError(error));
     } finally {
       setBookingLoading(false);
     }
@@ -226,6 +227,12 @@ export default function PanditsPage() {
 
   return (
     <div className="dp-pandits-page">
+    <div className="dp-pandit-sanctum" aria-hidden="true">
+      <span className="dp-pandit-yantra" />
+      <span className="dp-pandit-pillar dp-pandit-pillar--left" />
+      <span className="dp-pandit-pillar dp-pandit-pillar--right" />
+      <i /><b />
+    </div>
     <div className="container-shell py-12">
       <SectionTitle
         eyebrow="पंडित बुकिंग"
@@ -234,7 +241,7 @@ export default function PanditsPage() {
       />
       {hawanContext.title ? (
         <div className="mt-6 rounded-[24px] border border-brand-gold/30 bg-amber-50 p-5">
-          <p className="eyebrow">Booking from Hawan Guide</p>
+          <p className="eyebrow">हवन मार्गदर्शिका से बुकिंग</p>
           <h2 className="mt-2 text-2xl">{hawanContext.title}</h2>
           <p className="mt-2 text-sm leading-6 text-brand-ink/65">Language: {hawanContext.language} · Missing materials and ritual context will be prefilled in booking notes.</p>
         </div>
@@ -286,7 +293,7 @@ export default function PanditsPage() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <h3 className="text-2xl font-bold text-brand-ink">{profile.name}</h3>
-                          <p className="mt-1 text-sm text-brand-ink/65">{profile.serviceCities?.join(", ") || "Multiple cities"}</p>
+                          <p className="mt-1 text-sm text-brand-ink/65">{profile.serviceCities?.join(", ") || "कई शहरों में उपलब्ध"}</p>
                         </div>
                         <div className="flex items-center gap-1 rounded-full bg-brand-cream px-3 py-2 text-sm font-semibold text-brand-ink">
                           <Star className="h-4 w-4 text-brand-gold" />
@@ -294,7 +301,7 @@ export default function PanditsPage() {
                         </div>
                       </div>
 
-                      <p className="mt-4 text-sm leading-7 text-brand-ink/70">{profile.bio || "Verified pandit available for rituals, hawan, and guided ceremonies."}</p>
+                      <p className="mt-4 text-sm leading-7 text-brand-ink/70">{hindiContent(profile.bio, "पूजा, हवन और विधिवत अनुष्ठान के लिए सत्यापित पंडित उपलब्ध हैं।")}</p>
 
                       <div className="mt-5 space-y-3">
                         {profile.services.map((service) => (
@@ -303,24 +310,24 @@ export default function PanditsPage() {
                               <div>
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-brand-maroon">
-                                    {service.serviceType}
+                                    {hindiLabel(service.serviceType)}
                                   </span>
                                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-brand-ink">
                                     {formatCurrency(service.basePrice)}
                                   </span>
                                 </div>
-                                <h4 className="mt-3 text-lg font-bold text-brand-ink">{service.name}</h4>
-                                <p className="mt-2 text-sm leading-6 text-brand-ink/70">{service.description}</p>
+                                <h4 className="mt-3 text-lg font-bold text-brand-ink">{hindiLabel(service.name)}</h4>
+                                <p className="mt-2 text-sm leading-6 text-brand-ink/70">{hindiContent(service.description, "इस सेवा का पूरा विवरण बुकिंग के समय दिखाया जाएगा।")}</p>
                               </div>
 
-                              <Button onClick={() => handleSelectService(profile, service)}>Book service</Button>
+                              <Button onClick={() => handleSelectService(profile, service)}>सेवा बुक करें</Button>
                             </div>
 
                             <div className="mt-4 grid gap-2 text-xs font-semibold text-brand-ink/75 sm:grid-cols-2">
-                              <div className="rounded-full bg-white px-3 py-2">Travel: {formatCurrency(service.addons?.travelCharge || 0)}</div>
-                              <div className="rounded-full bg-white px-3 py-2">Samagri: {formatCurrency(service.addons?.samagriCost || 0)}</div>
-                              <div className="rounded-full bg-white px-3 py-2">Dakshina: {formatCurrency(service.addons?.extraDakshina || 0)}</div>
-                              <div className="rounded-full bg-white px-3 py-2">Video fee: {formatCurrency(service.addons?.videoDakshinaFee || 0)}</div>
+                              <div className="rounded-full bg-white px-3 py-2">यात्रा: {formatCurrency(service.addons?.travelCharge || 0)}</div>
+                              <div className="rounded-full bg-white px-3 py-2">सामग्री: {formatCurrency(service.addons?.samagriCost || 0)}</div>
+                              <div className="rounded-full bg-white px-3 py-2">दक्षिणा: {formatCurrency(service.addons?.extraDakshina || 0)}</div>
+                              <div className="rounded-full bg-white px-3 py-2">दृश्य वार्ता शुल्क: {formatCurrency(service.addons?.videoDakshinaFee || 0)}</div>
                             </div>
                           </div>
                         ))}
@@ -358,7 +365,7 @@ export default function PanditsPage() {
                   <div>
                     <p className="text-sm font-bold text-brand-ink">{selectedOffer.profile.name}</p>
                     <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-clay">
-                      {selectedOffer.service.serviceType} service
+                      {hindiLabel(selectedOffer.service.serviceType)} सेवा
                     </p>
                   </div>
                   <p className="text-lg font-bold text-brand-maroon">{formatCurrency(selectedOffer.service.basePrice)}</p>
@@ -392,7 +399,7 @@ export default function PanditsPage() {
                             : "bg-brand-cream text-brand-ink"
                         }`}
                       >
-                        {mode}
+                        {hindiLabel(mode)}
                       </button>
                     ))}
                   </div>
@@ -400,35 +407,35 @@ export default function PanditsPage() {
 
                 {requiresAddress ? (
                   <>
-                    <Input label="Address label" name="label" value={bookingForm.label} onChange={handleBookingFieldChange} />
-                    <Input label="Landmark" name="landmark" value={bookingForm.landmark} onChange={handleBookingFieldChange} />
-                    <Input label="Address line 1" name="line1" value={bookingForm.line1} onChange={handleBookingFieldChange} />
-                    <Input label="Address line 2" name="line2" value={bookingForm.line2} onChange={handleBookingFieldChange} />
-                    <Input label="City" name="city" value={bookingForm.city} onChange={handleBookingFieldChange} />
-                    <Input label="State" name="state" value={bookingForm.state} onChange={handleBookingFieldChange} />
-                    <Input label="Pincode" name="pincode" value={bookingForm.pincode} onChange={handleBookingFieldChange} />
+                    <Input label="पते का नाम" name="label" value={bookingForm.label} onChange={handleBookingFieldChange} />
+                    <Input label="निकटस्थ स्थान" name="landmark" value={bookingForm.landmark} onChange={handleBookingFieldChange} />
+                    <Input label="पता पंक्ति १" name="line1" value={bookingForm.line1} onChange={handleBookingFieldChange} />
+                    <Input label="पता पंक्ति २" name="line2" value={bookingForm.line2} onChange={handleBookingFieldChange} />
+                    <Input label="शहर" name="city" value={bookingForm.city} onChange={handleBookingFieldChange} />
+                    <Input label="राज्य" name="state" value={bookingForm.state} onChange={handleBookingFieldChange} />
+                    <Input label="पिनकोड" name="pincode" value={bookingForm.pincode} onChange={handleBookingFieldChange} />
                   </>
                 ) : (
                   <div className="rounded-[22px] bg-brand-cream/70 px-4 py-4 text-sm leading-7 text-brand-ink/75 md:col-span-2">
-                    Online pandit guidance ke liye address fields hide kar diye gaye hain. Agar physical visit chahiye ho to `OFFLINE` select karo.
+                    ऑनलाइन पंडित मार्गदर्शन के लिए पते की आवश्यकता नहीं है। प्रत्यक्ष सेवा चाहिए तो प्रत्यक्ष सेवा चुनें।
                   </div>
                 )}
 
                 <label className="flex flex-col gap-2 text-sm font-medium text-brand-ink md:col-span-2">
-                  <span>Notes for pandit</span>
+                  <span>पंडित के लिए टिप्पणी</span>
                   <textarea
                     name="notes"
                     value={bookingForm.notes}
                     onChange={handleBookingFieldChange}
                     rows="4"
                     className="rounded-2xl border border-brand-sand bg-white px-4 py-3 outline-none transition focus:border-brand-clay"
-                    placeholder="Mention samagri expectations, society instructions, or family preferences"
+                    placeholder="सामग्री, भवन के निर्देश या परिवार की प्राथमिकताएँ लिखें"
                   />
                 </label>
               </div>
 
               <div className="rounded-[26px] border border-brand-sand/70 p-4">
-                <p className="text-sm font-bold text-brand-ink">Pricing breakdown</p>
+                <p className="text-sm font-bold text-brand-ink">शुल्क का पूरा विवरण</p>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {requiresAddress ? (
                     <Input label="Travel charge" name="travelCharge" type="number" min="0" value={bookingForm.travelCharge} onChange={handleBookingFieldChange} />
