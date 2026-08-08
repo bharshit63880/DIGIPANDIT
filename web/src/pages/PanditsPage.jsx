@@ -233,12 +233,20 @@ export default function PanditsPage() {
       <span className="dp-pandit-pillar dp-pandit-pillar--right" />
       <i /><b />
     </div>
-    <div className="container-shell py-12">
+    <div className="container-shell py-12 dp-pandit-content">
+      <section className="dp-pandit-hero">
       <SectionTitle
         eyebrow="पंडित बुकिंग"
         title="स्पष्ट पता और कीमत के साथ पूजा, हवन और कथा की बुकिंग करें"
         description="पंडित बुकिंग, ज्योतिष परामर्श से अलग है। इसमें निश्चित सेवा शुल्क के साथ यात्रा, सामग्री और दक्षिणा शुल्क शामिल हो सकते हैं।"
       />
+      <div className="dp-pandit-assurance" aria-label="सेवा की विशेषताएँ">
+        <span>✦ सत्यापित पंडित</span>
+        <span>☆ स्पष्ट मूल्य</span>
+        <span>▣ सुरक्षित भुगतान</span>
+        <span>◌ सहायता उपलब्ध</span>
+      </div>
+      </section>
       {hawanContext.title ? (
         <div className="mt-6 rounded-[24px] border border-brand-gold/30 bg-amber-50 p-5">
           <p className="eyebrow">हवन मार्गदर्शिका से बुकिंग</p>
@@ -505,12 +513,12 @@ export default function PanditsPage() {
           ) : (
             <div className="mt-8 space-y-4">
               {[
-                { icon: MapPinHouse, text: "Mandatory full address for offline puja logistics" },
-                { icon: CalendarDays, text: "Date and time capture for the ritual schedule" },
-                { icon: CarTaxiFront, text: "Travel, samagri, and dakshina shown in one bill" },
-                { icon: Video, text: "Optional online guidance fee for remote support" },
-                { icon: NotebookText, text: "Special notes field for family and ceremony requests" },
-                { icon: Sparkles, text: "Astrology stays on the Astrology page and is not mixed here" },
+                { icon: MapPinHouse, text: "प्रत्यक्ष पूजा व्यवस्था के लिए पूरा पता आवश्यक है" },
+                { icon: CalendarDays, text: "अनुष्ठान के लिए तिथि और समय स्पष्ट रूप से चुनें" },
+                { icon: CarTaxiFront, text: "यात्रा, सामग्री और दक्षिणा एक ही विवरण में देखें" },
+                { icon: Video, text: "दूरस्थ सहायता के लिए वैकल्पिक ऑनलाइन मार्गदर्शन" },
+                { icon: NotebookText, text: "परिवार और अनुष्ठान की विशेष आवश्यकताएँ लिखें" },
+                { icon: Sparkles, text: "ज्योतिष परामर्श अलग ज्योतिष पृष्ठ पर उपलब्ध है" },
               ].map((item) => {
                 const Icon = item.icon;
                 return (

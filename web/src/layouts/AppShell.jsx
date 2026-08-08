@@ -4,7 +4,7 @@ import { Navbar } from "../components/Navbar";
 export default function AppShell() {
   const { pathname } = useLocation();
   const isCinematicHome = pathname === "/";
-  const isImmersivePage = ["/login", "/register", "/astrology", "/hawan-guide", "/store", "/cart"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
+  const isImmersivePage = ["/login", "/register", "/astrology", "/hawan-guide", "/store", "/cart", "/pandits"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
   return (
     <div className={`min-h-screen ${isCinematicHome ? "bg-[#130b25]" : "bg-brand-cream"} ${isImmersivePage ? "dp-shell--immersive" : ""}`}>
       <Navbar />
