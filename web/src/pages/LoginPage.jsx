@@ -31,12 +31,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container-shell py-16">
-      <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
-        <h1 className="text-4xl font-bold text-brand-ink">Welcome back</h1>
-        <p className="mt-3 text-brand-ink/65">Sign in to manage bookings, chat, store orders, and dashboard access.</p>
+    <main className="dp-auth-page">
+      <div className="dp-auth-glow" aria-hidden="true" />
+      <div className="dp-auth-shell">
+        <section className="dp-auth-intro" aria-labelledby="login-intro-title">
+          <div className="dp-auth-sigil" aria-hidden="true"><span>ॐ</span></div>
+          <p className="dp-auth-kicker">DigiPandit · सुरक्षित प्रवेश</p>
+          <h2 id="login-intro-title">आपकी आध्यात्मिक यात्रा फिर से यहीं से आगे बढ़ती है।</h2>
+          <p>अपनी बुकिंग, परामर्श, पूजा सामग्री और व्यक्तिगत डैशबोर्ड तक सुरक्षित रूप से पहुँचें।</p>
+          <div className="dp-auth-trust"><span>सुरक्षित सत्र</span><span>स्पष्ट सेवाएँ</span><span>गोपनीयता का सम्मान</span></div>
+        </section>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+        <section className="dp-auth-card" aria-labelledby="login-heading">
+          <p className="dp-auth-kicker">स्वागतम्</p>
+          <h1 id="login-heading">Welcome back</h1>
+          <p className="dp-auth-copy">Sign in to manage bookings, chat, store orders, and dashboard access.</p>
+
+        <form onSubmit={handleSubmit} className="dp-auth-form mt-8 space-y-4">
           <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <Input
             label="Password"
@@ -54,7 +65,7 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <div className="mt-5 flex flex-wrap gap-4 text-sm">
+        <div className="dp-auth-links mt-5 flex flex-wrap gap-4 text-sm">
           <Link to="/forgot-password" state={{ email: form.email }} className="font-semibold text-brand-maroon">
             Forgot your password?
           </Link>
@@ -63,13 +74,14 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <p className="mt-6 text-sm text-brand-ink/70">
+        <p className="dp-auth-switch mt-6 text-sm">
           New here?{" "}
           <Link to="/register" className="font-semibold text-brand-maroon">
             Create an account
           </Link>
         </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

@@ -54,7 +54,7 @@ export default function CartPage() {
   };
 
   return (
-    <div className="container-shell py-12">
+    <div className="dp-theme dp-store-theme container-shell py-12">
       <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="rounded-[36px] bg-white p-8 shadow-soft">
           <h1 className="text-4xl font-bold text-brand-ink">आपका कार्ट</h1>

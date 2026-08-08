@@ -225,6 +225,7 @@ export default function PanditsPage() {
   };
 
   return (
+    <div className="dp-pandits-page">
     <div className="container-shell py-12">
       <SectionTitle
         eyebrow="पंडित बुकिंग"
@@ -518,6 +519,7 @@ export default function PanditsPage() {
           )}
         </aside>
       </div>
+    </div>
     </div>
   );
 }

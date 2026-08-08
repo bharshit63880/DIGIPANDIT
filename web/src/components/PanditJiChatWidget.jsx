@@ -85,14 +85,14 @@ export function PanditJiChatWidget() {
     <>
       <button
         onClick={() => setOpen((value) => !value)}
-        className="fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-full bg-brand-maroon px-5 py-4 text-sm font-bold text-white shadow-soft hover:bg-brand-ink"
+        className="panditji-trigger fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-full bg-brand-maroon px-5 py-4 text-sm font-bold text-white shadow-soft hover:bg-brand-ink"
       >
         {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
         PanditJi
       </button>
 
       {open ? (
-        <div className="fixed bottom-24 right-5 z-50 flex h-[560px] w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-[30px] border border-brand-sand bg-white shadow-soft">
+        <div className="panditji-panel fixed bottom-24 right-5 z-50 flex h-[560px] w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-[30px] border border-brand-sand bg-white shadow-soft">
           <div className="bg-brand-maroon p-5 text-white">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">

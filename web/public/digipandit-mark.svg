@@ -1,37 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title id="title">DigiPandit brand mark</title>
-  <desc id="desc">A glowing diya and digital pixels inside a deep plum arch.</desc>
+  <title id="title">DigiPandit</title><desc id="desc">A spiritual guide reading an open scripture inside a golden temple arch.</desc>
   <defs>
-    <linearGradient id="bg" x1="36" y1="24" x2="220" y2="232" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5f2a53"/>
-      <stop offset="1" stop-color="#32152d"/>
-    </linearGradient>
-    <linearGradient id="flame" x1="128" y1="53" x2="128" y2="143" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#fff8cf"/>
-      <stop offset=".48" stop-color="#f4c15d"/>
-      <stop offset="1" stop-color="#db743f"/>
-    </linearGradient>
-    <linearGradient id="bowl" x1="72" y1="143" x2="184" y2="205" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#e7ad4f"/>
-      <stop offset="1" stop-color="#a65f4b"/>
-    </linearGradient>
-    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="7"/>
-    </filter>
+    <linearGradient id="panel" x1="32" y1="24" x2="222" y2="232"><stop stop-color="#241018"/><stop offset="1" stop-color="#090609"/></linearGradient>
+    <linearGradient id="gold" x1="58" y1="38" x2="202" y2="216"><stop stop-color="#fff0ae"/><stop offset=".35" stop-color="#e9ad45"/><stop offset=".72" stop-color="#9d551e"/><stop offset="1" stop-color="#f3c365"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#e9ad45" stop-opacity=".4"/><stop offset="1" stop-color="#e9ad45" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="5"/><feOffset dy="5"/><feComponentTransfer><feFuncA type="linear" slope=".5"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
-  <rect x="12" y="12" width="232" height="232" rx="62" fill="url(#bg)"/>
-  <path d="M57 192V103c0-41 31-73 71-73s71 32 71 73v89" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="7"/>
-  <circle cx="128" cy="126" r="47" fill="#f4c15d" opacity=".30" filter="url(#glow)"/>
-  <path d="M128 139c-21-13-25-31-15-48 5-9 14-18 15-31 18 17 28 31 27 47-1 14-10 26-27 32Z" fill="url(#flame)"/>
-  <path d="M128 126c-8-7-9-15-5-22 3-5 6-9 7-15 8 8 12 15 11 22 0 7-5 12-13 15Z" fill="#fff8cf"/>
-  <path d="M67 145h122c-4 35-26 61-61 61s-57-26-61-61Z" fill="url(#bowl)"/>
-  <path d="M77 158h102" stroke="#fff4cf" stroke-width="6" stroke-linecap="round" opacity=".82"/>
-  <path d="M97 206h62" stroke="#e7ad4f" stroke-width="9" stroke-linecap="round"/>
-  <g fill="#e7ad4f">
-    <rect x="39" y="91" width="12" height="12" rx="3"/>
-    <rect x="39" y="110" width="8" height="8" rx="2" opacity=".72"/>
-    <rect x="205" y="75" width="12" height="12" rx="3"/>
-    <rect x="209" y="94" width="8" height="8" rx="2" opacity=".72"/>
-  </g>
-  <circle cx="128" cy="42" r="4" fill="#e7ad4f"/>
+  <rect x="8" y="8" width="240" height="240" rx="58" fill="url(#panel)" stroke="#75401f" stroke-width="3"/>
+  <circle cx="128" cy="115" r="82" fill="url(#halo)"/>
+  <path d="M48 184V103c0-25 15-46 37-56 8-4 17-13 22-25 5 11 13 20 21 25 9-5 17-14 22-25 5 12 14 21 22 25 22 10 36 31 36 56v81" fill="none" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="128" cy="91" r="27" fill="#b96a2d" stroke="#f4c466" stroke-width="4"/>
+  <path d="M101 88c7-20 48-21 55 2-13-7-42-7-55-2Zm9 10c7 10 13 14 18 14s11-4 18-14c-2 21-8 34-18 34s-16-13-18-34Z" fill="url(#gold)"/>
+  <path d="M72 149c21-4 39 2 56 18 17-16 35-22 56-18v47c-21-4-39 2-56 17-17-15-35-21-56-17v-47Z" fill="#160b0d" stroke="url(#gold)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M128 168v45M84 165c15 0 28 5 44 17m44-17c-15 0-28 5-44 17" fill="none" stroke="#f5d98e" stroke-width="3" opacity=".8"/>
+  <circle cx="128" cy="52" r="4" fill="#fff0ae" filter="url(#shadow)"/>
 </svg>

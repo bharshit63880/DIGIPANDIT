@@ -333,7 +333,7 @@ export default function AstrologyHubPage() {
   ], []);
 
   return (
-    <div>
+    <div className="dp-theme dp-astrology-theme">
       <div className="overflow-hidden bg-brand-cream text-brand-ink">
         <section className="relative overflow-hidden bg-brand-ink text-white">
           <div className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(circle_at_80%_20%,rgba(255,255,255,.13),transparent_25%),radial-gradient(circle_at_13%_87%,rgba(255,255,255,.07),transparent_27%)]" />

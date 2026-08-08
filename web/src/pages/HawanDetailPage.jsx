@@ -187,7 +187,7 @@ export default function HawanDetailPage() {
   if (error || !hawan) return <div className="container-shell py-20"><div className="rounded-[32px] bg-white p-8 shadow-soft"><h1 className="text-4xl">Guide unavailable</h1><p className="mt-3 text-brand-ink/65">{error || "This guide may be unpublished or archived."}</p><Link to="/hawan-guide"><Button className="mt-6">Back to Hawan Guide</Button></Link></div></div>;
 
   return (
-    <div className="pb-28">
+    <div className="dp-theme dp-hawan-theme pb-28">
       <section className="bg-hero-pattern">
         <div className="container-shell py-12 lg:py-20">
           <Link to="/hawan-guide" className="inline-flex items-center gap-2 text-sm font-bold text-brand-maroon"><ArrowLeft className="h-4 w-4" />All Hawans</Link>

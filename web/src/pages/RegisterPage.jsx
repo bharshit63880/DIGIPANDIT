@@ -33,14 +33,25 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="container-shell py-16">
-      <div className="mx-auto max-w-2xl rounded-[36px] bg-white p-8 shadow-soft">
-        <h1 className="text-4xl font-bold text-brand-ink">Create your DigiPandit account</h1>
-        <p className="mt-3 text-brand-ink/65">
+    <main className="dp-auth-page dp-auth-page--register">
+      <div className="dp-auth-glow" aria-hidden="true" />
+      <div className="dp-auth-shell">
+        <section className="dp-auth-intro" aria-labelledby="register-intro-title">
+          <div className="dp-auth-sigil" aria-hidden="true"><span>ॐ</span></div>
+          <p className="dp-auth-kicker">DigiPandit · नवीन आरंभ</p>
+          <h2 id="register-intro-title">विश्वसनीय मार्गदर्शन के लिए अपना स्थान बनाएं।</h2>
+          <p>एक खाते से बुकिंग, परामर्श, हवन प्रगति और पूजा स्टोर की यात्रा संभालें।</p>
+          <div className="dp-auth-trust"><span>सुरक्षित जानकारी</span><span>सरल अनुभव</span><span>आपका नियंत्रण</span></div>
+        </section>
+
+        <section className="dp-auth-card dp-auth-card--wide" aria-labelledby="register-heading">
+        <p className="dp-auth-kicker">नवीन आरंभ</p>
+        <h1 id="register-heading">Create your DigiPandit account</h1>
+        <p className="dp-auth-copy">
           Register as a customer or pandit. Email verification will be available as the next step after registration.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="dp-auth-form mt-8 grid gap-4 md:grid-cols-2">
           <Input label="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <Input label="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
@@ -48,7 +59,7 @@ export default function RegisterPage() {
           <Input label="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
           <Input label="State" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
 
-          <label className="flex flex-col gap-2 text-sm font-medium text-brand-ink md:col-span-2">
+          <label className="dp-auth-select flex flex-col gap-2 text-sm font-medium md:col-span-2">
             <span>Account type</span>
             <select
               value={form.role}
@@ -69,19 +80,20 @@ export default function RegisterPage() {
           </div>
         </form>
 
-        <p className="mt-6 text-sm text-brand-ink/70">
+        <p className="dp-auth-switch mt-6 text-sm">
           Already have an account?{" "}
           <Link to="/login" className="font-semibold text-brand-maroon">
             Sign in
           </Link>
         </p>
-        <p className="mt-2 text-sm text-brand-ink/70">
+        <p className="dp-auth-switch mt-2 text-sm">
           Need a new verification code?{" "}
           <Link to="/verify-email" state={{ email: form.email }} className="font-semibold text-brand-maroon">
             Verify your email
           </Link>
         </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

@@ -33,7 +33,12 @@ export default function StorePage() {
   }, []);
 
   return (
-    <div className="container-shell py-12">
+    <div className="dp-theme dp-store-theme container-shell py-12">
+      <div className="dp-store-atmosphere" aria-hidden="true">
+        <span className="dp-store-mandala" />
+        <img src="/cinematic/puja-essentials.png" alt="" width="1024" height="805" />
+        <i /><b />
+      </div>
       <SectionTitle
         eyebrow="पूजा स्टोर"
         title="पूजा की आवश्यक सामग्री, एक भरोसेमंद जगह पर"

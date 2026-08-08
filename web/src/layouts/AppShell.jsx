@@ -1,12 +1,15 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 
 export default function AppShell() {
+  const { pathname } = useLocation();
+  const isCinematicHome = pathname === "/";
+  const isImmersivePage = ["/login", "/register", "/astrology", "/hawan-guide", "/store", "/cart"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
   return (
-    <div className="min-h-screen bg-brand-cream">
+    <div className={`min-h-screen ${isCinematicHome ? "bg-[#130b25]" : "bg-brand-cream"} ${isImmersivePage ? "dp-shell--immersive" : ""}`}>
       <Navbar />
       <Outlet />
-      <footer className="mt-16 border-t border-brand-sand bg-brand-maroon py-12 text-white">
+      <footer className={`${isCinematicHome ? "mt-0 border-white/10 bg-[#0d0818]" : "mt-16 border-brand-sand bg-brand-maroon"} border-t py-12 text-white`}>
         <div className="container-shell grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
           <div>
             <div className="flex items-center gap-3">

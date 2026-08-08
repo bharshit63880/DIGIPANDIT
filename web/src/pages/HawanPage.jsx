@@ -99,7 +99,7 @@ export default function HawanPage() {
   };
 
   return (
-    <div className="pb-20">
+    <div className="dp-theme dp-hawan-theme pb-20">
       <section className="relative overflow-hidden bg-hero-pattern">
         <div className="container-shell grid gap-10 py-16 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
           <div className="self-center">

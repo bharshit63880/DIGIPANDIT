@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
   const savings = product.compareAtPrice ? product.compareAtPrice - product.price : 0;
 
   return (
-    <div className="container-shell py-12">
+    <div className="dp-theme dp-store-theme container-shell py-12">
       <Link to="/store" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-maroon">
         <ChevronLeft className="h-4 w-4" />
         पूजा स्टोर पर वापस जाएँ
