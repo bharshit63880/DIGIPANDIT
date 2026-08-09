@@ -62,11 +62,9 @@ export function Navbar() {
     <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container-shell">
         <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4">
-          <Link to="/" className="dp-brand flex min-w-0 items-center" aria-label="डिजीपंडित होम">
-            <picture>
-              <source media="(max-width: 479px)" srcSet="/digipandit-emblem.webp" />
-              <img src="/digipandit-brand.webp" alt="DigiPandit" width="414" height="280" className="dp-brand__logo h-[68px] w-auto max-w-[112px] object-contain max-[479px]:h-12 max-[479px]:w-12" />
-            </picture>
+          <Link to="/" className="dp-brand flex min-w-0 items-center gap-3" aria-label="डिजीपंडित होम">
+            <img src="/digipandit-emblem.webp" alt="" width="48" height="48" className="dp-brand__mark h-12 w-12 shrink-0 object-contain" />
+            <div className="min-w-0 leading-none"><p data-no-translate className={`font-serif text-xl font-semibold ${navText}`}>Digi<span className="text-brand-gold">Pandit</span></p><p className="mt-1 text-[.58rem] font-bold tracking-[.15em] text-white/55">परंपरा, सरल रूप में</p></div>
           </Link>
           <nav className="hidden items-center justify-center lg:flex" aria-label="मुख्य नेविगेशन"><div className="dp-nav-rail flex items-center gap-1">
             {visibleItems.map((item) => <NavLink key={item.to} to={item.to} className={`dp-nav-link ${isItemActive(item) ? "is-active" : ""}`}>{item.label}</NavLink>)}
