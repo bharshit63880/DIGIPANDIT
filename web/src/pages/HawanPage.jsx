@@ -48,7 +48,7 @@ export default function HawanPage() {
     <header className="hg-hero">
       <div className="hg-shell hg-hero__inner">
         <p className="hg-eyebrow">स्रोत-संदर्भित हवन मार्गदर्शन</p>
-        <h2>अपने संकल्प से<br />सही हवन तक।</h2>
+        <h1>अपने संकल्प से<br />सही हवन तक।</h1>
         <p className="hg-hero__copy">प्रकाशित मार्गदर्शिकाओं में उद्देश्य, आवश्यक सामग्री, सुरक्षा निर्देश और क्रमबद्ध चरण एक ही स्थान पर देखें।</p>
         <div className="hg-actions">
           <a className="hg-button hg-button--primary" href="#hawan-library">हवन चुनें</a>
