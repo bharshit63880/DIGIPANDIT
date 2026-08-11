@@ -344,8 +344,20 @@ const uploadProductImageAdmin = asyncHandler(async (req, res) => {
   if (!product) throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
   if (!req.file) throw new ApiError(StatusCodes.BAD_REQUEST, "JPEG, PNG or WebP image is required");
 
-  const image = await uploadImage(req.file, "digipandit/products");
-  product.images = [image, ...product.images.slice(0, 3)];
+  let image;
+  try {
+    image = await uploadImage(req.file, "digipandit/products");
+  } catch (error) {
+    if (error.statusCode !== StatusCodes.SERVICE_UNAVAILABLE) throw error;
+    image = {
+      url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+      publicId: "database-upload",
+    };
+  }
+
+  product.images = image.publicId === "database-upload"
+    ? [image]
+    : [image, ...product.images.filter((item) => item.url !== image.url).slice(0, 3)];
   await product.save();
 
   res.json({ success: true, message: "Product image uploaded successfully", data: product });

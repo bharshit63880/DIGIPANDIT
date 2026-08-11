@@ -224,6 +224,7 @@ export default function AdminDashboardPage() {
   };
 
   const saveProduct = async () => {
+    setNotice("");
     const payload = {
       ...productForm,
       price: Number(productForm.price || 0),
@@ -239,26 +240,28 @@ export default function AdminDashboardPage() {
       delete payload.compareAtPrice;
     }
 
-    let savedProduct;
-    if (editingProductId) {
-      const response = await api.patch(`/admin/products/${editingProductId}`, payload);
-      savedProduct = response.data.data;
-      setNotice("Product updated successfully.");
-    } else {
-      const response = await api.post("/admin/products", payload);
-      savedProduct = response.data.data;
-      setNotice("Product created successfully.");
-    }
+    try {
+      let savedProduct;
+      if (editingProductId) {
+        const response = await api.patch(`/admin/products/${editingProductId}`, payload);
+        savedProduct = response.data.data;
+      } else {
+        const response = await api.post("/admin/products", payload);
+        savedProduct = response.data.data;
+      }
 
-    if (productImageFile && savedProduct?._id) {
-      const imageData = new FormData();
-      imageData.append("image", productImageFile);
-      await api.post(`/admin/products/${savedProduct._id}/image`, imageData);
-      setNotice("Product and image saved successfully.");
-    }
+      if (productImageFile && savedProduct?._id) {
+        const imageData = new FormData();
+        imageData.append("image", productImageFile);
+        await api.post(`/admin/products/${savedProduct._id}/image`, imageData);
+      }
 
-    resetProductForm();
-    loadData();
+      setNotice(editingProductId ? "उत्पाद सफलतापूर्वक अपडेट हो गया।" : "उत्पाद और चित्र सफलतापूर्वक जोड़ दिए गए।");
+      resetProductForm();
+      await loadData();
+    } catch (error) {
+      setNotice(error.message || "उत्पाद अपडेट नहीं हो सका। कृपया दोबारा प्रयास करें।");
+    }
   };
 
   const editProduct = (product) => {
