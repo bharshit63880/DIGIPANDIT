@@ -6,10 +6,12 @@ const ApiError = require("../utils/ApiError");
 const asyncHandler = require("../utils/asyncHandler");
 const escapeRegex = require("../utils/escapeRegex");
 const { buildMuhurat } = require("../services/muhuratService");
+const { ensureHawanSeedData } = require("../seeders/seedHawans");
 
 const publicFilter = { isPublished: true, isArchived: false, verificationStatus: "VERIFIED" };
 
 const listHawans = asyncHandler(async (req, res) => {
+  await ensureHawanSeedData();
   const { page, limit, category, purpose, difficulty, search, featured } = req.validated.query;
   const filter = { ...publicFilter };
   if (category) filter.category = category;
@@ -38,6 +40,7 @@ const listHawans = asyncHandler(async (req, res) => {
 });
 
 const getCategories = asyncHandler(async (_req, res) => {
+  await ensureHawanSeedData();
   const rows = await Hawan.aggregate([
     { $match: publicFilter },
     { $group: { _id: "$category", count: { $sum: 1 } } },
@@ -47,6 +50,7 @@ const getCategories = asyncHandler(async (_req, res) => {
 });
 
 const getHawanBySlug = asyncHandler(async (req, res) => {
+  await ensureHawanSeedData();
   const hawan = await Hawan.findOne({ slug: req.validated.params.slug, ...publicFilter })
     .populate("materials.product", "name slug price stock images category isActive")
     .populate("relatedProductIds", "name slug price stock images category isActive")
@@ -56,6 +60,7 @@ const getHawanBySlug = asyncHandler(async (req, res) => {
 });
 
 const recommendHawans = asyncHandler(async (req, res) => {
+  await ensureHawanSeedData();
   const input = req.validated.body;
   const term = new RegExp(escapeRegex(input.purpose), "i");
   const candidates = await Hawan.find({

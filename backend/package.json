@@ -15,7 +15,8 @@
     "qa:admin": "node src/qa/adminSmokeTest.js"
     ,
     "qa:hawan": "node src/qa/hawanSmokeTest.js",
-    "qa:hawan-source": "node src/qa/hawanSourceIntegrity.js"
+    "qa:hawan-source": "node src/qa/hawanSourceIntegrity.js",
+    "qa:hawan-seed": "node src/qa/hawanSeedIntegrity.js"
   },
   "dependencies": {
     "astronomy-engine": "^2.1.19",
