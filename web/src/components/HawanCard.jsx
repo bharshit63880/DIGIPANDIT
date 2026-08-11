@@ -1,30 +1,22 @@
-import { Clock3, IndianRupee, Sparkles, UserRoundCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const difficultyLabels = { BEGINNER: "आरंभ करने वालों के लिए सरल", INTERMEDIATE: "थोड़ा मार्गदर्शन उपयोगी", ADVANCED: "पंडित मार्गदर्शन उचित" };
+const difficultyLabels = { BEGINNER: "आरंभिक", INTERMEDIATE: "मध्यम", ADVANCED: "विशेषज्ञ सहायता उचित" };
+const categoryLabels = { POPULAR: "लोकप्रिय", CAREER: "करियर", MARRIAGE: "विवाह", HEALTH: "स्वास्थ्य", WEALTH: "समृद्धि", EDUCATION: "शिक्षा", FAMILY: "परिवार", GRAH_DOSH: "ग्रह दोष", SPIRITUAL: "आध्यात्मिक", PROPERTY: "संपत्ति", BUSINESS: "व्यवसाय" };
 
-export function HawanCard({ hawan, reason }) {
-  return (
-    <article className="surface-card flex h-full flex-col overflow-hidden">
-      <div className="flex min-h-40 items-end bg-gradient-to-br from-brand-maroon via-brand-clay to-brand-gold p-6 text-white">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/75">{hawan.category?.replaceAll("_", " ")}</p>
-          <h3 className="mt-2 text-3xl font-bold">{hawan.title}</h3>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col p-6">
-        {reason ? <p className="mb-3 rounded-2xl bg-brand-blush px-4 py-3 text-sm font-medium text-brand-maroon">{reason}</p> : null}
-        <p className="text-sm leading-7 text-brand-ink/70">{hawan.shortDescription}</p>
-        <div className="mt-5 grid grid-cols-2 gap-3 text-xs font-semibold text-brand-ink/70">
-          <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-brand-clay" />{hawan.durationMinutes} मिनट</span>
-          <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-brand-clay" />{difficultyLabels[hawan.difficulty]}</span>
-          <span className="flex items-center gap-2"><IndianRupee className="h-4 w-4 text-brand-clay" />{hawan.estimatedCostRange?.min}–{hawan.estimatedCostRange?.max}</span>
-          <span className="flex items-center gap-2"><UserRoundCheck className="h-4 w-4 text-brand-clay" />{hawan.panditRecommended ? "पंडित की सलाह उचित" : "वैकल्पिक सहायता"}</span>
-        </div>
-        <Link to={`/hawan-guide/${hawan.slug}`} className="mt-6 inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand-maroon px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-ink">
-          निर्देशित अनुष्ठान देखें
-        </Link>
-      </div>
-    </article>
-  );
+export function HawanCard({ hawan }) {
+  const participants = hawan.participantRange ? `${hawan.participantRange.min || 1}–${hawan.participantRange.max || 1} व्यक्ति` : "व्यक्ति संख्या देखें";
+  const materialCount = hawan.materialCount ?? hawan.materials?.length;
+  return <article className="hg-card">
+    <div className="hg-card__top"><span>{categoryLabels[hawan.category] || hawan.category}</span>{hawan.panditRecommended ? <em>पंडित की सलाह उचित</em> : null}</div>
+    <h3>{hawan.title}</h3>
+    <p>{hawan.shortDescription}</p>
+    {hawan.purposes?.length ? <ul className="hg-card__purposes">{hawan.purposes.slice(0, 3).map((purpose) => <li key={purpose}>{purpose}</li>)}</ul> : null}
+    <dl className="hg-card__facts">
+      <div><dt>समय</dt><dd>{hawan.durationMinutes} मिनट</dd></div>
+      <div><dt>स्तर</dt><dd>{difficultyLabels[hawan.difficulty] || hawan.difficulty}</dd></div>
+      <div><dt>सहभागी</dt><dd>{participants}</dd></div>
+      {materialCount !== undefined ? <div><dt>सामग्री</dt><dd>{materialCount} वस्तुएँ</dd></div> : null}
+    </dl>
+    <Link to={`/hawan-guide/${hawan.slug}`}>पूरी मार्गदर्शिका देखें <span aria-hidden="true">→</span></Link>
+  </article>;
 }

@@ -1,289 +1,161 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Bookmark, Check, ChevronDown, Clock3, Flame, Pause, Play, Share2, ShieldCheck, ShoppingCart, Volume2, X } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Button } from "../components/Button";
-import { RitualCounter } from "../components/RitualCounter";
-import { SafetyConfirmation } from "../components/SafetyConfirmation";
-import { addToCart } from "../features/cart/cartSlice";
-import { useAuth } from "../hooks/useAuth";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { api } from "../lib/api";
+import { useAuth } from "../hooks/useAuth";
 import { HawanSourceAttribution } from "../components/HawanSourceAttribution";
+import { clearLocalHawanProgress, emptyHawanProgress, loadLocalHawanProgress, progressPayload, saveLocalHawanProgress } from "../features/hawan/hawanProgress";
+import "../styles/hawan-journey.css";
 
-const localKey = (id) => `digipandit_hawan_progress_${id}`;
+const safetyChecks = [
+  "हवन केवल खुले या अच्छी तरह हवादार स्थान में करें।",
+  "हवन कुंड को समतल और अग्निरोधी आधार पर रखें।",
+  "पानी, रेत या उपयुक्त अग्निशामक साधन पास रखें।",
+  "बच्चों और पालतू पशुओं को सुरक्षित दूरी पर रखें।",
+  "ढीले वस्त्र, पर्दे और ज्वलनशील वस्तुएँ अग्नि से दूर रखें।",
+  "जलती अग्नि को कभी अकेला न छोड़ें।",
+  "धुएँ से परेशानी, श्वसन संबंधी समस्या या अस्वस्थता होने पर तुरंत रुकें।",
+  "स्थानीय अग्नि-सुरक्षा नियमों का पालन करें और संदेह होने पर विशेषज्ञ सहायता लें।",
+];
+const difficultyLabels = { BEGINNER: "आरंभिक", INTERMEDIATE: "मध्यम", ADVANCED: "विशेषज्ञ सहायता उचित" };
+
+function LoadingState() { return <div className="hg-page"><div className="hg-shell hg-state hg-detail-state"><strong>मार्गदर्शिका लोड हो रही है…</strong></div></div>; }
 
 export default function HawanDetailPage() {
   const { slug } = useParams();
   const { isAuthenticated } = useAuth();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [hawan, setHawan] = useState(null);
-  const [materials, setMaterials] = useState([]);
-  const [pandits, setPandits] = useState([]);
-  const [muhurat, setMuhurat] = useState(null);
-  const [cityQuery, setCityQuery] = useState("New Delhi, DL");
-  const [cityOptions, setCityOptions] = useState([]);
-  const [muhuratLoading, setMuhuratLoading] = useState(false);
-  const [progress, setProgress] = useState({ completedStepIds: [], readyMaterialIds: [], currentStepIndex: 0, mantraCounts: {}, offeringCount: 0, saved: false });
+  const [progress, setProgress] = useState(emptyHawanProgress());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [showSafety, setShowSafety] = useState(false);
+  const [safetyAccepted, setSafetyAccepted] = useState(false);
   const [guided, setGuided] = useState(false);
-  const [language, setLanguage] = useState(localStorage.getItem("digipandit_hawan_language") || "hi-IN");
-  const [speaking, setSpeaking] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const [timerRunning, setTimerRunning] = useState(false);
-  const [audioSpeed, setAudioSpeed] = useState(1);
-  const [audioLoop, setAudioLoop] = useState(false);
   const saveTimer = useRef(null);
-  const audioRef = useRef(null);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const detailResponse = await api.get(`/hawans/${slug}`);
-        const guide = detailResponse.data.data;
-        setHawan(guide);
-        const [materialResponse, panditResponse, muhuratResponse] = await Promise.all([
-          api.get(`/hawans/${guide._id}/materials`),
-          api.get(`/hawans/${guide._id}/pandits`),
-          api.get(`/hawans/${guide._id}/muhurat`, { params: { latitude: 28.6139, longitude: 77.209, location: "New Delhi, DL" } }),
-        ]);
-        setMaterials(materialResponse.data.data || []);
-        setPandits(panditResponse.data.data || []);
-        setMuhurat(muhuratResponse.data.data);
-        const stored = JSON.parse(localStorage.getItem(localKey(guide._id)) || "null");
-        if (stored) setProgress((current) => ({ ...current, ...stored }));
-        if (isAuthenticated) {
-          const savedResponse = await api.get(`/hawans/${guide._id}/progress`);
-          if (savedResponse.data.data) setProgress((current) => ({ ...current, ...savedResponse.data.data }));
-        }
-      } catch (requestError) {
-        setError(requestError.message);
-      } finally {
-        setLoading(false);
+  const loadGuide = useCallback(async () => {
+    setLoading(true); setError("");
+    try {
+      const response = await api.get(`/hawans/${slug}`);
+      const guide = response.data?.data;
+      setHawan(guide);
+      let restored = loadLocalHawanProgress(guide._id);
+      if (isAuthenticated) {
+        try {
+          const cloud = await api.get(`/hawans/${guide._id}/progress`);
+          if (cloud.data?.data && String(cloud.data.data.updatedAt || "") > String(restored.updatedAt || "")) restored = { ...restored, ...cloud.data.data };
+        } catch { setNotice("स्थानीय प्रगति उपलब्ध है। ऑनलाइन समन्वय अभी नहीं हो सका।"); }
       }
-    };
-    load();
+      setProgress(restored);
+    } catch (requestError) { setError(requestError.message || "मार्गदर्शिका उपलब्ध नहीं है।"); }
+    finally { setLoading(false); }
   }, [slug, isAuthenticated]);
 
-  const step = hawan?.steps?.[progress.currentStepIndex];
-  const mantra = hawan?.mantras?.find((item) => item.key === step?.mantraKey);
-  const readyCount = progress.readyMaterialIds?.length || 0;
-  const completedCount = progress.completedStepIds?.length || 0;
-  const overallPercent = hawan?.steps?.length ? Math.round((completedCount / hawan.steps.length) * 100) : 0;
+  useEffect(() => { loadGuide(); }, [loadGuide]);
+  useEffect(() => () => clearTimeout(saveTimer.current), []);
 
-  const persist = (next) => {
+  const persist = useCallback((next, message = "") => {
     if (!hawan) return;
-    localStorage.setItem(localKey(hawan._id), JSON.stringify(next));
-    clearTimeout(saveTimer.current);
+    const local = saveLocalHawanProgress(hawan._id, next, { slug: hawan.slug, title: hawan.title });
+    setProgress(local);
+    if (message) setNotice(message);
     if (isAuthenticated) {
-      saveTimer.current = window.setTimeout(() => {
-        api.post(`/hawans/${hawan._id}/progress`, next).catch(() => setNotice("Progress is saved on this device; cloud sync will retry when the connection returns."));
-      }, 500);
+      clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(async () => {
+        try { await api.post(`/hawans/${hawan._id}/progress`, progressPayload(local)); }
+        catch { setNotice("प्रगति इस उपकरण पर सुरक्षित है; ऑनलाइन समन्वय बाद में फिर प्रयास करेगा।"); }
+      }, 450);
     }
-  };
-  const updateProgress = (patch) => setProgress((current) => {
-    const next = { ...current, ...patch };
-    persist(next);
-    return next;
-  });
+  }, [hawan, isAuthenticated]);
 
-  useEffect(() => {
-    if (!step) return;
-    setTimer(step.durationSeconds || 0);
-    setTimerRunning(false);
-    window.speechSynthesis?.cancel();
-    setSpeaking(false);
-  }, [step?._id]);
-
-  useEffect(() => {
-    if (!timerRunning || timer <= 0) return undefined;
-    const id = window.setInterval(() => setTimer((value) => {
-      if (value <= 1) {
-        window.clearInterval(id);
-        setTimerRunning(false);
-        return 0;
-      }
-      return value - 1;
-    }), 1000);
-    return () => window.clearInterval(id);
-  }, [timerRunning, timer]);
-
-  useEffect(() => () => {
-    clearTimeout(saveTimer.current);
-    window.speechSynthesis?.cancel();
-  }, []);
-
-  const speak = () => setNotice("Narration is unavailable until a verified mantra audio recording is attached.");
+  const materials = hawan?.materials || [];
+  const steps = hawan?.steps || [];
+  const requiredMaterials = materials.filter((item) => item.required !== false);
+  const requiredReady = requiredMaterials.every((item) => progress.readyMaterialIds?.includes(String(item._id)));
+  const currentIndex = Math.min(progress.currentStepIndex || 0, Math.max(steps.length - 1, 0));
+  const currentStep = steps[currentIndex];
+  const completedCount = progress.completedStepIds?.length || 0;
+  const percent = steps.length ? Math.round((completedCount / steps.length) * 100) : 0;
+  const mantra = useMemo(() => hawan?.mantras?.find((item) => item.key === currentStep?.mantraKey && item.verificationStatus === "VERIFIED"), [hawan, currentStep]);
 
   const toggleMaterial = (id) => {
-    const current = progress.readyMaterialIds || [];
-    updateProgress({ readyMaterialIds: current.includes(id) ? current.filter((item) => item !== id) : [...current, id] });
+    const key = String(id); const current = progress.readyMaterialIds || [];
+    persist({ ...progress, readyMaterialIds: current.includes(key) ? current.filter((item) => item !== key) : [...current, key] });
   };
-  const markStep = () => {
-    const current = progress.completedStepIds || [];
-    const id = step._id;
-    updateProgress({ completedStepIds: current.includes(id) ? current.filter((item) => item !== id) : [...current, id] });
-  };
-  const addMissing = () => {
-    const ready = new Set(progress.readyMaterialIds || []);
-    const products = materials.filter((item) => !ready.has(item._id) && item.product?.stock > 0);
-    products.forEach((item) => dispatch(addToCart(item.product)));
-    setNotice(products.length ? `${products.length} available missing items added to cart.` : "No linked in-stock products are currently available. You can still use the checklist.");
+  const toggleStep = () => {
+    const key = String(currentStep._id); const current = progress.completedStepIds || [];
+    persist({ ...progress, completedStepIds: current.includes(key) ? current.filter((item) => item !== key) : [...current, key] });
   };
   const startGuide = () => {
-    if (!progress.safetyConfirmedAt) return setShowSafety(true);
-    setGuided(true);
-  };
-  const confirmSafety = () => {
-    const timestamp = new Date().toISOString();
-    updateProgress({ safetyConfirmedAt: timestamp, safetyConfirmed: true });
-    setShowSafety(false);
-    setGuided(true);
+    if (!requiredReady || !safetyAccepted) return;
+    const next = { ...progress, saved: true, safetyConfirmedAt: new Date().toISOString(), startedAt: progress.startedAt || new Date().toISOString() };
+    persist(next, "सुरक्षा पुष्टि और प्रगति सुरक्षित कर दी गई है।"); setGuided(true);
   };
   const finish = async () => {
-    updateProgress({ completedAt: new Date().toISOString() });
-    if (isAuthenticated) await api.post(`/hawans/${hawan._id}/complete`).catch((requestError) => setNotice(requestError.message));
-    setGuided(false);
-    setNotice("Hawan guide completed. This digital record is a personal souvenir, not a certificate of religious authority.");
+    if (completedCount !== steps.length) { setNotice("समाप्त करने से पहले सभी चरण पूरे चिह्नित करें।"); return; }
+    const next = { ...progress, completedAt: new Date().toISOString(), saved: true };
+    persist(next, "हवन मार्गदर्शिका पूर्ण चिह्नित की गई।"); setGuided(false);
+    if (isAuthenticated) { try { await api.post(`/hawans/${hawan._id}/progress`, progressPayload(next)); await api.post(`/hawans/${hawan._id}/complete`); } catch { /* local completion remains safe */ } }
   };
-  const share = async () => {
-    const payload = { title: hawan.title, text: hawan.shortDescription, url: window.location.href };
-    if (navigator.share) await navigator.share(payload);
-    else {
-      await navigator.clipboard.writeText(window.location.href);
-      setNotice("Guide link copied.");
-    }
+  const restart = () => {
+    if (!window.confirm("क्या आप इस हवन की पूरी सुरक्षित प्रगति मिटाकर दोबारा आरंभ करना चाहते हैं?")) return;
+    clearLocalHawanProgress(hawan._id); setProgress(emptyHawanProgress()); setSafetyAccepted(false); setGuided(false); setNotice("स्थानीय प्रगति साफ कर दी गई है।");
   };
 
-  const searchCities = async (value) => {
-    setCityQuery(value);
-    if (value.trim().length < 2) return setCityOptions([]);
-    const response = await api.get("/astrology/cities", { params: { q: value } });
-    setCityOptions((response.data.data || []).slice(0, 6));
-  };
+  if (loading) return <LoadingState />;
+  if (error || !hawan) return <div className="hg-page"><div className="hg-shell hg-state hg-detail-state" role="alert"><strong>मार्गदर्शिका नहीं खुल सकी</strong><span>{error}</span><button type="button" onClick={loadGuide}>फिर प्रयास करें</button><Link to="/hawan-guide">हवन संग्रह पर लौटें</Link></div></div>;
 
-  const selectMuhuratCity = async (city) => {
-    setCityQuery(`${city.name}, ${city.stateCode}`);
-    setCityOptions([]);
-    try {
-      setMuhuratLoading(true);
-      const response = await api.get(`/hawans/${hawan._id}/muhurat`, {
-        params: { latitude: city.latitude, longitude: city.longitude, location: `${city.name}, ${city.stateCode}` },
-      });
-      setMuhurat(response.data.data);
-    } catch (requestError) {
-      setNotice(requestError.message);
-    } finally {
-      setMuhuratLoading(false);
-    }
-  };
+  return <div className="hg-page">
+    <header className="hg-detail-hero"><div className="hg-shell">
+      <Link className="hg-back-link" to="/hawan-guide">← सभी हवन</Link><p className="hg-eyebrow">{hawan.category?.replaceAll("_", " ")}</p>
+      <h1>{hawan.title}</h1><p className="hg-hero__copy">{hawan.shortDescription}</p>
+      <dl className="hg-summary">
+        <div><dt>अनुमानित समय</dt><dd>{hawan.durationMinutes} मिनट</dd></div><div><dt>स्तर</dt><dd>{difficultyLabels[hawan.difficulty] || hawan.difficulty}</dd></div>
+        <div><dt>सहभागी</dt><dd>{hawan.participantRange?.min || 1}–{hawan.participantRange?.max || 1}</dd></div><div><dt>प्रगति</dt><dd>{percent}%</dd></div>
+      </dl>
+    </div></header>
 
-  if (loading) return <div className="container-shell py-20"><div className="h-[32rem] animate-pulse rounded-[36px] bg-brand-blush" /></div>;
-  if (error || !hawan) return <div className="container-shell py-20"><div className="rounded-[32px] bg-white p-8 shadow-soft"><h1 className="text-4xl">Guide unavailable</h1><p className="mt-3 text-brand-ink/65">{error || "This guide may be unpublished or archived."}</p><Link to="/hawan-guide"><Button className="mt-6">Back to Hawan Guide</Button></Link></div></div>;
-
-  return (
-    <div className="dp-theme dp-hawan-theme pb-28">
-      <section className="bg-hero-pattern">
-        <div className="container-shell py-12 lg:py-20">
-          <Link to="/hawan-guide" className="inline-flex items-center gap-2 text-sm font-bold text-brand-maroon"><ArrowLeft className="h-4 w-4" />All Hawans</Link>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_.85fr]">
-            <div>
-              <p className="eyebrow">{hawan.category.replaceAll("_", " ")} ritual guide</p>
-              <h1 className="mt-4 text-5xl leading-none md:text-7xl">{hawan.title}</h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-brand-ink/70">{hawan.shortDescription}</p>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-brand-ink/60">{hawan.fullDescription}</p>
-              <div className="mt-5 max-w-3xl"><HawanSourceAttribution source={hawan.source} status={hawan.verificationStatus} /></div>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Button onClick={startGuide}><Flame className="mr-2 h-4 w-4" />Start guided mode</Button>
-                <Button variant="secondary" onClick={() => updateProgress({ saved: !progress.saved })}><Bookmark className="mr-2 h-4 w-4" />{progress.saved ? "Saved" : "Save"}</Button>
-                <Button variant="secondary" onClick={share}><Share2 className="mr-2 h-4 w-4" />Share</Button>
-              </div>
-              {!isAuthenticated ? <p className="mt-4 text-sm text-brand-ink/60">Progress stays on this device. <Link to="/login" className="font-bold text-brand-maroon">Login for cloud sync.</Link></p> : null}
-            </div>
-            <div className="rounded-[32px] bg-brand-ink p-7 text-white shadow-lift">
-              <div className="grid grid-cols-2 gap-4">
-                {[["Duration", `${hawan.durationMinutes} min`], ["Difficulty", hawan.difficulty], ["Materials", materials.length], ["Approx. cost", `₹${hawan.estimatedCostRange.min}–₹${hawan.estimatedCostRange.max}`], ["Participants", `${hawan.participantRange.min}–${hawan.participantRange.max}`], ["Pandit", hawan.panditRecommended ? "Recommended" : "Optional"]].map(([label, value]) => <div key={label} className="rounded-2xl bg-white/8 p-4"><p className="text-xs uppercase tracking-wider text-brand-gold">{label}</p><p className="mt-2 text-sm font-bold">{value}</p></div>)}
-              </div>
-              <div className="mt-5"><div className="flex justify-between text-sm"><span>Guide progress</span><strong>{overallPercent}%</strong></div><div className="mt-2 h-2 rounded-full bg-white/10"><div className="h-full rounded-full bg-brand-gold transition-all" style={{ width: `${overallPercent}%` }} /></div></div>
-            </div>
-          </div>
-        </div>
+    <main className="hg-shell hg-detail">
+      {notice ? <div className="hg-notice" role="status">{notice}</div> : null}
+      <section className="hg-panel"><div className="hg-section-heading"><div><p className="hg-eyebrow">तैयारी</p><h2>आरंभ करने से पहले</h2></div></div>
+        {hawan.fullDescription ? <p className="hg-prose">{hawan.fullDescription}</p> : null}
+        <dl className="hg-preparation">
+          {hawan.locationRequirements ? <div><dt>स्थान</dt><dd>{hawan.locationRequirements}</dd></div> : null}
+          {hawan.direction ? <div><dt>दिशा</dt><dd>{hawan.direction}</dd></div> : null}
+          {hawan.clothingSuggestion ? <div><dt>वस्त्र</dt><dd>{hawan.clothingSuggestion}</dd></div> : null}
+          {hawan.fastingInformation ? <div><dt>उपवास</dt><dd>{hawan.fastingInformation}</dd></div> : null}
+        </dl>
+        {hawan.prerequisites?.length ? <div className="hg-list-block"><h3>पूर्व तैयारी</h3><ul>{hawan.prerequisites.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
       </section>
 
-      {notice ? <div className="container-shell pt-6"><div role="status" className="rounded-2xl border border-brand-gold/30 bg-amber-50 px-5 py-4 text-sm text-amber-950">{notice}</div></div> : null}
+      <section className="hg-panel" id="materials"><div className="hg-section-heading"><div><p className="hg-eyebrow">सामग्री सूची</p><h2>{progress.readyMaterialIds?.length || 0} / {materials.length} तैयार</h2></div><p>आवश्यक और वैकल्पिक सामग्री अलग-अलग चिह्नित है।</p></div>
+        <div className="hg-materials">{materials.map((item) => { const id = String(item._id); const checked = progress.readyMaterialIds?.includes(id); return <label key={id} className={checked ? "is-checked" : ""}><input type="checkbox" checked={checked} onChange={() => toggleMaterial(id)} /><span><strong>{item.name}</strong><small>{item.required === false ? "वैकल्पिक" : "आवश्यक"}{item.quantityStatus === "NOT_STATED" ? " · मात्रा स्रोत में नहीं बताई गई" : item.quantity ? ` · ${item.quantity} ${item.unit || ""}` : ""}</small>{item.purpose || item.description ? <em>{item.purpose || item.description}</em> : null}</span></label>; })}</div>
+        <p className={`hg-readiness ${requiredReady ? "is-ready" : ""}`}>{requiredReady ? "सभी आवश्यक सामग्री तैयार है।" : "आगे बढ़ने से पहले सभी आवश्यक सामग्री तैयार चिह्नित करें।"}</p>
+      </section>
 
-      <main className="container-shell space-y-12 py-12">
-        <section className="grid gap-6 lg:grid-cols-3">
-          <div className="surface-card p-6"><p className="eyebrow">Overview</p><h2 className="mt-3 text-3xl">Prepare with context</h2><dl className="mt-5 space-y-4 text-sm"><div><dt className="font-bold">Direction</dt><dd className="mt-1 text-brand-ink/65">{hawan.direction}</dd></div><div><dt className="font-bold">Clothing</dt><dd className="mt-1 text-brand-ink/65">{hawan.clothingSuggestion}</dd></div><div><dt className="font-bold">Fasting</dt><dd className="mt-1 text-brand-ink/65">{hawan.fastingInformation}</dd></div></dl></div>
-          <div className="surface-card p-6 lg:col-span-2"><p className="eyebrow">Traditional benefits</p><h2 className="mt-3 text-3xl">Respectful, non-guaranteed guidance</h2><div className="mt-5 grid gap-3 sm:grid-cols-2">{hawan.benefits.map((benefit) => <div key={benefit} className="flex gap-3 rounded-2xl bg-brand-mist p-4 text-sm leading-6"><Check className="mt-1 h-4 w-4 shrink-0 text-brand-forest" />{benefit}</div>)}</div></div>
-        </section>
+      <section className="hg-panel hg-safety"><div className="hg-section-heading"><div><p className="hg-eyebrow">अनिवार्य सुरक्षा सीमा</p><h2>अग्नि जलाने से पहले पुष्टि करें</h2></div></div>
+        <ul>{safetyChecks.map((item) => <li key={item}>{item}</li>)}</ul>
+        {hawan.safetyInstructions?.length ? <div className="hg-list-block"><h3>इस हवन के विशेष निर्देश</h3><ul>{hawan.safetyInstructions.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
+        <label className="hg-safety-confirm"><input type="checkbox" checked={safetyAccepted} onChange={(event) => setSafetyAccepted(event.target.checked)} /><span>मैंने सुरक्षा निर्देश पढ़ लिए हैं, स्थान और आवश्यक सामग्री तैयार है, और मैं इनका पालन करूँगा/करूँगी।</span></label>
+        <button className="hg-button hg-button--primary" type="button" disabled={!requiredReady || !safetyAccepted || !steps.length} onClick={startGuide}>{progress.startedAt ? "निर्देशित हवन जारी रखें" : "निर्देशित हवन आरंभ करें"}</button>
+      </section>
 
-        <section id="materials" className="surface-card p-6 sm:p-8">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-            <div><p className="eyebrow">Interactive checklist</p><h2 className="mt-3 text-4xl">Materials: {readyCount} of {materials.length} ready</h2><p className="mt-2 text-sm text-brand-ink/65">Prices and stock come from the DigiPandit store; no guide price is hard-coded.</p></div>
-            <div className="flex flex-wrap gap-3"><Button variant="secondary" onClick={() => updateProgress({ readyMaterialIds: materials.map((item) => item._id) })}>Mark all ready</Button><Button onClick={addMissing}><ShoppingCart className="mr-2 h-4 w-4" />Add missing items</Button></div>
-          </div>
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
-            {materials.map((item) => {
-              const checked = progress.readyMaterialIds?.includes(item._id);
-              return <button key={item._id} type="button" onClick={() => toggleMaterial(item._id)} className={`flex gap-4 rounded-[24px] border p-5 text-left ${checked ? "border-brand-forest bg-emerald-50" : "border-brand-sand bg-white"}`}><span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full ${checked ? "bg-brand-forest text-white" : "border border-brand-sand"}`}>{checked ? <Check className="h-4 w-4" /> : null}</span><span className="min-w-0"><strong className="block">{item.name} · {item.quantityStatus === "NOT_STATED" ? "Quantity not stated" : `${item.quantity} ${item.unit}`}</strong><span className="mt-1 block text-sm leading-6 text-brand-ink/60">{item.purpose || item.description}</span><span className="mt-2 block text-xs font-bold text-brand-clay">{item.required ? "Required" : "Optional"} · {item.product ? item.product.stock > 0 ? `₹${item.product.price} · In stock` : "Out of stock" : "Store match unavailable"}</span></span></button>;
-            })}
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-[1fr_340px]">
-          <div className="surface-card p-6 sm:p-8">
-            <div className="flex items-end justify-between gap-4"><div><p className="eyebrow">Step-by-step ritual</p><h2 className="mt-3 text-4xl">{step.title}</h2></div><span className="rounded-full bg-brand-mist px-4 py-2 text-sm font-bold">{progress.currentStepIndex + 1}/{hawan.steps.length}</span></div>
-            <p className="mt-5 text-base leading-8 text-brand-ink/70">{step.description}</p>
-            {step.safetyNote ? <div className="mt-5 flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950"><ShieldCheck className="h-5 w-5 shrink-0" />{step.safetyNote}</div> : null}
-            {mantra ? <div className="mt-6 rounded-[26px] bg-brand-blush p-6"><p className="eyebrow">Associated mantra · {step.repetitionCount || mantra.defaultRepetitionCount} repetitions</p><p className="mt-3 text-2xl font-bold leading-10">{mantra.devanagari}</p><p className="mt-3 text-sm leading-7 text-brand-ink/70">{mantra.englishTransliteration}</p><p className="mt-3 text-sm italic text-brand-ink/60">{mantra.meaning}</p>{mantra.audioUrl ? <div className="mt-5 rounded-2xl bg-white p-4"><audio ref={audioRef} className="w-full" controls preload="metadata" loop={audioLoop} src={mantra.audioUrl}>Your browser does not support mantra audio.</audio><div className="mt-3 flex flex-wrap items-center gap-3 text-sm"><label className="font-bold">Speed <select value={audioSpeed} onChange={(event) => { const speed=Number(event.target.value); setAudioSpeed(speed); if(audioRef.current) audioRef.current.playbackRate=speed; }} className="ml-2 rounded-lg border border-brand-sand px-2 py-1">{[0.75,1,1.25,1.5].map((speed)=><option key={speed} value={speed}>{speed}×</option>)}</select></label><label className="font-bold"><input type="checkbox" checked={audioLoop} onChange={(event)=>setAudioLoop(event.target.checked)} /> Repeat audio</label></div></div> : <button type="button" onClick={() => speak(`${step.description}. ${mantra.devanagari}`)} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-brand-maroon">{speaking ? <Pause className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}{speaking ? "Stop narration" : "Hindi voice fallback"}</button>}</div> : null}
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-              <Button variant="secondary" disabled={progress.currentStepIndex === 0} onClick={() => updateProgress({ currentStepIndex: Math.max(0, progress.currentStepIndex - 1) })}><ArrowLeft className="mr-2 h-4 w-4" />Previous</Button>
-              <Button variant={progress.completedStepIds?.includes(step._id) ? "secondary" : "primary"} onClick={markStep}>{progress.completedStepIds?.includes(step._id) ? "Completed" : "Mark complete"}</Button>
-              <Button variant="secondary" disabled={progress.currentStepIndex === hawan.steps.length - 1} onClick={() => updateProgress({ currentStepIndex: Math.min(hawan.steps.length - 1, progress.currentStepIndex + 1) })}>Next<ArrowRight className="ml-2 h-4 w-4" /></Button>
-            </div>
-          </div>
-          <div className="space-y-5">
-            <RitualCounter label="Mantra counter" target={step.repetitionCount || mantra?.defaultRepetitionCount || 0} initial={progress.mantraCounts?.[step._id] || 0} onChange={(value) => updateProgress({ mantraCounts: { ...progress.mantraCounts, [step._id]: value } })} />
-            <div className="surface-card p-5"><p className="eyebrow">Step timer</p><p className="mt-3 text-4xl font-bold">{Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}</p><div className="mt-4 flex gap-3"><Button onClick={() => setTimerRunning((value) => !value)}>{timerRunning ? "Pause" : "Start"}</Button><Button variant="secondary" onClick={() => { setTimer(step.durationSeconds || 0); setTimerRunning(false); }}>Reset</Button></div></div>
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-2">
-          <div className="surface-card p-7">
-            <p className="eyebrow">Location-based Panchang</p><h2 className="mt-3 text-3xl">Calculated Muhurat windows</h2>
-            <div className="relative mt-5">
-              <label className="text-sm font-bold" htmlFor="muhurat-city">City</label>
-              <input id="muhurat-city" value={cityQuery} onChange={(event) => searchCities(event.target.value)} className="mt-2 min-h-11 w-full rounded-2xl border border-brand-sand px-4" autoComplete="off" />
-              {cityOptions.length ? <div className="absolute z-10 mt-2 w-full rounded-2xl border border-brand-sand bg-white p-2 shadow-lift">{cityOptions.map((city) => <button key={`${city.name}-${city.latitude}`} type="button" onClick={() => selectMuhuratCity(city)} className="block w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-brand-mist">{city.name}, {city.stateCode}</button>)}</div> : null}
-            </div>
-            {muhuratLoading ? <p className="mt-4 text-sm">Calculating astronomical timings…</p> : muhurat ? <div className="mt-5">
-              <div className="grid grid-cols-2 gap-3 text-sm"><div className="rounded-2xl bg-brand-mist p-3"><strong>Tithi</strong><span className="mt-1 block text-brand-ink/65">{muhurat.tithi}</span></div><div className="rounded-2xl bg-brand-mist p-3"><strong>Nakshatra</strong><span className="mt-1 block text-brand-ink/65">{muhurat.nakshatra}</span></div><div className="rounded-2xl bg-brand-mist p-3"><strong>Sunrise</strong><span className="mt-1 block text-brand-ink/65">{muhurat.sunrise}</span></div><div className="rounded-2xl bg-amber-50 p-3"><strong>Rahu Kaal</strong><span className="mt-1 block text-amber-900">{muhurat.rahuKaal?.start}–{muhurat.rahuKaal?.end}</span></div></div>
-              <div className="mt-4 space-y-2">{muhurat.timings?.map((slot) => <div key={slot.label} className="flex justify-between rounded-xl border border-brand-sand px-4 py-3 text-sm"><strong>{slot.label}</strong><span>{slot.start}–{slot.end}</span></div>)}</div>
-              <p className="mt-4 text-xs leading-5 text-brand-ink/55">{muhurat.calculation}</p><p className="mt-2 text-xs leading-5 text-brand-ink/55">{muhurat.disclaimer}</p>
-            </div> : null}
-          </div>
-          <div className="surface-card p-7"><p className="eyebrow">Available ritual experts</p><h2 className="mt-3 text-3xl">{pandits.length ? `${pandits.length} matching Pandits` : "No exact specialist online"}</h2><p className="mt-4 text-sm leading-7 text-brand-ink/65">{pandits.length ? "Review language, service mode, experience, price, and availability before booking." : "Broaden the search and confirm ritual qualifications directly."}</p><Link to={`/pandits?serviceType=HAWAN&hawan=${encodeURIComponent(hawan.title)}&materials=${encodeURIComponent(materials.filter((item) => !progress.readyMaterialIds?.includes(item._id)).map((item) => item.name).join(", "))}&language=${encodeURIComponent(language)}`}><Button className="mt-5">Book assistance</Button></Link></div>
-        </section>
-
-        <section className="surface-card p-7"><p className="eyebrow">Frequently asked questions</p><h2 className="mt-3 text-4xl">Practical answers</h2><div className="mt-6 divide-y divide-brand-sand">{hawan.faqs.map((faq) => <details key={faq.question} className="group py-4"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">{faq.question}<ChevronDown className="h-5 w-5 transition group-open:rotate-180" /></summary><p className="mt-3 max-w-4xl text-sm leading-7 text-brand-ink/65">{faq.answer}</p></details>)}</div></section>
-      </main>
-
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-brand-sand bg-white/95 p-3 backdrop-blur md:hidden"><Button onClick={startGuide} className="w-full"><Flame className="mr-2 h-4 w-4" />Resume guided mode · {overallPercent}%</Button></div>
-      {showSafety ? <SafetyConfirmation instructions={hawan.safetyInstructions} onConfirm={confirmSafety} onClose={() => setShowSafety(false)} /> : null}
-      {guided ? (
-        <div className="fixed inset-0 z-40 flex flex-col bg-brand-ink text-white">
-          <header className="flex items-center justify-between border-b border-white/10 px-5 py-4"><div><p className="text-xs uppercase tracking-wider text-brand-gold">{hawan.title}</p><p className="mt-1 text-sm text-white/60">Step {progress.currentStepIndex + 1} of {hawan.steps.length} · {overallPercent}% complete</p></div><button type="button" onClick={() => window.confirm("Exit guided mode? Your progress is saved.") && setGuided(false)} className="rounded-xl bg-white/10 p-3" aria-label="Exit guided mode"><X className="h-5 w-5" /></button></header>
-          <div className="h-1 bg-white/10"><div className="h-full bg-brand-gold" style={{ width: `${((progress.currentStepIndex + 1) / hawan.steps.length) * 100}%` }} /></div>
-          <main className="flex flex-1 items-center overflow-y-auto px-5 py-10"><div className="mx-auto w-full max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[.22em] text-brand-gold">Step {progress.currentStepIndex + 1}</p><h2 className="mt-5 text-5xl leading-none sm:text-7xl">{step.title}</h2><p className="mx-auto mt-7 max-w-2xl text-lg leading-9 text-white/72">{step.description}</p>{step.safetyNote ? <p className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-7 text-amber-100">{step.safetyNote}</p> : null}{mantra ? <div className="mt-8"><p className="text-2xl leading-10 text-brand-gold">{mantra.devanagari}</p><button type="button" onClick={() => speak(`${step.description}. ${mantra.devanagari}`)} className="mt-5 rounded-full bg-white/10 px-5 py-3 text-sm font-bold">{speaking ? "Stop voice" : "Play Hindi voice"}</button></div> : null}</div></main>
-          <footer className="border-t border-white/10 p-4"><div className="mx-auto flex max-w-3xl items-center justify-between gap-3"><Button variant="secondary" disabled={progress.currentStepIndex === 0} onClick={() => updateProgress({ currentStepIndex: progress.currentStepIndex - 1 })}>Previous</Button><Button onClick={markStep}>{progress.completedStepIds?.includes(step._id) ? "Completed" : "Mark complete"}</Button>{progress.currentStepIndex < hawan.steps.length - 1 ? <Button variant="secondary" onClick={() => updateProgress({ currentStepIndex: progress.currentStepIndex + 1 })}>Next</Button> : <Button className="bg-brand-gold text-brand-ink" onClick={finish}>Finish</Button>}</div></footer>
+      {guided && currentStep ? <section className="hg-panel hg-guided" aria-live="polite">
+        <div className="hg-guided__head"><div><p className="hg-eyebrow">चरण {currentIndex + 1} / {steps.length}</p><h2>{currentStep.title}</h2></div><strong>{percent}% पूर्ण</strong></div>
+        <div className="hg-progress"><span style={{ width: `${percent}%` }} /></div><p className="hg-prose">{currentStep.description}</p>
+        {currentStep.safetyNote ? <div className="hg-step-warning"><strong>इस चरण की सावधानी</strong><span>{currentStep.safetyNote}</span></div> : null}
+        {mantra ? <div className="hg-mantra"><p className="hg-eyebrow">सत्यापित मंत्र{currentStep.repetitionCount ? ` · ${currentStep.repetitionCount} बार` : ""}</p><strong>{mantra.devanagari}</strong>{mantra.hindiTransliteration ? <span>{mantra.hindiTransliteration}</span> : null}{mantra.hindiMeaning || mantra.meaning ? <p>{mantra.hindiMeaning || mantra.meaning}</p> : null}{mantra.audioUrl && mantra.audioVerificationStatus === "VERIFIED" ? <audio controls preload="metadata" src={mantra.audioUrl}>आपका ब्राउज़र ध्वनि नहीं चला सकता।</audio> : null}</div> : null}
+        <div className="hg-guided__controls">
+          <button type="button" disabled={currentIndex === 0} onClick={() => persist({ ...progress, currentStepIndex: currentIndex - 1 })}>पिछला चरण</button>
+          <button type="button" className="hg-button--primary" onClick={toggleStep}>{progress.completedStepIds?.includes(String(currentStep._id)) ? "पूर्ण चिह्न हटाएँ" : "चरण पूर्ण चिह्नित करें"}</button>
+          <button type="button" disabled={currentIndex === steps.length - 1} onClick={() => persist({ ...progress, currentStepIndex: currentIndex + 1 })}>अगला चरण</button>
         </div>
-      ) : null}
-    </div>
-  );
+        <div className="hg-guided__secondary"><button type="button" onClick={() => { persist({ ...progress, saved: true }, "प्रगति सुरक्षित है। आप बाद में यहीं से जारी रख सकते हैं।"); setGuided(false); }}>अभी रोकें, बाद में जारी रखें</button>{currentIndex === steps.length - 1 ? <button type="button" disabled={completedCount !== steps.length} onClick={finish}>हवन मार्गदर्शिका पूर्ण करें</button> : null}</div>
+      </section> : null}
+
+      {progress.completedAt ? <section className="hg-panel hg-complete"><p className="hg-eyebrow">पूर्ण</p><h2>यह हवन मार्गदर्शिका पूरी हुई</h2><p>आपकी पूर्णता इस उपकरण पर सुरक्षित है{isAuthenticated ? " और खाते से समन्वित की जा रही है" : ""}।</p><button type="button" onClick={restart}>दोबारा आरंभ करें</button></section> : null}
+
+      <HawanSourceAttribution source={hawan.source} status={hawan.verificationStatus} />
+      {hawan.panditRecommended ? <section className="hg-panel hg-pandit-help"><div><p className="hg-eyebrow">मानवीय सहायता</p><h2>इस हवन में पंडित मार्गदर्शन उचित है</h2><p>मंत्रोच्चार, क्रम या अग्नि-सुरक्षा को लेकर संदेह हो तो योग्य पंडित से पुष्टि करें।</p></div><Link className="hg-button hg-button--outline" to={`/pandits?hawan=${encodeURIComponent(hawan.title)}`}>पंडित सहायता देखें</Link></section> : null}
+    </main>
+  </div>;
 }

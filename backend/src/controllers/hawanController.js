@@ -22,14 +22,19 @@ const listHawans = asyncHandler(async (req, res) => {
   }
   const [items, total] = await Promise.all([
     Hawan.find(filter)
-      .select("-steps -mantras -faqs -safetyInstructions")
+      .select("-mantras -faqs -safetyInstructions")
       .sort({ isFeatured: -1, completionCount: -1, title: 1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean(),
     Hawan.countDocuments(filter),
   ]);
-  res.json({ success: true, data: items, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+  const data = items.map(({ steps = [], materials = [], ...item }) => ({
+    ...item,
+    stepCount: steps.length,
+    materialCount: materials.length,
+  }));
+  res.json({ success: true, data, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 });
 
 const getCategories = asyncHandler(async (_req, res) => {
@@ -172,10 +177,14 @@ const completeHawan = asyncHandler(async (req, res) => {
 
 const listMyHawans = asyncHandler(async (req, res) => {
   const items = await HawanProgress.find({ user: req.user._id })
-    .populate("hawan", "title slug shortDescription coverImage durationMinutes difficulty")
+    .populate("hawan", "title slug shortDescription coverImage durationMinutes difficulty steps")
     .sort({ updatedAt: -1 })
     .lean();
-  res.json({ success: true, data: items.filter((item) => item.hawan) });
+  const data = items.filter((item) => item.hawan).map((item) => {
+    const { steps = [], ...hawan } = item.hawan;
+    return { ...item, hawan: { ...hawan, stepCount: steps.length } };
+  });
+  res.json({ success: true, data });
 });
 
 module.exports = { listHawans, getCategories, getHawanBySlug, recommendHawans, getMaterials, getPhases, getMantras, getPurposeOfferings, getPandits, getMuhurat, getMyProgress, saveProgress, completeHawan, listMyHawans };
