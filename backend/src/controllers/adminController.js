@@ -14,6 +14,8 @@ const ApiError = require("../utils/ApiError");
 const pickPagination = require("../utils/pickPagination");
 const buildPagedResponse = require("../utils/buildPagedResponse");
 const escapeRegex = require("../utils/escapeRegex");
+const { uploadImage } = require("../services/uploadService");
+const pujaCatalogSnapshot = require("../data/pujaCatalogSnapshot");
 
 const makeSlug = (value = "") =>
   value
@@ -241,6 +243,16 @@ const listProductsAdmin = asyncHandler(async (req, res) => {
   });
 });   
 
+const normalizeImageUrl = (value) => {
+  if (!value) return "";
+  try {
+    const url = new URL(String(value).trim());
+    return url.protocol === "https:" ? url.toString() : "";
+  } catch {
+    return "";
+  }
+};
+
 const createProductAdmin = asyncHandler(async (req, res) => {
   const {
     name,
@@ -252,17 +264,23 @@ const createProductAdmin = asyncHandler(async (req, res) => {
     stock,
     tags = [],
     isActive = true,
+    imageUrl,
   } = req.body;
 
   if (!name || !category || price === undefined || stock === undefined) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "name, category, price, and stock are required");
   }
 
-  const nextSlug = slug?.trim() || makeSlug(name);
+  const nextSlug = slug?.trim() || makeSlug(name) || `product-${Date.now()}`;
   const existing = await Product.findOne({ slug: nextSlug });
 
   if (existing) {
     throw new ApiError(StatusCodes.CONFLICT, "Product slug already exists");
+  }
+
+  const normalizedImageUrl = normalizeImageUrl(imageUrl);
+  if (imageUrl && !normalizedImageUrl) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Image URL must be a valid HTTPS address");
   }
 
   const product = await Product.create({
@@ -275,6 +293,7 @@ const createProductAdmin = asyncHandler(async (req, res) => {
     stock,
     tags,
     isActive,
+    images: normalizedImageUrl ? [{ url: normalizedImageUrl, publicId: "external-url" }] : [],
   });
 
   res.status(StatusCodes.CREATED).json({
@@ -291,7 +310,8 @@ const updateProductAdmin = asyncHandler(async (req, res) => {
     throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
   }
 
-  const nextSlug = req.body.slug?.trim() || (req.body.name ? makeSlug(req.body.name) : product.slug);
+  const generatedSlug = req.body.name ? makeSlug(req.body.name) : "";
+  const nextSlug = req.body.slug?.trim() || generatedSlug || product.slug;
 
   if (nextSlug !== product.slug) {
     const existing = await Product.findOne({ slug: nextSlug, _id: { $ne: product._id } });
@@ -301,7 +321,15 @@ const updateProductAdmin = asyncHandler(async (req, res) => {
     }
   }
 
-  Object.assign(product, req.body, { slug: nextSlug });
+  const { imageUrl, ...updates } = req.body;
+  const normalizedImageUrl = normalizeImageUrl(imageUrl);
+  if (imageUrl && !normalizedImageUrl) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Image URL must be a valid HTTPS address");
+  }
+  Object.assign(product, updates, { slug: nextSlug });
+  if (normalizedImageUrl) {
+    product.images = [{ url: normalizedImageUrl, publicId: "external-url" }, ...product.images.filter((image) => image.url !== normalizedImageUrl).slice(0, 3)];
+  }
   await product.save();
 
   res.json({
@@ -309,6 +337,32 @@ const updateProductAdmin = asyncHandler(async (req, res) => {
     message: "Product updated successfully",
     data: product,
   });
+});
+
+const uploadProductImageAdmin = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.productId);
+  if (!product) throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
+  if (!req.file) throw new ApiError(StatusCodes.BAD_REQUEST, "JPEG, PNG or WebP image is required");
+
+  const image = await uploadImage(req.file, "digipandit/products");
+  product.images = [image, ...product.images.slice(0, 3)];
+  await product.save();
+
+  res.json({ success: true, message: "Product image uploaded successfully", data: product });
+});
+
+const importPujaCatalogAdmin = asyncHandler(async (_req, res) => {
+  const imported = [];
+  for (const item of pujaCatalogSnapshot) {
+    const { imageUrl, ...productData } = item;
+    const product = await Product.findOneAndUpdate(
+      { slug: item.slug },
+      { $set: { ...productData, isActive: true, images: [{ url: imageUrl, publicId: "catalogue-snapshot" }] } },
+      { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
+    );
+    imported.push(product);
+  }
+  res.json({ success: true, message: `${imported.length} products imported into DigiPandit`, data: imported });
 });
 
 const deleteProductAdmin = asyncHandler(async (req, res) => {
@@ -524,6 +578,8 @@ module.exports = {
   listProductsAdmin,
   createProductAdmin,
   updateProductAdmin,
+  uploadProductImageAdmin,
+  importPujaCatalogAdmin,
   deleteProductAdmin,
   listPanditApprovals,
   updatePanditApproval,

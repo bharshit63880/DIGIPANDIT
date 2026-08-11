@@ -3,6 +3,7 @@ const { protect, authorize } = require("../middleware/auth");
 const adminController = require("../controllers/adminController");
 const adminHawanController = require("../controllers/adminHawanController");
 const validate = require("../middleware/validate");
+const upload = require("../middleware/upload");
 const { adminCreateSchema, adminUpdateSchema, idParamSchema, verificationSchema } = require("../validators/hawanValidators");
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.delete("/users/:userId", adminController.deleteUser);
 router.get("/products", adminController.listProductsAdmin);
 router.post("/products", adminController.createProductAdmin);
 router.patch("/products/:productId", adminController.updateProductAdmin);
+router.post("/products/:productId/image", upload.single("image"), adminController.uploadProductImageAdmin);
+router.post("/products/import-puja-catalogue", adminController.importPujaCatalogAdmin);
 router.delete("/products/:productId", adminController.deleteProductAdmin);
 router.get("/pandits/approvals", adminController.listPanditApprovals);
 router.patch("/pandits/:panditId/approval", adminController.updatePanditApproval);

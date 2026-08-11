@@ -34,6 +34,7 @@ const emptyProductForm = {
   compareAtPrice: 0,
   stock: 0,
   tags: "",
+  imageUrl: "",
   isActive: true,
 };
 
@@ -92,6 +93,7 @@ export default function AdminDashboardPage() {
   const [editingUserId, setEditingUserId] = useState("");
   const [productForm, setProductForm] = useState(emptyProductForm);
   const [editingProductId, setEditingProductId] = useState("");
+  const [productImageFile, setProductImageFile] = useState(null);
 
   const totalRevenue = useMemo(() => {
     if (!dashboard) return 0;
@@ -178,6 +180,7 @@ export default function AdminDashboardPage() {
   const resetProductForm = () => {
     setEditingProductId("");
     setProductForm(emptyProductForm);
+    setProductImageFile(null);
   };
 
   const saveUser = async () => {
@@ -236,12 +239,22 @@ export default function AdminDashboardPage() {
       delete payload.compareAtPrice;
     }
 
+    let savedProduct;
     if (editingProductId) {
-      await api.patch(`/admin/products/${editingProductId}`, payload);
+      const response = await api.patch(`/admin/products/${editingProductId}`, payload);
+      savedProduct = response.data.data;
       setNotice("Product updated successfully.");
     } else {
-      await api.post("/admin/products", payload);
+      const response = await api.post("/admin/products", payload);
+      savedProduct = response.data.data;
       setNotice("Product created successfully.");
+    }
+
+    if (productImageFile && savedProduct?._id) {
+      const imageData = new FormData();
+      imageData.append("image", productImageFile);
+      await api.post(`/admin/products/${savedProduct._id}/image`, imageData);
+      setNotice("Product and image saved successfully.");
     }
 
     resetProductForm();
@@ -258,6 +271,7 @@ export default function AdminDashboardPage() {
       compareAtPrice: product.compareAtPrice || 0,
       stock: product.stock || 0,
       tags: (product.tags || []).join(", "),
+      imageUrl: ["external-url", "catalogue-snapshot"].includes(product.images?.[0]?.publicId) ? product.images[0].url : "",
       isActive: product.isActive ?? true,
     });
     setActiveTab("products");
@@ -266,6 +280,12 @@ export default function AdminDashboardPage() {
   const archiveProduct = async (productId) => {
     await api.delete(`/admin/products/${productId}`);
     setNotice("Product archived successfully.");
+    loadData();
+  };
+
+  const importPujaCatalogue = async () => {
+    const response = await api.post("/admin/products/import-puja-catalogue");
+    setNotice(`${response.data.data?.length || 0} पूजा उत्पाद DigiPandit स्टोर में जोड़े गए।`);
     loadData();
   };
 
@@ -530,7 +550,7 @@ export default function AdminDashboardPage() {
       {activeTab === "products" ? (
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="rounded-[36px] bg-white p-8 shadow-soft">
-            <h2 className="text-2xl font-bold text-brand-ink">{editingProductId ? "Update product" : "Create product"}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl font-bold text-brand-ink">{editingProductId ? "Update product" : "Create product"}</h2><Button variant="secondary" onClick={importPujaCatalogue}>पूजा कैटलॉग आयात करें</Button></div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <Input label="Product name" value={productForm.name} onChange={(e) => setProductForm({ ...productForm, name: e.target.value })} />
               <SelectField
@@ -564,6 +584,15 @@ export default function AdminDashboardPage() {
             <div className="mt-4">
               <Input label="Tags comma separated" value={productForm.tags} onChange={(e) => setProductForm({ ...productForm, tags: e.target.value })} />
             </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <Input label="Image HTTPS URL" placeholder="https://..." value={productForm.imageUrl} onChange={(e) => setProductForm({ ...productForm, imageUrl: e.target.value })} />
+              <label className="flex flex-col gap-2 text-sm font-medium text-brand-ink">
+                <span>Upload image from device</span>
+                <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setProductImageFile(event.target.files?.[0] || null)} className="rounded-2xl border border-brand-sand bg-white px-4 py-3" />
+                <small className="text-brand-ink/60">JPEG, PNG or WebP · maximum 5 MB</small>
+              </label>
+            </div>
+            {productImageFile || productForm.imageUrl ? <div className="mt-4 overflow-hidden rounded-[24px] border border-brand-sand bg-brand-sand/20 p-3"><img src={productImageFile ? URL.createObjectURL(productImageFile) : productForm.imageUrl} alt="Product preview" className="h-44 w-full rounded-2xl object-contain" /></div> : null}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={saveProduct}>{editingProductId ? "Update product" : "Create product"}</Button>
               <Button variant="secondary" onClick={resetProductForm}>Reset</Button>
