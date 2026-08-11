@@ -24,6 +24,25 @@ const makeSlug = (value = "") =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+const normalizeProductTags = (tags) => {
+  if (Array.isArray(tags)) return tags.map((tag) => String(tag).trim()).filter(Boolean);
+  if (typeof tags !== "string") return tags;
+  return tags.split(",").map((tag) => tag.trim()).filter(Boolean);
+};
+
+const resolveAdminProductImage = async (file) => {
+  if (!file) return null;
+  try {
+    return await uploadImage(file, "digipandit/products");
+  } catch (error) {
+    if (error.statusCode !== StatusCodes.SERVICE_UNAVAILABLE) throw error;
+    return {
+      url: `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
+      publicId: "database-upload",
+    };
+  }
+};
+
 const getDashboardStats = asyncHandler(async (req, res) => {
   const [totalUsers, totalPandits, totalBookings, totalProducts, bookingRevenueRows, latestOrders] =
     await Promise.all([
@@ -283,6 +302,7 @@ const createProductAdmin = asyncHandler(async (req, res) => {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Image URL must be a valid HTTPS address");
   }
 
+  const uploadedImage = await resolveAdminProductImage(req.file);
   const product = await Product.create({
     name,
     slug: nextSlug,
@@ -291,9 +311,13 @@ const createProductAdmin = asyncHandler(async (req, res) => {
     price,
     compareAtPrice,
     stock,
-    tags,
+    tags: normalizeProductTags(tags),
     isActive,
-    images: normalizedImageUrl ? [{ url: normalizedImageUrl, publicId: "external-url" }] : [],
+    images: uploadedImage
+      ? [uploadedImage]
+      : normalizedImageUrl
+        ? [{ url: normalizedImageUrl, publicId: "external-url" }]
+        : [],
   });
 
   res.status(StatusCodes.CREATED).json({
@@ -322,12 +346,20 @@ const updateProductAdmin = asyncHandler(async (req, res) => {
   }
 
   const { imageUrl, ...updates } = req.body;
+  if (Object.prototype.hasOwnProperty.call(updates, "tags")) {
+    updates.tags = normalizeProductTags(updates.tags);
+  }
   const normalizedImageUrl = normalizeImageUrl(imageUrl);
   if (imageUrl && !normalizedImageUrl) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Image URL must be a valid HTTPS address");
   }
   Object.assign(product, updates, { slug: nextSlug });
-  if (normalizedImageUrl) {
+  const uploadedImage = await resolveAdminProductImage(req.file);
+  if (uploadedImage) {
+    product.images = uploadedImage.publicId === "database-upload"
+      ? [uploadedImage]
+      : [uploadedImage, ...product.images.filter((image) => image.url !== uploadedImage.url).slice(0, 3)];
+  } else if (normalizedImageUrl) {
     product.images = [{ url: normalizedImageUrl, publicId: "external-url" }, ...product.images.filter((image) => image.url !== normalizedImageUrl).slice(0, 3)];
   }
   await product.save();

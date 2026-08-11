@@ -35,6 +35,7 @@ const emptyProductForm = {
   stock: 0,
   tags: "",
   imageUrl: "",
+  currentImageUrl: "",
   isActive: true,
 };
 
@@ -94,6 +95,8 @@ export default function AdminDashboardPage() {
   const [productForm, setProductForm] = useState(emptyProductForm);
   const [editingProductId, setEditingProductId] = useState("");
   const [productImageFile, setProductImageFile] = useState(null);
+  const [productSaving, setProductSaving] = useState(false);
+  const [productSaveState, setProductSaveState] = useState("idle");
 
   const totalRevenue = useMemo(() => {
     if (!dashboard) return 0;
@@ -181,6 +184,7 @@ export default function AdminDashboardPage() {
     setEditingProductId("");
     setProductForm(emptyProductForm);
     setProductImageFile(null);
+    setProductSaveState("idle");
   };
 
   const saveUser = async () => {
@@ -225,42 +229,36 @@ export default function AdminDashboardPage() {
 
   const saveProduct = async () => {
     setNotice("");
-    const payload = {
-      ...productForm,
-      price: Number(productForm.price || 0),
-      compareAtPrice: Number(productForm.compareAtPrice || 0),
-      stock: Number(productForm.stock || 0),
-      tags: productForm.tags
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
-    };
-
-    if (!payload.compareAtPrice) {
-      delete payload.compareAtPrice;
-    }
+    setProductSaving(true);
+    setProductSaveState("saving");
+    const payload = new FormData();
+    payload.append("name", productForm.name.trim());
+    payload.append("category", productForm.category);
+    payload.append("description", productForm.description.trim());
+    payload.append("price", String(Number(productForm.price || 0)));
+    payload.append("stock", String(Number(productForm.stock || 0)));
+    payload.append("tags", productForm.tags);
+    payload.append("isActive", String(productForm.isActive));
+    if (Number(productForm.compareAtPrice || 0)) payload.append("compareAtPrice", String(Number(productForm.compareAtPrice)));
+    if (productForm.imageUrl.trim()) payload.append("imageUrl", productForm.imageUrl.trim());
+    if (productImageFile) payload.append("image", productImageFile);
 
     try {
-      let savedProduct;
       if (editingProductId) {
-        const response = await api.patch(`/admin/products/${editingProductId}`, payload);
-        savedProduct = response.data.data;
+        await api.patch(`/admin/products/${editingProductId}`, payload);
       } else {
-        const response = await api.post("/admin/products", payload);
-        savedProduct = response.data.data;
-      }
-
-      if (productImageFile && savedProduct?._id) {
-        const imageData = new FormData();
-        imageData.append("image", productImageFile);
-        await api.post(`/admin/products/${savedProduct._id}/image`, imageData);
+        await api.post("/admin/products", payload);
       }
 
       setNotice(editingProductId ? "उत्पाद सफलतापूर्वक अपडेट हो गया।" : "उत्पाद और चित्र सफलतापूर्वक जोड़ दिए गए।");
-      resetProductForm();
+      setProductSaveState("success");
       await loadData();
+      window.setTimeout(resetProductForm, 1600);
     } catch (error) {
+      setProductSaveState("error");
       setNotice(error.message || "उत्पाद अपडेट नहीं हो सका। कृपया दोबारा प्रयास करें।");
+    } finally {
+      setProductSaving(false);
     }
   };
 
@@ -275,6 +273,7 @@ export default function AdminDashboardPage() {
       stock: product.stock || 0,
       tags: (product.tags || []).join(", "),
       imageUrl: ["external-url", "catalogue-snapshot"].includes(product.images?.[0]?.publicId) ? product.images[0].url : "",
+      currentImageUrl: product.images?.[0]?.url || "",
       isActive: product.isActive ?? true,
     });
     setActiveTab("products");
@@ -595,9 +594,11 @@ export default function AdminDashboardPage() {
                 <small className="text-brand-ink/60">JPEG, PNG or WebP · maximum 5 MB</small>
               </label>
             </div>
-            {productImageFile || productForm.imageUrl ? <div className="mt-4 overflow-hidden rounded-[24px] border border-brand-sand bg-brand-sand/20 p-3"><img src={productImageFile ? URL.createObjectURL(productImageFile) : productForm.imageUrl} alt="Product preview" className="h-44 w-full rounded-2xl object-contain" /></div> : null}
+            {productImageFile || productForm.imageUrl || productForm.currentImageUrl ? <div className="mt-4 overflow-hidden rounded-[24px] border border-brand-sand bg-brand-sand/20 p-3"><img src={productImageFile ? URL.createObjectURL(productImageFile) : productForm.imageUrl || productForm.currentImageUrl} alt="उत्पाद चित्र पूर्वावलोकन" className="h-44 w-full rounded-2xl object-contain" /></div> : null}
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button onClick={saveProduct}>{editingProductId ? "Update product" : "Create product"}</Button>
+              <Button onClick={saveProduct} disabled={productSaving || productSaveState === "success"} aria-live="polite">
+                {productSaveState === "saving" ? "अपडेट हो रहा है…" : productSaveState === "success" ? "अपडेट हो गया ✓" : productSaveState === "error" ? "फिर प्रयास करें" : editingProductId ? "उत्पाद अपडेट करें" : "उत्पाद बनाएँ"}
+              </Button>
               <Button variant="secondary" onClick={resetProductForm}>Reset</Button>
             </div>
           </div>

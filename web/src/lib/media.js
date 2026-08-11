@@ -86,9 +86,9 @@ export const getProductImage = (product) => {
   const mapped = productPhotoMap[product?.name];
   const current = product?.images?.[0]?.url || "";
 
-  if (mapped) {
-    return mapped;
+  if (current && !isPlaceholderProduct(current)) {
+    return current;
   }
 
-  return (!isPlaceholderProduct(current) && current) || getProductFallbackImage(product);
+  return mapped || getProductFallbackImage(product);
 };
