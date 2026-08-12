@@ -20,6 +20,8 @@ import { SectionTitle } from "../components/SectionTitle";
 import { KundaliChart } from "../components/KundaliChart";
 import { KundaliPlanetTable } from "../components/KundaliPlanetTable";
 import { LoadingCard } from "../components/LoadingCard";
+import { GoldenTiltSurface } from "../components/GoldenTiltSurface";
+import { GoldenWriting } from "../components/GoldenWriting";
 import { api } from "../lib/api";
 import { getExpertImage } from "../lib/media";
 import { payEntity } from "../lib/payments";
@@ -312,21 +314,21 @@ export default function AstrologyPage() {
   const ActiveSessionIcon = activeSessionMeta.icon;
 
   return (
-    <div className="dp-theme dp-astrology-theme pb-20">
-      <section className="bg-hero-pattern">
+    <div className="dp-theme dp-astrology-theme dp-consultation-reference pb-20">
+      <section className="bg-hero-pattern dp-consultation-hero">
         <div className="container-shell grid gap-10 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
           <div className="space-y-7">
             
             <div className="space-y-4">
-              <h1 className="max-w-3xl text-5xl font-bold leading-tight text-brand-ink md:text-6xl">
+              <GoldenWriting className="max-w-3xl text-5xl font-bold leading-tight md:text-6xl">
                 कुंडली, भविष्यवाणी और लाइव परामर्श—सब कुछ एक ही ज्योतिष पेज पर।
-              </h1>
+              </GoldenWriting>
               <p className="max-w-2xl text-lg leading-8 text-brand-ink/70">
                 कुंडली बनाएँ, दशा समयरेखा देखें, वॉलेट में राशि जोड़ें और बिना अलग-अलग पेजों पर जाए प्रति-मिनट ज्योतिष परामर्श शुरू करें।
               </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="dp-consultation-trust grid gap-4 md:grid-cols-3">
               {insightCards.map((card) => {
                 const Icon = card.icon;
                 return (
@@ -487,13 +489,13 @@ export default function AstrologyPage() {
           </button>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="dp-consultation-directory mt-10 grid gap-5">
           {astrologersLoading
             ? Array.from({ length: 6 }).map((_, index) => <LoadingCard key={index} />)
             : astrologers.map((astrologer) => {
                 const currentService = astrologer.astrologyServices.find((service) => service.sessionType === consultationMode);
                 return (
-                  <article key={astrologer._id} className="dp-astrologer-card flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-soft">
+                  <GoldenTiltSurface key={astrologer._id} className="dp-astrologer-card flex h-full flex-col overflow-hidden rounded-[28px] border border-brand-gold/20 bg-white shadow-soft">
                     <img
                       src={getExpertImage({
                         user: {
@@ -551,7 +553,7 @@ export default function AstrologyPage() {
                         </Button>
                       </div>
                     </div>
-                  </article>
+                  </GoldenTiltSurface>
                 );
               })}
         </div>

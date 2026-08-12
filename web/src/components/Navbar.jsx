@@ -15,6 +15,7 @@ const navItems = [
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const prismStep = useRef(0);
   const headerRef = useRef(null);
   const menuButtonRef = useRef(null);
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ export function Navbar() {
   const user = useSelector((state) => state.auth.user);
   const cartCount = useSelector((state) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0));
   const isCinematicHome = location.pathname === "/";
+  const isAstrology = location.pathname.startsWith("/astrology");
   const visibleItems = navItems;
 
   const handleLogout = () => { setIsMenuOpen(false); dispatch(logout()); navigate("/"); };
@@ -36,11 +38,16 @@ export function Navbar() {
     const update = () => {
       frame = 0;
       const y = window.scrollY;
-      const velocity = Math.max(-16, Math.min(16, y - lastY));
+      const direction = y >= lastY ? 1 : -1;
       lastY = y;
       setIsScrolled(y > 24);
-      headerRef.current?.style.setProperty("--prism-rx", `${Math.sin(y / 210) * 2.1 - velocity * .035}deg`);
-      headerRef.current?.style.setProperty("--prism-rz", `${Math.sin(y / 420) * .72}deg`);
+      const nextStep = Math.floor(Math.max(0, y - 80) / 360);
+      if (nextStep !== prismStep.current) {
+        prismStep.current = nextStep;
+        headerRef.current?.style.setProperty("--prism-turn", `${nextStep * 120}deg`);
+        headerRef.current?.style.setProperty("--prism-kick", `${direction * -1.2}deg`);
+        window.setTimeout(() => headerRef.current?.style.setProperty("--prism-kick", "0deg"), 420);
+      }
       headerRef.current?.style.setProperty("--prism-lift", `${y > 24 ? 5 : 0}px`);
     };
     const onScroll = () => { if (!frame) frame = window.requestAnimationFrame(update); };
@@ -59,9 +66,10 @@ export function Navbar() {
 
   const navText = "text-white";
   return (
-    <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isScrolled ? "is-scrolled" : ""}`}>
+    <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isAstrology ? "dp-navbar--reference" : ""} ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container-shell">
         <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4">
+          <div className="dp-prism-geometry" aria-hidden="true"><i /><i /><i /></div>
           <Link to="/" className="dp-brand flex min-w-0 items-center gap-3" aria-label="डिजीपंडित होम">
             <img src="/digipandit-emblem.webp" alt="" width="48" height="48" className="dp-brand__mark h-12 w-12 shrink-0 object-contain" />
             <div className="min-w-0 leading-none"><p data-no-translate className={`font-serif text-xl font-semibold ${navText}`}>Digi<span className="text-brand-gold">Pandit</span></p><p className="mt-1 text-[.58rem] font-bold tracking-[.15em] text-white/55">परंपरा, सरल रूप में</p></div>
