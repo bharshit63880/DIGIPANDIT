@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
@@ -14,6 +14,9 @@ export default function StorePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("ALL");
+  const [sort, setSort] = useState("DEFAULT");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -32,35 +35,31 @@ export default function StorePage() {
     fetchProducts();
   }, []);
 
+  const visibleProducts = useMemo(() => products
+    .filter((product) => category === "ALL" || product.category === category)
+    .filter((product) => !search.trim() || `${product.name} ${getProductContent(product).shortDescription}`.toLocaleLowerCase("hi").includes(search.trim().toLocaleLowerCase("hi")))
+    .sort((a, b) => sort === "PRICE_LOW" ? Number(a.price) - Number(b.price) : sort === "PRICE_HIGH" ? Number(b.price) - Number(a.price) : 0), [products, search, category, sort]);
+
   return (
-    <div className="dp-theme dp-store-theme container-shell py-12">
+    <div className="dp-theme dp-store-theme dp-store-reference container-shell py-12">
       <div className="dp-store-atmosphere" aria-hidden="true">
         <span className="dp-store-mandala" />
         <img src="/cinematic/puja-essentials.png" alt="" width="1024" height="805" />
         <i /><b />
       </div>
-      <SectionTitle
+      <div className="dp-store-reference__heading"><SectionTitle
         eyebrow="पूजा स्टोर"
         title="पूजा की आवश्यक सामग्री, एक भरोसेमंद जगह पर"
         description="रोज़मर्रा की पूजा के लिए चुनी हुई पूजा किट, मूर्तियाँ, धूप और मंदिर की उपयोगी सामग्री देखें।"
-      />
+      /><div className="dp-store-search"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="पूजा सामग्री खोजें" aria-label="पूजा सामग्री खोजें" /><span>खोजें</span></div></div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        {allowedStoreCategories.map((category) => (
-          <div
-            key={category}
-            className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-clay shadow-soft"
-          >
-            {productCategoryLabels[category]}
-          </div>
-        ))}
-      </div>
+      <div className="dp-store-filterbar"><label>श्रेणी<select value={category} onChange={(e)=>setCategory(e.target.value)}><option value="ALL">सभी</option>{allowedStoreCategories.map((item)=><option key={item} value={item}>{productCategoryLabels[item]}</option>)}</select></label><label>क्रम<select value={sort} onChange={(e)=>setSort(e.target.value)}><option value="DEFAULT">लोकप्रिय</option><option value="PRICE_LOW">कम कीमत</option><option value="PRICE_HIGH">अधिक कीमत</option></select></label><span>कुल {visibleProducts.length} उत्पाद उपलब्ध</span></div>
 
       <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {loading
           ? Array.from({ length: 6 }).map((_, index) => <LoadingCard key={index} />)
-          : products.map((product) => (
-              <article key={product._id} className="flex h-full flex-col overflow-hidden rounded-[24px] bg-white shadow-soft">
+          : visibleProducts.map((product, index) => (
+              <article key={product._id} className={`dp-store-product flex h-full flex-col overflow-hidden rounded-[24px] bg-white shadow-soft ${index === 0 ? "dp-store-product--featured" : ""}`}>
                 <Link to={`/store/${product.slug}`} className="block overflow-hidden">
                   <img
                     src={getProductImage(product)}

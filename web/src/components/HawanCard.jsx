@@ -6,10 +6,9 @@ const categoryLabels = { POPULAR: "लोकप्रिय", CAREER: "करि
 export function HawanCard({ hawan }) {
   const participants = hawan.participantRange ? `${hawan.participantRange.min || 1}–${hawan.participantRange.max || 1} व्यक्ति` : "व्यक्ति संख्या देखें";
   const materialCount = hawan.materialCount ?? hawan.materials?.length;
-  return <article className="hg-card">
+  return <article className="hg-card hg-card--row">
     <div className="hg-card__top"><span>{categoryLabels[hawan.category] || hawan.category}</span>{hawan.panditRecommended ? <em>पंडित की सलाह उचित</em> : null}</div>
-    <h3>{hawan.title}</h3>
-    <p>{hawan.shortDescription}</p>
+    <div className="hg-card__identity"><h3>{hawan.title}</h3><p>{hawan.shortDescription}</p></div>
     {hawan.purposes?.length ? <ul className="hg-card__purposes">{hawan.purposes.slice(0, 3).map((purpose) => <li key={purpose}>{purpose}</li>)}</ul> : null}
     <dl className="hg-card__facts">
       <div><dt>समय</dt><dd>{hawan.durationMinutes} मिनट</dd></div>

@@ -44,24 +44,23 @@ export default function HawanPage() {
     });
   }, [hawans, search, category]);
 
-  return <div className="hg-page">
+  return <div className="hg-page hg-page--reference">
     <header className="hg-hero">
       <div className="hg-shell hg-hero__inner">
-        <p className="hg-eyebrow">स्रोत-संदर्भित हवन मार्गदर्शन</p>
+        <div className="hg-hero__content"><p className="hg-eyebrow">सत्यापित हवन मार्गदर्शन</p>
         <h1>अपने संकल्प से<br />सही हवन तक।</h1>
-        <p className="hg-hero__copy">प्रकाशित मार्गदर्शिकाओं में उद्देश्य, आवश्यक सामग्री, सुरक्षा निर्देश और क्रमबद्ध चरण एक ही स्थान पर देखें।</p>
+        <p className="hg-hero__copy">सही संकल्प चुनें, आवश्यक सामग्री जानें और क्रमबद्ध चरणों के साथ सुरक्षित एवं सफल हवन संपन्न करें।</p>
         <div className="hg-actions">
           <a className="hg-button hg-button--primary" href="#hawan-library">हवन चुनें</a>
           {savedProgress ? <Link className="hg-button hg-button--outline" to={`/hawan-guide/${savedProgress.slug}`}>अधूरा हवन जारी रखें</Link> : null}
         </div>
-        <ul className="hg-trust" aria-label="मार्गदर्शिका की विशेषताएँ">
-          <li>प्रकाशित मार्गदर्शिकाएँ</li><li>आवश्यक अग्नि-सुरक्षा</li><li>आपकी प्रगति सुरक्षित</li>
-        </ul>
+        <ul className="hg-trust" aria-label="मार्गदर्शिका की विशेषताएँ"><li>सुरक्षा पहले</li><li>सामग्री सूची</li><li>चरण-दर-चरण विधि</li><li>प्रगति सुरक्षित</li></ul></div>
+        <div className="hg-hero__visual" aria-hidden="true"><img src="/cinematic/hawan-kund-editorial.webp" alt="" /></div>
       </div>
     </header>
 
     <main id="hawan-library" className="hg-shell hg-library">
-      <div className="hg-section-heading">
+      <div className="hg-section-heading hg-section-heading--compact">
         <div><p className="hg-eyebrow">हवन संग्रह</p><h2>अपना संकल्प चुनें</h2></div>
         <p>यहाँ केवल प्रकाशित और सत्यापित मार्गदर्शिकाएँ दिखाई जाती हैं।</p>
       </div>
@@ -74,7 +73,8 @@ export default function HawanPage() {
       {loading ? <div className="hg-state" role="status"><strong>हवन मार्गदर्शिकाएँ लोड हो रही हैं…</strong><span>कृपया थोड़ी देर प्रतीक्षा करें।</span></div> : null}
       {!loading && error ? <div className="hg-state hg-state--error" role="alert"><strong>मार्गदर्शिकाएँ नहीं खुल सकीं</strong><span>{error}</span><button type="button" onClick={loadHawans}>फिर प्रयास करें</button></div> : null}
       {!loading && !error && filtered.length === 0 ? <div className="hg-state"><strong>इस चयन के लिए कोई प्रकाशित हवन मार्गदर्शिका उपलब्ध नहीं है।</strong><span>दूसरी श्रेणी या खोज शब्द आज़माएँ।</span></div> : null}
-      {!loading && !error && filtered.length > 0 ? <div className="hg-card-grid">{filtered.map((hawan) => <HawanCard key={hawan._id} hawan={hawan} />)}</div> : null}
+      {!loading && !error && filtered.length > 0 ? <div className="hg-reference-layout"><div className="hg-card-grid">{filtered.map((hawan) => <HawanCard key={hawan._id} hawan={hawan} />)}</div><aside className="hg-start-check"><h3>शुरू करने से पहले</h3>{[["01","स्थान","शांत, स्वच्छ और हवादार जगह चुनें।"],["02","सुरक्षा","अग्नि से सुरक्षा रखें और बच्चों की निगरानी करें।"],["03","सामग्री","आवश्यक सामग्री सूची पहले से तैयार रखें।"],["04","समय","सुविधाजनक और निर्विघ्न समय निर्धारित करें।"]].map(([n,title,copy])=><div key={n}><b>{n}</b><p><strong>{title}</strong><span>{copy}</span></p></div>)}</aside></div> : null}
+      <div className="hg-journey"><h3>आपकी हवन यात्रा</h3>{[["1","संकल्प","अपना संकल्प तय करें"],["2","सामग्री","सामग्री सूची तैयार करें"],["3","सुरक्षा","सुरक्षित हवन के नियम"],["4","विधि","चरण-दर-चरण मार्गदर्शन"],["5","पूर्ण","हवन के बाद क्या करें"]].map(([n,title,copy])=><div key={n}><b>{n}</b><strong>{title}</strong><span>{copy}</span></div>)}</div>
     </main>
   </div>;
 }
