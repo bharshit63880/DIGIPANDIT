@@ -11,6 +11,10 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
+// Vercel forwards the visitor IP through this header. Trusting its first proxy
+// keeps rate limiting accurate and removes express-rate-limit runtime errors.
+app.set("trust proxy", 1);
+
 const allowedOrigins = new Set([
   ...env.corsOrigins,
   ...(!env.isProduction ? ["http://localhost:5173", "http://127.0.0.1:5173"] : []),

@@ -35,7 +35,11 @@ const resolveAdminProductImage = async (file) => {
   try {
     return await uploadImage(file, "digipandit/products");
   } catch (error) {
-    if (error.statusCode !== StatusCodes.SERVICE_UNAVAILABLE) throw error;
+    // Product editing must remain usable even when the optional Cloudinary
+    // integration is missing, expired, or temporarily unavailable.
+    console.warn("[admin:product-image] Remote upload failed; storing the image with the product instead.", {
+      message: error.message,
+    });
     return {
       url: `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
       publicId: "database-upload",
@@ -376,16 +380,7 @@ const uploadProductImageAdmin = asyncHandler(async (req, res) => {
   if (!product) throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
   if (!req.file) throw new ApiError(StatusCodes.BAD_REQUEST, "JPEG, PNG or WebP image is required");
 
-  let image;
-  try {
-    image = await uploadImage(req.file, "digipandit/products");
-  } catch (error) {
-    if (error.statusCode !== StatusCodes.SERVICE_UNAVAILABLE) throw error;
-    image = {
-      url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
-      publicId: "database-upload",
-    };
-  }
+  const image = await resolveAdminProductImage(req.file);
 
   product.images = image.publicId === "database-upload"
     ? [image]

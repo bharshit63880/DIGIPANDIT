@@ -256,7 +256,7 @@ export default function AdminDashboardPage() {
       window.setTimeout(resetProductForm, 1600);
     } catch (error) {
       setProductSaveState("error");
-      setNotice(error.message || "उत्पाद अपडेट नहीं हो सका। कृपया दोबारा प्रयास करें।");
+      setNotice(`उत्पाद अपडेट नहीं हो सका: ${error.message || "कृपया दोबारा प्रयास करें।"}`);
     } finally {
       setProductSaving(false);
     }
