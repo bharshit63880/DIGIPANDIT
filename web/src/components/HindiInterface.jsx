@@ -197,6 +197,10 @@ function translateTree(root) {
 
 export function HindiInterface() {
   useEffect(() => {
+    if (window.location.pathname.startsWith("/admin")) {
+      document.documentElement.lang = "en";
+      return undefined;
+    }
     document.documentElement.lang = "hi";
     translateTree(document.body);
     const observer = new MutationObserver((mutations) => mutations.forEach((mutation) => {

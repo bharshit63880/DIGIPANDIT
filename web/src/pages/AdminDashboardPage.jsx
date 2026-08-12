@@ -3,16 +3,21 @@ import { api } from "../lib/api";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { StatCard } from "../components/StatCard";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../features/auth/authSlice";
+import { LayoutDashboard, Users, UserRoundCheck, CalendarDays, Package, ShoppingBag, Flame, WalletCards, Search, ExternalLink, LogOut, Bell, Menu, X } from "lucide-react";
+import "./admin-dashboard.css";
 
 const tabs = [
-  { id: "overview", label: "Overview" },
-  { id: "users", label: "Users" },
-  { id: "products", label: "Products" },
-  { id: "hawans", label: "Hawan Guides" },
-  { id: "experts", label: "Pandits & Astrologers" },
-  { id: "bookings", label: "Bookings" },
-  { id: "orders", label: "Orders" },
-  { id: "withdrawals", label: "Withdrawals" },
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "users", label: "Users", icon: Users },
+  { id: "experts", label: "Pandits & Astrologers", icon: UserRoundCheck },
+  { id: "bookings", label: "Bookings", icon: CalendarDays },
+  { id: "products", label: "Products", icon: Package },
+  { id: "orders", label: "Orders", icon: ShoppingBag },
+  { id: "hawans", label: "Hawan Guides", icon: Flame },
+  { id: "withdrawals", label: "Withdrawals", icon: WalletCards },
 ];
 
 const emptyUserForm = {
@@ -76,7 +81,12 @@ function SelectField({ label, value, onChange, options }) {
 }
 
 export default function AdminDashboardPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
   const [activeTab, setActiveTab] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState("");
   const [dashboard, setDashboard] = useState(null);
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -250,13 +260,13 @@ export default function AdminDashboardPage() {
         await api.post("/admin/products", payload);
       }
 
-      setNotice(editingProductId ? "उत्पाद सफलतापूर्वक अपडेट हो गया।" : "उत्पाद और चित्र सफलतापूर्वक जोड़ दिए गए।");
+      setNotice(editingProductId ? "Product updated successfully." : "Product and image added successfully.");
       setProductSaveState("success");
       await loadData();
       window.setTimeout(resetProductForm, 1600);
     } catch (error) {
       setProductSaveState("error");
-      setNotice(`उत्पाद अपडेट नहीं हो सका: ${error.message || "कृपया दोबारा प्रयास करें।"}`);
+      setNotice(`Product could not be updated: ${error.message || "Please try again."}`);
     } finally {
       setProductSaving(false);
     }
@@ -287,7 +297,7 @@ export default function AdminDashboardPage() {
 
   const importPujaCatalogue = async () => {
     const response = await api.post("/admin/products/import-puja-catalogue");
-    setNotice(`${response.data.data?.length || 0} पूजा उत्पाद DigiPandit स्टोर में जोड़े गए।`);
+    setNotice(`${response.data.data?.length || 0} Puja products imported into the DigiPandit store.`);
     loadData();
   };
 
@@ -367,26 +377,35 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-[36px] bg-white p-8 shadow-soft">
+    <div className="admin-console" data-no-translate>
+      <aside className={`admin-sidebar ${sidebarOpen ? "is-open" : ""}`}>
+        <div className="admin-brand"><span className="admin-brand-mark">ॐ</span><div><strong>DigiPandit</strong><small>Administration</small></div><button className="admin-mobile-close" onClick={() => setSidebarOpen(false)} aria-label="Close navigation"><X /></button></div>
+        <nav className="admin-nav" aria-label="Admin sections">
+          {tabs.map((tab) => { const Icon = tab.icon; return <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSidebarOpen(false); }} className={activeTab === tab.id ? "is-active" : ""}><Icon /><span>{tab.label}</span>{tab.id === "experts" && pendingExpertsCount ? <b>{pendingExpertsCount}</b> : null}</button>; })}
+        </nav>
+        <div className="admin-profile"><span>{(currentUser?.name || "A").slice(0, 1).toUpperCase()}</span><div><strong>{currentUser?.name || "Administrator"}</strong><small>{currentUser?.email || "DigiPandit Admin"}</small></div></div>
+        <button className="admin-signout" onClick={() => { dispatch(logout()); navigate("/"); }}><LogOut /> Sign out</button>
+      </aside>
+      {sidebarOpen ? <button className="admin-sidebar-backdrop" aria-label="Close navigation" onClick={() => setSidebarOpen(false)} /> : null}
+      <div className="admin-workspace">
+        <header className="admin-topbar"><button className="admin-menu" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Menu /></button><div className="admin-breadcrumb">Admin <span>/</span> {tabs.find((tab) => tab.id === activeTab)?.label}</div><label className="admin-global-search"><Search /><input value={globalSearch} onChange={(event) => setGlobalSearch(event.target.value)} placeholder="Search users, orders, products..." /></label><div className="admin-top-actions"><button aria-label="Notifications"><Bell /></button><a href="/" target="_blank" rel="noreferrer">View website <ExternalLink /></a></div></header>
+        <main className="admin-main">
+      <div className="admin-page-heading">
         <p className="text-sm font-bold uppercase tracking-[0.25em] text-brand-clay">Admin Control Center</p>
-        <h1 className="mt-3 text-4xl font-bold text-brand-ink">Admin-only dashboard with platform-wide control</h1>
-        <p className="mt-3 text-brand-ink/70">
-          Is panel ko sirf admin role hi access kar sakta hai. Yahan se users, experts, bookings, products, orders,
-          aur withdrawals ko manage kiya ja sakta hai.
-        </p>
+        <h1>{tabs.find((tab) => tab.id === activeTab)?.label}</h1>
+        <p>Manage DigiPandit operations, content and platform activity.</p>
         {notice ? <p className="mt-4 text-sm font-semibold text-brand-forest">{notice}</p> : null}
       </div>
 
-      <div className="grid gap-5 md:grid-cols-5">
+      {activeTab === "overview" ? <div className="admin-stat-grid">
         <StatCard label="Users" value={dashboard.totalUsers} detail="Registered customers" />
         <StatCard label="Pandits" value={dashboard.totalPandits} detail="Experts on platform" />
         <StatCard label="Bookings" value={dashboard.totalBookings} detail="All bookings" />
         <StatCard label="Products" value={dashboard.totalProducts} detail="Store catalogue" />
         <StatCard label="Revenue" value={`Rs. ${totalRevenue}`} detail="Bookings + store orders" />
-      </div>
+      </div> : null}
 
-      <div className="flex flex-wrap gap-3">
+      <div className="admin-old-tabs">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -552,7 +571,7 @@ export default function AdminDashboardPage() {
       {activeTab === "products" ? (
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="rounded-[36px] bg-white p-8 shadow-soft">
-            <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl font-bold text-brand-ink">{editingProductId ? "Update product" : "Create product"}</h2><Button variant="secondary" onClick={importPujaCatalogue}>पूजा कैटलॉग आयात करें</Button></div>
+            <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl font-bold text-brand-ink">{editingProductId ? "Update product" : "Create product"}</h2><Button variant="secondary" onClick={importPujaCatalogue}>Import Puja catalogue</Button></div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <Input label="Product name" value={productForm.name} onChange={(e) => setProductForm({ ...productForm, name: e.target.value })} />
               <SelectField
@@ -594,10 +613,10 @@ export default function AdminDashboardPage() {
                 <small className="text-brand-ink/60">JPEG, PNG or WebP · maximum 5 MB</small>
               </label>
             </div>
-            {productImageFile || productForm.imageUrl || productForm.currentImageUrl ? <div className="mt-4 overflow-hidden rounded-[24px] border border-brand-sand bg-brand-sand/20 p-3"><img src={productImageFile ? URL.createObjectURL(productImageFile) : productForm.imageUrl || productForm.currentImageUrl} alt="उत्पाद चित्र पूर्वावलोकन" className="h-44 w-full rounded-2xl object-contain" /></div> : null}
+            {productImageFile || productForm.imageUrl || productForm.currentImageUrl ? <div className="mt-4 overflow-hidden rounded-[24px] border border-brand-sand bg-brand-sand/20 p-3"><img src={productImageFile ? URL.createObjectURL(productImageFile) : productForm.imageUrl || productForm.currentImageUrl} alt="Product preview" className="h-44 w-full rounded-2xl object-contain" /></div> : null}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={saveProduct} disabled={productSaving || productSaveState === "success"} aria-live="polite">
-                {productSaveState === "saving" ? "अपडेट हो रहा है…" : productSaveState === "success" ? "अपडेट हो गया ✓" : productSaveState === "error" ? "फिर प्रयास करें" : editingProductId ? "उत्पाद अपडेट करें" : "उत्पाद बनाएँ"}
+                {productSaveState === "saving" ? "Saving…" : productSaveState === "success" ? "Saved ✓" : productSaveState === "error" ? "Try again" : editingProductId ? "Update product" : "Create product"}
               </Button>
               <Button variant="secondary" onClick={resetProductForm}>Reset</Button>
             </div>
@@ -748,6 +767,8 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       ) : null}
+        </main>
+      </div>
     </div>
   );
 }

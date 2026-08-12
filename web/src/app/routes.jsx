@@ -106,23 +106,15 @@ export const appRoutes = [
           </ProtectedRoute>
         ),
       },
-      {
-        path: "/admin",
-        element: (
-          <ProtectedRoute roles={["ADMIN"]}>
-            <AdminDashboardPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/hawans/:hawanId/edit",
-        element: (
-          <ProtectedRoute roles={["ADMIN"]}>
-            <AdminHawanEditorPage />
-          </ProtectedRoute>
-        ),
-      },
     ],
+  },
+  {
+    path: "/admin",
+    element: <ProtectedRoute roles={["ADMIN"]}><AdminDashboardPage /></ProtectedRoute>,
+  },
+  {
+    path: "/admin/hawans/:hawanId/edit",
+    element: <ProtectedRoute roles={["ADMIN"]}><AdminHawanEditorPage /></ProtectedRoute>,
   },
   {
     path: "*",
