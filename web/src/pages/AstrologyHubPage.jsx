@@ -15,8 +15,6 @@ import { KundaliPlanetTable } from "../components/KundaliPlanetTable";
 import {
   getHindiSectionCopy, translateDasha, translateDosh, translatePlanet, translateScore, translateSection, translateSign,
 } from "../lib/kundaliI18n";
-import { GoldenWriting } from "../components/GoldenWriting";
-import { JyotishArtifact } from "../features/astrology/JyotishArtifact";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
@@ -24,12 +22,12 @@ const fadeUp = {
 };
 
 const modules = [
-  { id: "kundali", title: "जन्म कुंडली", text: "चार्ट, ग्रह, दशाएँ और जीवन की विस्तृत रिपोर्ट।", artifact: "manuscript" },
-  { id: "matching", title: "कुंडली मिलान", text: "छत्तीस गुणों और संबंधों की अनुकूलता का स्पष्ट विश्लेषण।", artifact: "matching" },
-  { id: "numerology", title: "अंक ज्योतिष", text: "जीवन पथ, भाग्यांक और व्यक्तित्व अंक का मार्गदर्शन।", artifact: "astrolabe" },
-  { id: "remedies", title: "दोष और उपाय", text: "सरल दोष जाँच और व्यावहारिक आध्यात्मिक मार्गदर्शन।", artifact: "mala" },
-  { id: "dashas", title: "महादशा", text: "प्रमुख ग्रह दशाओं की सरल और स्पष्ट समयरेखा।", artifact: "panchang" },
-  { id: "consultations", title: "ज्योतिषाचार्य से पूछें", text: "सत्यापित विशेषज्ञ से बातचीत, ध्वनि या दृश्य परामर्श।", artifact: "yantra", href: "/astrology/consultations" },
+  { id: "kundali", title: "जन्म कुंडली", text: "चार्ट, ग्रह, दशाएँ और जीवन की विस्तृत रिपोर्ट।", icon: Orbit, tone: "from-brand-maroon to-brand-clay" },
+  { id: "matching", title: "कुंडली मिलान", text: "छत्तीस गुणों और संबंधों की अनुकूलता का स्पष्ट विश्लेषण।", icon: HeartHandshake, tone: "from-brand-clay to-brand-gold" },
+  { id: "numerology", title: "अंक ज्योतिष", text: "जीवन पथ, भाग्यांक और व्यक्तित्व अंक का मार्गदर्शन।", icon: CircleGauge, tone: "from-brand-forest to-brand-maroon" },
+  { id: "remedies", title: "दोष और उपाय", text: "सरल दोष जाँच और व्यावहारिक आध्यात्मिक मार्गदर्शन।", icon: ShieldCheck, tone: "from-amber-500 to-orange-600" },
+  { id: "dashas", title: "महादशा", text: "प्रमुख ग्रह दशाओं की सरल और स्पष्ट समयरेखा।", icon: ChartNoAxesCombined, tone: "from-brand-forest to-brand-clay" },
+  { id: "consultations", title: "ज्योतिषाचार्य से पूछें", text: "सत्यापित विशेषज्ञ से बातचीत, ध्वनि या दृश्य परामर्श।", icon: Bot, tone: "from-brand-maroon to-brand-forest", href: "/astrology/consultations" },
 ];
 
 const orbitPlanets = [
@@ -51,20 +49,6 @@ function PlanetaryOrbit({ daily, loading }) {
           <i>{symbol}</i><small>{name}</small>
         </span>
       ))}
-    </div>
-  );
-}
-
-function ReferenceKundliChart() {
-  const cells = [["मं", "2"], ["गु", "1"], ["शु", "12"], ["चं", "3"], ["सूर्य", "4"], ["रा", "11"], ["श", "5"], ["बु", "7"], ["के", "10"], ["से", "6"], ["रु", "8"], ["ने", "9"]];
-  return (
-    <div className="dp-reference-kundli" aria-label="उत्तर भारतीय कुंडली का सजावटी चित्र">
-      <svg viewBox="0 0 600 430" role="img" aria-hidden="true">
-        <path d="M300 16C334 68 378 68 442 68H560V362H442C378 362 334 362 300 414C266 362 222 362 158 362H40V68H158C222 68 266 68 300 16Z" />
-        <path d="M40 68 300 215 560 68M40 362 300 215 560 362M40 68 300 414M560 68 300 414M40 362 300 16M560 362 300 16" />
-      </svg>
-      {cells.map(([planet, house], index) => <span key={`${planet}-${house}`} style={{ "--kundli-cell": index }}><b>{planet}</b><small>{house}</small></span>)}
-      <i className="dp-reference-kundli__lotus">ॐ</i>
     </div>
   );
 }
@@ -390,18 +374,18 @@ export default function AstrologyHubPage() {
 
   return (
     <div className="dp-theme dp-astrology-theme">
-      <div className="dp-astrology-reference overflow-hidden bg-brand-cream text-brand-ink">
+      <div className="overflow-hidden bg-brand-cream text-brand-ink">
         <section className="relative overflow-hidden bg-brand-ink text-white">
           <div className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(circle_at_80%_20%,rgba(255,255,255,.13),transparent_25%),radial-gradient(circle_at_13%_87%,rgba(255,255,255,.07),transparent_27%)]" />
-          <div className="container-shell dp-reference-hero relative grid items-center gap-12 py-16 lg:grid-cols-[1.02fr_.98fr] lg:py-24">
+          <div className="container-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-              <GoldenWriting className="max-w-3xl text-5xl font-semibold leading-[.96] md:text-7xl">अपनी कुंडली समझें।<br />स्पष्टता से आगे बढ़ें।</GoldenWriting>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">वैदिक ज्योतिष की शास्त्र सम्मत विधि से जीवन के हर पहलू को समझें और सही निर्णय लेने के लिए स्पष्ट दिशा पाएँ।</p>
+              <h1 className="dp-astro-typewriter max-w-3xl text-5xl font-semibold leading-[.96] text-white md:text-7xl"><span>अपनी कुंडली समझें।</span><span>स्पष्टता से आगे बढ़ें।</span></h1>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">कुंडली, पंचांग, मिलान, महादशा, उपाय और विश्वसनीय ज्योतिषाचार्य—सब एक सहज DigiPandit अनुभव में।</p>
               <div className="mt-8 flex flex-wrap gap-4"><a href="#kundali"><Button className="bg-brand-gold px-7 py-4 text-brand-ink hover:bg-white">निःशुल्क कुंडली बनाएँ <ArrowRight className="ml-2 h-5 w-5" /></Button></a><Link to="/astrology/consultations"><Button variant="secondary" className="px-7 py-4">ज्योतिषी से बात करें</Button></Link></div>
               <div className="mt-7 flex flex-wrap gap-5 text-sm font-semibold text-white/55">{["साइन-अप जरूरी नहीं", "क्रमबद्ध गणना", "आपकी गोपनीयता सुरक्षित"].map((item) => <span key={item} className="flex items-center gap-2"><Check className="h-4 w-4 text-brand-gold" />{item}</span>)}</div>
             </motion.div>
             <motion.div initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .7 }} className="relative">
-              <ReferenceKundliChart />
+              <PlanetaryOrbit daily={daily} loading={dailyQuery.isLoading} />
             </motion.div>
           </div>
         </section>
@@ -409,7 +393,7 @@ export default function AstrologyHubPage() {
         <main className="container-shell">
           <section className="py-20">
             <SectionHeading eyebrow="खोजें" title="मार्गदर्शन का एक संपूर्ण संसार" description="सभी ज्योतिष सुविधाएँ एक ही सरल और सुसंगत अनुभव में उपलब्ध हैं।" />
-            <div className="dp-reference-services mt-12">{modules.map((item) => { const content = <article className="dp-reference-service"><JyotishArtifact type={item.artifact} /><div><h3>{item.title}</h3><p>{item.text}</p></div><span>विस्तृत रिपोर्ट <ArrowRight /></span></article>; return item.href ? <Link key={item.id} to={item.href}>{content}</Link> : <a key={item.id} href={`#${item.id}`}>{content}</a>; })}</div>
+            <div className="dp-astro-marquee mt-12"><div className="dp-astro-marquee-track">{[...modules, ...modules].map((item, index) => { const Icon = item.icon; const duplicate = index >= modules.length; const content = <article className="dp-astro-module-card group"><div className={`dp-astro-module-icon bg-gradient-to-br ${item.tone}`}><Icon /></div><h3>{item.title}</h3><p>{item.text}</p><span>विस्तार से देखें <ArrowRight /></span></article>; return item.href ? <Link aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} to={item.href}>{content}</Link> : <a aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} href={`#${item.id}`}>{content}</a>; })}</div></div>
           </section>
 
           {daily ? <section className="dp-panchang-spiral-section py-16"><SectionHeading eyebrow="आज का वैदिक संकेत" title="एक दृष्टि में पंचांग" /><div className="dp-panchang-spiral"><div className="dp-panchang-center"><span>ॐ</span><strong>{daily.panchang.nakshatra}</strong></div>{[["सूर्योदय", daily.panchang.sunrise, Sun], ["तिथि", daily.panchang.tithi, CalendarDays], ["राहु काल", daily.panchang.rahuKaal, Zap], ["अभिजित मुहूर्त", daily.panchang.abhijitMuhurat, Star]].map(([label, value, Icon], index) => <article key={label} className="dp-panchang-node" style={{ "--node-index": index }}><Icon /><div><small>{label}</small><strong>{value}</strong></div></article>)}</div><div className="dp-horoscope-ribbon">{daily.horoscope.slice(0, 3).map((item) => <article key={item.sign}><div><h3>{item.sign}</h3><strong>{item.score}%</strong></div><p>{item.summary}</p></article>)}</div></section> : null}
