@@ -7,6 +7,7 @@ import App from "./App";
 import { store } from "./app/store";
 import "./index.css";
 import "./styles/themed-pages.css";
+import "./styles/mobile-responsive.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

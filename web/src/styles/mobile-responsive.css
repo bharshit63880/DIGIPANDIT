@@ -1,0 +1,143 @@
+/* Mobile safety layer. Kept separate so in-progress desktop artwork is untouched. */
+@media (max-width: 899px) {
+  html, body, #root { width: 100%; max-width: 100%; overflow-x: clip; }
+  body { -webkit-text-size-adjust: 100%; }
+  img, svg, video, canvas { max-width: 100%; }
+  button, a, input, select, textarea { min-width: 0; }
+  input, select, textarea { font-size: 16px; }
+  .container-shell { max-width: 100%; padding-inline: 1rem; }
+
+  /* The full prism remains visible, but its content becomes a true mobile bar. */
+  .dp-navbar { width: 100%; padding: .45rem .5rem; }
+  .dp-navbar .container-shell { width: 100%; padding-inline: 0; }
+  .dp-navbar .container-shell > div {
+    grid-template-columns: minmax(2.8rem, 1fr) auto !important;
+    gap: .4rem !important;
+    min-height: 3.75rem !important;
+    padding: .25rem .65rem !important;
+    clip-path: polygon(2.2% 0, 97.8% 0, 100% 50%, 97.8% 100%, 2.2% 100%, 0 50%) !important;
+  }
+  .dp-navbar .dp-brand { width: auto; min-width: 0; overflow: hidden; gap: .5rem; }
+  .dp-navbar .dp-brand > div { display: none; }
+  .dp-navbar .dp-brand__mark { width: 2.65rem; height: 2.65rem; }
+  .dp-navbar-actions { gap: .4rem !important; }
+  .dp-navbar-actions > a[href="/cart"],
+  .dp-navbar-actions > button { width: 2.65rem; height: 2.65rem; flex: 0 0 2.65rem; }
+  .dp-navbar-actions .dp-auth-register,
+  .dp-navbar-actions .dp-auth-login { min-height: 2.65rem; padding-inline: .85rem; font-size: .75rem; white-space: nowrap; }
+  .dp-navbar nav#mobile-navigation {
+    left: .15rem !important; right: .15rem !important; top: calc(100% + .35rem) !important;
+    max-height: calc(100svh - 5.5rem); overflow-y: auto;
+  }
+
+  /* Home: cinematic artwork becomes a contained backdrop instead of a desktop canvas. */
+  .cinematic-home--continuous .journey-world-3d { display: none !important; }
+  .cinematic-home--continuous .journey-stage { padding: 5.4rem 1rem 2.5rem !important; }
+  .cinematic-home--continuous .journey-scene { min-height: 100svh; }
+  .cinematic-home--continuous .journey-scene--hero .journey-copy,
+  .cinematic-home--continuous .journey-copy { padding-top: clamp(15rem, 61vw, 22rem) !important; }
+  .journey-copy h1, .journey-copy h2 { font-size: clamp(2.2rem, 11vw, 3.3rem) !important; line-height: 1.04; }
+  .journey-copy > p:not(.cinematic-kicker):not(.journey-chapter):not(.gateway-assurance) { font-size: .94rem; line-height: 1.7; }
+  .cinematic-home--continuous .journey-pandit--hero {
+    inset: 5rem 0 auto !important; width: 100% !important; height: auto !important;
+    aspect-ratio: 1672 / 939; object-fit: contain !important; object-position: center top !important;
+    transform: none !important; filter: drop-shadow(0 20px 32px rgba(0,0,0,.7));
+  }
+  .journey-astrologer {
+    inset: 5rem 0 auto !important; width: 100% !important; height: auto !important;
+    aspect-ratio: 1672 / 939; object-fit: contain !important; object-position: center !important;
+    transform: none !important;
+  }
+  .journey-aura { top: 3.75rem !important; width: 100vw !important; right: 0 !important; }
+  .zodiac-rings { top: 4.5rem !important; width: 94vw !important; right: 3vw !important; }
+  .journey-pandit--discovery {
+    top: 4.5rem !important; right: 0 !important; bottom: auto !important;
+    width: 100% !important; height: auto !important; max-height: 21rem; object-fit: contain;
+    transform: none !important;
+  }
+  .journey-scene--hawan .journey-copy,
+  .journey-scene--store .journey-copy { padding-top: clamp(18rem, 72vw, 23rem) !important; }
+  .hawan-kund { top: 7rem !important; left: 8% !important; width: 84vw !important; transform: scale(.78); transform-origin: top center; }
+  .store-pedestal { top: 7rem !important; right: 4% !important; width: 92vw !important; transform: scale(.8) !important; transform-origin: top center; }
+  .cinematic-actions { gap: .7rem; }
+  .cinematic-cta { min-height: 3rem; justify-content: center; text-align: center; }
+  .cinematic-home--continuous .discovery-results { max-width: 100%; overflow: hidden; }
+  .cinematic-home--continuous .discovery-card { grid-template-columns: 5.5rem minmax(0, 1fr); }
+
+  /* Public themed pages. */
+  .dp-theme { overflow-x: clip; }
+  .dp-theme h1 { font-size: clamp(2.25rem, 11vw, 3.35rem); line-height: 1.08; }
+  .dp-theme h2 { overflow-wrap: anywhere; }
+  .dp-theme section { min-width: 0; }
+  .dp-unified-footer { padding-block: 2.5rem; }
+  .dp-unified-footer .container-shell { gap: 2rem; }
+
+  /* Astrology retains horizontal discovery, with cards sized to the viewport. */
+  .dp-astrology-theme > section:first-child .container-shell { padding-top: 4rem; padding-bottom: 3rem; }
+  .dp-planetarium { width: min(22rem, 88vw) !important; }
+  .dp-astro-marquee { margin-inline: calc(50% - 50vw); padding-block: 1.5rem 2.5rem; scroll-snap-type: x proximity; }
+  .dp-astro-marquee-track { gap: .8rem; padding-inline: 1rem; }
+  .dp-astro-marquee-track > a { width: min(17rem, calc(100vw - 2rem)) !important; scroll-snap-align: center; }
+  .dp-astro-module-card { min-height: 14rem !important; padding: 1.3rem 1.5rem !important; }
+  .dp-panchang-spiral-section { overflow: hidden; }
+  .dp-panchang-spiral { width: min(16rem, 72vw) !important; }
+  .dp-kundali-dialog { align-items: flex-end; padding: 0 !important; }
+  .dp-kundali-dialog-shell { width: 100%; max-height: 92svh; overflow-y: auto; border-radius: 1.25rem 1.25rem 0 0 !important; }
+
+  /* Pandit booking: one readable column, touch-friendly horizontal cards. */
+  .dp-pandit-content { padding-inline: 1rem !important; }
+  .dp-pandit-hero { min-height: 36rem !important; padding: 1.75rem 1rem 0 !important; }
+  .dp-pandit-hero-copy { padding: 1.25rem 0 0 !important; }
+  .dp-pandit-typewriter { font-size: clamp(2.15rem, 10vw, 3.1rem) !important; }
+  .dp-pandit-floating-figure { right: -4rem !important; width: 23rem !important; height: 22rem !important; }
+  .dp-pandits-page .dp-pandit-content > .mt-8.grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .dp-pandit-card-rail { grid-auto-columns: min(82vw, 20rem) !important; width: 100%; }
+  .dp-pandit-card-rail .dp-pandit-card > img { height: 11.5rem; }
+
+  /* Store: hero art stays behind the heading; controls and cards stack cleanly. */
+  .dp-store-theme { padding: 2rem 1rem 3rem !important; }
+  .dp-store-theme > .dp-store-atmosphere + div { max-width: none !important; padding-top: min(64vw, 15rem) !important; }
+  .dp-store-atmosphere { height: min(72vw, 19rem) !important; overflow: hidden; }
+  .dp-store-atmosphere img { right: 50% !important; bottom: -1rem !important; width: min(76vw, 22rem) !important; max-width: 76vw; transform: translateX(50%) !important; object-fit: contain; }
+  .dp-store-mandala { top: .5rem !important; width: min(72vw, 20rem) !important; }
+  .dp-store-reference__heading { max-width: 100%; }
+  .dp-store-search { display: grid !important; grid-template-columns: minmax(0, 1fr) auto; width: 100%; }
+  .dp-store-search input { width: 100%; }
+  .dp-store-filterbar { align-items: stretch; flex-direction: column; }
+  .dp-store-filterbar label, .dp-store-filterbar select { width: 100%; }
+  .dp-store-theme > .mt-8.grid { grid-template-columns: minmax(0, 1fr) !important; margin-top: 2.5rem !important; }
+  .dp-store-product { width: 100%; }
+
+  /* Hawan library and detail controls become compact, sequential touch flows. */
+  .hg-page--reference .hg-hero__inner { padding-top: 4.5rem; }
+  .hg-page--reference .hg-hero h1 { font-size: clamp(2.5rem, 12vw, 3.6rem); }
+  .hg-page--reference .hg-hero__content { padding-block: 2rem; }
+  .hg-page--reference .hg-hero__visual img { object-position: 64% center; }
+  .hg-actions, .hg-actions .hg-button { width: 100%; }
+  .hg-reference-layout, .hg-card-grid, .hg-filters { min-width: 0; }
+  .hg-journey { overflow: hidden; }
+
+  /* Forms/details: reduce oversized desktop surfaces without changing logic. */
+  .dp-auth-page { min-height: 100svh; padding: 1rem; }
+  .dp-auth-shell { width: 100%; border-radius: 1.25rem; }
+  .dp-auth-card { padding: 1.35rem !important; }
+  .dp-auth-form { gap: .85rem; }
+  .dp-store-theme .rounded-\[32px\],
+  .dp-store-theme .rounded-\[36px\] { border-radius: 1.35rem; }
+  .dp-store-theme .p-8 { padding: 1.25rem; }
+  .dp-store-theme .p-7 { padding: 1.15rem; }
+}
+
+@media (max-width: 359px) {
+  .container-shell { padding-inline: .75rem; }
+  .dp-navbar { padding-inline: .35rem; }
+  .dp-navbar .container-shell > div { padding-inline: .55rem !important; }
+  .dp-navbar-actions .dp-auth-register { max-width: 5.25rem; padding-inline: .55rem; line-height: 1.05; }
+  .journey-copy h1, .journey-copy h2 { font-size: 2.12rem !important; }
+  .dp-pandit-card-rail { grid-auto-columns: calc(100vw - 3rem) !important; }
+  .dp-store-search span { padding-inline: .85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-astro-marquee-track { animation: none !important; }
+}
