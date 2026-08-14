@@ -24,7 +24,7 @@ export default function LoginPage() {
       const roleHome = {
         ADMIN: "/admin",
         PANDIT: "/pandit-dashboard",
-        USER: "/dashboard",
+        USER: "/",
       };
       navigate(location.state?.from || roleHome[action.payload.user.role] || "/");
     }

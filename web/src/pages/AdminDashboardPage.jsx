@@ -46,6 +46,7 @@ const emptyProductForm = {
 
 const orderStatuses = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
 const bookingStatuses = ["PENDING", "ACCEPTED", "REJECTED", "CANCELLED", "COMPLETED"];
+const ADMIN_REQUEST_TIMEOUT = 30000;
 
 function TextAreaField({ label, value, onChange, rows = 4 }) {
   return (
@@ -155,25 +156,40 @@ export default function AdminDashboardPage() {
     setLoadError("");
 
     try {
-      const [dashboardRes, usersRes, productsRes, expertsRes, bookingsRes, ordersRes, withdrawalsRes, hawansRes] = await Promise.all([
-        api.get("/admin/dashboard"),
-        api.get("/admin/users", { params: { limit: 50 } }),
-        api.get("/admin/products"),
-        api.get("/admin/pandits/approvals"),
-        api.get("/admin/bookings", { params: { limit: 50 } }),
-        api.get("/admin/store-orders", { params: { limit: 50 } }),
-        api.get("/admin/withdrawals"),
-        api.get("/admin/hawans"),
-      ]);
+      const sections = [
+        ["dashboard", api.get("/admin/dashboard", { timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["users", api.get("/admin/users", { params: { limit: 50 }, timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["products", api.get("/admin/products", { timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["experts", api.get("/admin/pandits/approvals", { timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["bookings", api.get("/admin/bookings", { params: { limit: 50 }, timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["orders", api.get("/admin/store-orders", { params: { limit: 50 }, timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["withdrawals", api.get("/admin/withdrawals", { timeout: ADMIN_REQUEST_TIMEOUT })],
+        ["hawans", api.get("/admin/hawans", { timeout: ADMIN_REQUEST_TIMEOUT })],
+      ];
+      const results = await Promise.allSettled(sections.map(([, request]) => request));
+      const responseBySection = Object.fromEntries(
+        sections.map(([name], index) => [name, results[index].status === "fulfilled" ? results[index].value : null])
+      );
+      const failedSections = sections
+        .filter((_, index) => results[index].status === "rejected")
+        .map(([name]) => name);
 
-      setDashboard(dashboardRes.data.data);
-      setUsers(usersRes.data.docs || []);
-      setProducts(productsRes.data.data || []);
-      setExperts(expertsRes.data.data || []);
-      setBookings(bookingsRes.data.docs || []);
-      setOrders(ordersRes.data.docs || []);
-      setWithdrawals(withdrawalsRes.data.data || []);
-      setHawans(hawansRes.data.data || []);
+      setDashboard(responseBySection.dashboard?.data?.data || {});
+      setUsers(responseBySection.users?.data?.docs || []);
+      setProducts(responseBySection.products?.data?.data || []);
+      setExperts(responseBySection.experts?.data?.data || []);
+      setBookings(responseBySection.bookings?.data?.docs || []);
+      setOrders(responseBySection.orders?.data?.docs || []);
+      setWithdrawals(responseBySection.withdrawals?.data?.data || []);
+      setHawans(responseBySection.hawans?.data?.data || []);
+
+      if (failedSections.length === sections.length) {
+        throw new Error("Admin data could not be loaded. Please refresh after the server is available.");
+      }
+
+      if (failedSections.length) {
+        setNotice(`Some admin sections are still loading: ${failedSections.join(", ")}.`);
+      }
     } catch (error) {
       setLoadError(error.response?.data?.message || error.message || "Admin data could not be loaded.");
     } finally {

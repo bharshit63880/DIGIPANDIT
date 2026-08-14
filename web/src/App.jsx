@@ -16,6 +16,14 @@ export default function App() {
   const element = useRoutes(appRoutes);
 
   useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location.pathname]);
+
+  useEffect(() => {
     if (token) {
       dispatch(fetchCurrentUser());
     }
