@@ -4,11 +4,12 @@ import { Navbar } from "../components/Navbar";
 export default function AppShell() {
   const { pathname } = useLocation();
   const isCinematicHome = pathname === "/";
+  const isAuthPage = ["/login", "/register", "/forgot-password"].includes(pathname);
   return (
-    <div className={`dp-unified-shell min-h-screen ${isCinematicHome ? "dp-unified-shell--home" : "dp-shell--immersive"}`}>
-      <Navbar />
+    <div className={`dp-unified-shell min-h-screen ${isCinematicHome ? "dp-unified-shell--home" : "dp-shell--immersive"} ${isAuthPage ? "dp-unified-shell--auth" : ""}`}>
+      {!isAuthPage && <Navbar />}
       <Outlet />
-      <footer className="dp-unified-footer mt-0 border-t py-12 text-white">
+      {!isAuthPage && <footer className="dp-unified-footer mt-0 border-t py-12 text-white">
         <div className="container-shell grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
           <div>
             <div className="flex items-center gap-3">
@@ -34,7 +35,7 @@ export default function AppShell() {
             </p>
           </div>
         </div>
-      </footer>
+      </footer>}
     </div>
   );
 }
