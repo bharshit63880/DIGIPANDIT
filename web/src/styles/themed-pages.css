@@ -201,9 +201,12 @@
 }
 
 /* Fixed supplied astrology world: the artwork stays in place while content scrolls. */
-.dp-astrology-theme{background-color:#050302!important;background-image:linear-gradient(90deg,rgba(4,3,2,.7),rgba(7,5,3,.36) 48%,rgba(5,4,3,.54)),url('/cinematic/astrology-fixed-bg.png')!important;background-position:center,center!important;background-size:cover,cover!important;background-repeat:no-repeat,no-repeat!important;background-attachment:fixed,fixed!important}
-.dp-astrology-theme:before{display:none!important}
-.dp-astrology-theme:after{z-index:0!important;background:linear-gradient(180deg,rgba(5,4,3,.05),rgba(5,4,3,.45))!important}
+.dp-astrology-theme{position:relative;isolation:isolate;background:#050302!important}
+.dp-astrology-theme:before{content:""!important;display:block!important;position:fixed!important;z-index:0!important;inset:0!important;width:100vw!important;height:100svh!important;background-image:linear-gradient(90deg,rgba(4,3,2,.48),rgba(7,5,3,.22) 48%,rgba(5,4,3,.38)),url('/cinematic/astrology-fixed-bg.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;opacity:1!important;filter:none!important;pointer-events:none!important;transform:translateZ(0)}
+.dp-astrology-theme:after{position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,4,3,.04),rgba(5,4,3,.34))!important;pointer-events:none!important}
+.dp-astrology-theme>div,.dp-astrology-theme main,.dp-astrology-theme main:before,.dp-astrology-theme main>section,.dp-astrology-theme section:first-child{background:transparent!important}
+.dp-astrology-theme>*{position:relative;z-index:1}
+@media(max-width:899px){.dp-astrology-theme:before{background-position:58% center!important}}
 
 /* One Pandit Ji temple atmosphere shared by all authentication screens. */
 .dp-auth-page{background-color:#080503!important;background-image:linear-gradient(90deg,rgba(5,3,2,.91),rgba(7,4,2,.66) 46%,rgba(6,4,2,.5)),url('/cinematic/pandit-fixed-bg.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
