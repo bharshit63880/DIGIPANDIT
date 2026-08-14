@@ -76,7 +76,7 @@ export function JourneyProvider({ children }) {
       if (hashFrame) window.cancelAnimationFrame(hashFrame);
       hashFrame = window.requestAnimationFrame(() => {
         hashFrame = 0;
-        document.getElementById(id)?.scrollIntoView({ behavior: "auto", block: "start" });
+        document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       });
     };
     navigateToHash();
@@ -87,7 +87,7 @@ export function JourneyProvider({ children }) {
       window.removeEventListener("popstate", navigateToHash);
       window.removeEventListener("hashchange", navigateToHash);
     };
-  }, []);
+  }, [reducedMotion]);
 
   const registerSection = useCallback((id, node) => {
     if (node) sections.current.set(id, node);
