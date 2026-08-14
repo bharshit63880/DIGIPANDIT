@@ -75,20 +75,21 @@
 @media(max-width:899px){.cinematic-home--continuous{background-attachment:scroll}.cinematic-home--continuous .journey-pandit--hero,.cinematic-home--continuous .journey-pandit--discovery,.cinematic-home--continuous .journey-astrologer{inset:4.5rem -20% auto auto;width:135vw;height:52svh;object-position:center bottom;transform:none;opacity:.72}.cinematic-home--continuous .hawan-kund{inset:5rem -18% auto auto;width:128vw;height:49svh;transform:none}.cinematic-home--continuous .journey-copy{padding-top:48svh}.cinematic-home--continuous .journey-stage:after{background:linear-gradient(0deg,rgba(5,3,2,.96),rgba(5,3,2,.72) 50%,rgba(5,3,2,.12) 84%)!important}}
 @media(prefers-reduced-motion:reduce){.cinematic-home--continuous{scroll-behavior:auto}.cinematic-home--continuous .journey-copy,.cinematic-home--continuous .journey-pandit,.cinematic-home--continuous .journey-astrologer,.cinematic-home--continuous .hawan-kund{transition:none}}
 
-/* Final composition pass: a quiet, static pilgrimage with motion reserved for fire. */
+/* Final composition pass: clean sacred geometry, with scroll-led cinematic subjects. */
 .journey-world-3d,.journey-aura,.journey-location,.zodiac-rings,.dissolve-figure{display:none!important}
-.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-copy{opacity:1!important;transform:translateY(-50%)!important}
-.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-pandit,
-.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-astrologer,
-.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .store-pedestal,
-.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .discovery-card{animation:none!important;transform:none!important;opacity:1!important}
+.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-copy{opacity:clamp(.12,calc(var(--p)*2.8),1)!important;transform:translate3d(0,calc(-50% + (1 - var(--p))*4.5rem),0)!important;filter:blur(calc((1 - var(--p))*3px));will-change:transform,opacity,filter}
+.cinematic-home--continuous .journey-pandit--hero{animation:none!important;opacity:clamp(.22,calc(var(--p)*1.7),1)!important;transform:translate3d(calc((1 - var(--p))*8vw),calc((.52 - var(--p))*5vh),0) scale(calc(.9 + var(--p)*.13))!important;clip-path:inset(calc((1 - var(--p))*7%) 0 0 calc((1 - var(--p))*8%) round 2rem);will-change:transform,opacity,clip-path}
+.cinematic-home--continuous .journey-pandit--discovery{animation:none!important;opacity:clamp(.15,calc(var(--p)*1.85),1)!important;transform:translate3d(calc((1 - var(--p))*-7vw),calc((.5 - var(--p))*4vh),0) scale(calc(.91 + var(--p)*.11))!important;clip-path:inset(calc((1 - var(--p))*8%) calc((1 - var(--p))*4%) 0 0 round 2rem);will-change:transform,opacity,clip-path}
+.cinematic-home--continuous .journey-astrologer{animation:none!important;opacity:clamp(.1,calc(var(--p)*1.9),1)!important;transform:translate3d(calc((1 - var(--p))*7vw),calc((.5 - var(--p))*5vh),0) scale(calc(.9 + var(--p)*.12)) rotate(calc((1 - var(--p))*1.2deg))!important;filter:drop-shadow(0 32px 50px rgba(0,0,0,.58)) blur(calc((1 - var(--p))*2px));will-change:transform,opacity,filter}
+.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .store-pedestal{animation:none!important;opacity:clamp(.12,calc(var(--p)*2),1)!important;transform:translate3d(0,calc((1 - var(--p))*5rem),0) scale(calc(.92 + var(--p)*.08))!important;will-change:transform,opacity}
+.cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .discovery-card{animation:none!important;opacity:clamp(.08,calc(var(--p)*2.1 - var(--card-index)*.12),1)!important;transform:translate3d(calc((1 - var(--p))*9vw),calc((1 - var(--p))*3.5rem),0) rotateY(calc((1 - var(--p))*-7deg))!important;will-change:transform,opacity}
 .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .ember-field,
 .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .store-embers{display:none!important}
 .cinematic-home--continuous .journey-scene--hawan .hawan-kund{inset:5% auto 0 0!important;width:min(72vw,78rem)!important;height:95%!important;background-position:left center!important;background-size:cover!important;filter:drop-shadow(0 30px 54px rgba(0,0,0,.68)) drop-shadow(0 0 34px rgba(255,116,27,.25))!important;mask-image:linear-gradient(90deg,#000 0 78%,transparent 100%),linear-gradient(180deg,transparent 0,#000 8%,#000 94%,transparent 100%);mask-composite:intersect;transform:translate3d(calc((1 - var(--p))*-2.5vw),calc((1 - var(--p))*1.5rem),0) scale(calc(.985 + var(--p)*.015))!important;transform-origin:left center}
 .cinematic-home--continuous .journey-scene--hawan .journey-stage:after{background:linear-gradient(90deg,rgba(5,3,2,.08),rgba(5,3,2,.2) 48%,rgba(5,3,2,.9) 72%,rgba(5,3,2,.96))!important}
 .cinematic-home--continuous .journey-scene--hawan .journey-copy{right:max(5vw,2rem);width:min(37rem,39vw)}
 
-/* Reference navbar: compact angular black-gold bar, stable while scrolling. */
+/* Reference navbar: angular at rest, softly bowed into a floating capsule on scroll. */
 .dp-navbar{transform:none!important;perspective:none!important;padding:.55rem 0;background:transparent!important;filter:none!important}
 .dp-navbar .container-shell{max-width:112rem!important;padding-inline:clamp(.65rem,2.2vw,2rem)!important}
 .dp-navbar .container-shell>div:first-child{position:relative;min-height:68px!important;grid-template-columns:minmax(12rem,auto) minmax(0,1fr) auto!important;gap:clamp(.6rem,1.5vw,1.4rem)!important;padding:.35rem clamp(.9rem,1.8vw,1.65rem);border:1px solid rgba(229,174,66,.5);clip-path:polygon(1.35rem 0,calc(100% - 1.35rem) 0,100% 50%,calc(100% - 1.35rem) 100%,1.35rem 100%,0 50%);background:linear-gradient(180deg,rgba(30,18,12,.98),rgba(8,6,5,.98));box-shadow:0 0 0 1px rgba(255,220,132,.06) inset,0 16px 42px rgba(0,0,0,.42),0 0 24px rgba(214,145,37,.08)}
@@ -96,12 +97,24 @@
 .dp-navbar .dp-nav-link{position:relative;border-radius:0!important;padding:.82rem 1rem!important;clip-path:polygon(.7rem 0,100% 0,calc(100% - .7rem) 100%,0 100%);transition:color .2s ease,background .2s ease,transform .16s ease!important}
 .dp-navbar .dp-nav-link.is-active{color:#160d06!important;background:linear-gradient(135deg,#f1c665,#c98b25)!important;box-shadow:0 0 22px rgba(232,177,66,.22)!important}
 .dp-navbar .dp-nav-link:active{transform:translateY(2px) scale(.97)}
-.dp-navbar.is-scrolled .container-shell>div:first-child{box-shadow:0 0 0 1px rgba(255,220,132,.08) inset,0 20px 55px rgba(0,0,0,.6),0 0 28px rgba(214,145,37,.12)}
+.dp-navbar .container-shell{transition:transform .55s cubic-bezier(.22,1,.36,1),padding .45s ease!important;transform-origin:50% 0}
+.dp-navbar .container-shell>div:first-child{transition:border-radius .55s cubic-bezier(.22,1,.36,1),clip-path .55s cubic-bezier(.22,1,.36,1),box-shadow .45s ease,background .45s ease!important}
+.dp-navbar.is-scrolled .container-shell{transform:perspective(1100px) translateY(.2rem) scale(.965) rotateX(3deg)!important}
+.dp-navbar.is-scrolled .container-shell>div:first-child{clip-path:none!important;border-radius:50% / 34%!important;background:radial-gradient(ellipse at 50% -25%,rgba(105,58,24,.34),transparent 55%),linear-gradient(180deg,rgba(28,16,12,.97),rgba(8,6,5,.97))!important;box-shadow:0 0 0 1px rgba(255,220,132,.1) inset,0 28px 68px rgba(0,0,0,.64),0 8px 36px rgba(214,145,37,.16)!important}
 
 @media(max-width:899px){
-  .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-copy{transform:none!important}
+  .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-copy{opacity:1!important;transform:none!important;filter:none!important}
+  .cinematic-home--continuous .journey-pandit--hero,.cinematic-home--continuous .journey-pandit--discovery,.cinematic-home--continuous .journey-astrologer{opacity:.7!important;transform:translate3d(0,calc((1 - var(--p))*1.5rem),0) scale(calc(.97 + var(--p)*.03))!important;clip-path:none!important;filter:drop-shadow(0 22px 34px rgba(0,0,0,.5))!important}
+  .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .discovery-card{opacity:1!important;transform:none!important}
   .cinematic-home--continuous .journey-scene--hawan .hawan-kund{inset:4.6rem auto auto 0!important;width:112vw!important;height:49svh!important;background-size:cover!important;background-position:left center!important;mask-image:linear-gradient(90deg,#000 0 72%,transparent 100%),linear-gradient(180deg,#000 0 84%,transparent 100%);transform:translate3d(calc((1 - var(--p))*-1.5rem),0,0) scale(calc(.98 + var(--p)*.02))!important}
   .cinematic-home--continuous .journey-scene--hawan .journey-copy{width:auto;padding-top:49svh}
   .dp-navbar{padding:.35rem 0}
   .dp-navbar .container-shell>div:first-child{min-height:62px!important;grid-template-columns:minmax(0,1fr) auto!important;padding:.3rem .85rem;clip-path:polygon(.8rem 0,calc(100% - .8rem) 0,100% 50%,calc(100% - .8rem) 100%,.8rem 100%,0 50%)}
+  .dp-navbar.is-scrolled .container-shell{transform:translateY(.15rem) scale(.98)!important}
+  .dp-navbar.is-scrolled .container-shell>div:first-child{border-radius:1.5rem!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .cinematic-home--continuous .journey-copy,.cinematic-home--continuous .journey-pandit,.cinematic-home--continuous .journey-astrologer,.cinematic-home--continuous .store-pedestal,.cinematic-home--continuous .discovery-card{transform:none!important;opacity:1!important;filter:none!important;clip-path:none!important}
+  .dp-navbar .container-shell,.dp-navbar .container-shell>div:first-child{transition:none!important}
 }

@@ -184,16 +184,17 @@
 .dp-pandits-page>*{position:relative;z-index:1}
 .dp-pandit-sanctum,.dp-pandit-floating-figure{display:none!important}
 .dp-pandit-hero{grid-template-columns:minmax(0,1fr)!important;max-width:58rem!important}
-.dp-store-theme{position:relative;isolation:isolate;background:#080604!important}
-.dp-store-theme:before{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(90deg,rgba(5,3,2,.6),rgba(6,4,2,.32) 55%,rgba(5,3,2,.18)),url('/cinematic/store-fixed-bg.png') center/cover no-repeat!important;opacity:1!important;pointer-events:none}
-.dp-store-theme:after{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,3,2,.14),rgba(5,3,2,.7))!important;opacity:1!important;pointer-events:none}
+.dp-store-theme{position:relative;isolation:isolate;background-color:#080604!important;background-image:linear-gradient(90deg,rgba(5,3,2,.66),rgba(6,4,2,.34) 55%,rgba(5,3,2,.2)),linear-gradient(180deg,rgba(5,3,2,.08),rgba(5,3,2,.7)),url('/cinematic/store-fixed-bg.png')!important;background-position:center,center,center top!important;background-size:cover,cover,cover!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
+.dp-store-theme:before{display:none!important}
+.dp-store-theme:after{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,3,2,.02),rgba(5,3,2,.38))!important;opacity:1!important;pointer-events:none}
 .dp-store-theme>*{position:relative;z-index:1}
 .dp-store-atmosphere{display:none!important}
 .dp-store-reference>.dp-store-atmosphere+div{max-width:43rem!important;padding-top:clamp(2rem,7vw,7rem)!important}
 .dp-store-filterbar{margin-top:clamp(3rem,10vw,9rem)!important}
 
 @media(max-width:899px){
-  .dp-astrology-theme:before,.dp-pandits-page:before,.dp-store-theme:before{background-position:center top!important}
+  .dp-astrology-theme:before,.dp-pandits-page:before{background-position:center top!important}
+  .dp-store-theme{background-attachment:scroll!important;background-position:center,center,62% top!important}
   .dp-pandit-hero{min-height:0!important;padding-top:4rem!important}
   .dp-store-reference>.dp-store-atmosphere+div{padding-top:3rem!important}
   .dp-store-filterbar{margin-top:3rem!important}
