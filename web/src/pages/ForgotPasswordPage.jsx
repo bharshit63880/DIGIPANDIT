@@ -49,12 +49,23 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="container-shell py-16">
-      <div className="mx-auto max-w-lg rounded-[36px] bg-white p-8 shadow-soft">
+    <main className="dp-auth-page dp-auth-page--forgot">
+      <div className="dp-auth-glow" aria-hidden="true" />
+      <div className="dp-auth-shell dp-auth-shell--forgot">
+        <section className="dp-auth-intro">
+          <div className="dp-auth-sigil" aria-hidden="true"><img src="/digipandit-emblem.webp" alt="" /></div>
+          <p className="dp-auth-kicker">DIGIPANDIT · सुरक्षित पुनर्प्रवेश</p>
+          <h2>अपनी आध्यात्मिक यात्रा फिर से आरंभ करें।</h2>
+          <p>सत्यापन संकेत के माध्यम से अपने खाते तक सुरक्षित पहुँच दोबारा प्राप्त करें।</p>
+          <div className="dp-auth-trust" aria-label="सुरक्षा विशेषताएँ">
+            <span>सुरक्षित सत्यापन</span><span>गोपनीय प्रक्रिया</span><span>त्वरित सहायता</span>
+          </div>
+        </section>
+        <section className="dp-auth-card">
         <h1 className="text-4xl font-bold text-brand-ink">कूटशब्द भूल गए</h1>
         <p className="mt-3 text-brand-ink/65">ईमेल पर भेजे गए सत्यापन संकेत से अपना कूटशब्द बदलें।</p>
 
-        <form onSubmit={handleReset} className="mt-8 space-y-4">
+        <form onSubmit={handleReset} className="dp-auth-form mt-8 space-y-4">
           <Input label="ईमेल" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
           <Input label="छह अंकों का सत्यापन संकेत" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
           <Input
@@ -77,13 +88,14 @@ export default function ForgotPasswordPage() {
           </div>
         </form>
 
-        <p className="mt-6 text-sm text-brand-ink/70">
+        <p className="dp-auth-switch mt-6 text-sm">
           प्रवेश या ईमेल सत्यापन करना है?{" "}
           <Link to="/login" className="font-semibold text-brand-maroon">
             प्रवेश पर लौटें
           </Link>
         </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

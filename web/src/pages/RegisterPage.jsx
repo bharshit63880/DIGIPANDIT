@@ -37,7 +37,7 @@ export default function RegisterPage() {
       <div className="dp-auth-glow" aria-hidden="true" />
       <div className="dp-auth-shell">
         <section className="dp-auth-intro" aria-labelledby="register-intro-title">
-          <div className="dp-auth-sigil" aria-hidden="true"><span>ॐ</span></div>
+          <div className="dp-auth-sigil" aria-hidden="true"><img src="/digipandit-emblem.webp" alt="" /></div>
           <p className="dp-auth-kicker">DigiPandit · नवीन आरंभ</p>
           <h2 id="register-intro-title">विश्वसनीय मार्गदर्शन के लिए अपना स्थान बनाएं।</h2>
           <p>एक खाते से बुकिंग, परामर्श, हवन प्रगति और पूजा स्टोर की यात्रा संभालें।</p>

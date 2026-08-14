@@ -35,7 +35,7 @@ export default function LoginPage() {
       <div className="dp-auth-glow" aria-hidden="true" />
       <div className="dp-auth-shell">
         <section className="dp-auth-intro" aria-labelledby="login-intro-title">
-          <div className="dp-auth-sigil" aria-hidden="true"><span>ॐ</span></div>
+          <div className="dp-auth-sigil" aria-hidden="true"><img src="/digipandit-emblem.webp" alt="" /></div>
           <p className="dp-auth-kicker">DigiPandit · सुरक्षित प्रवेश</p>
           <h2 id="login-intro-title">आपकी आध्यात्मिक यात्रा फिर से यहीं से आगे बढ़ती है।</h2>
           <p>अपनी बुकिंग, परामर्श, पूजा सामग्री और व्यक्तिगत डैशबोर्ड तक सुरक्षित रूप से पहुँचें।</p>

@@ -89,7 +89,7 @@
 .cinematic-home--continuous .journey-scene--hawan .journey-stage:after{background:linear-gradient(90deg,rgba(5,3,2,.08),rgba(5,3,2,.2) 48%,rgba(5,3,2,.9) 72%,rgba(5,3,2,.96))!important}
 .cinematic-home--continuous .journey-scene--hawan .journey-copy{right:max(5vw,2rem);width:min(37rem,39vw)}
 
-/* Reference navbar: angular at rest, softly bowed into a floating capsule on scroll. */
+/* Reference navbar: stable angular black-gold bar at rest and while scrolling. */
 .dp-navbar{transform:none!important;perspective:none!important;padding:.55rem 0;background:transparent!important;filter:none!important}
 .dp-navbar .container-shell{max-width:112rem!important;padding-inline:clamp(.65rem,2.2vw,2rem)!important}
 .dp-navbar .container-shell>div:first-child{position:relative;min-height:68px!important;grid-template-columns:minmax(12rem,auto) minmax(0,1fr) auto!important;gap:clamp(.6rem,1.5vw,1.4rem)!important;padding:.35rem clamp(.9rem,1.8vw,1.65rem);border:1px solid rgba(229,174,66,.5);clip-path:polygon(1.35rem 0,calc(100% - 1.35rem) 0,100% 50%,calc(100% - 1.35rem) 100%,1.35rem 100%,0 50%);background:linear-gradient(180deg,rgba(30,18,12,.98),rgba(8,6,5,.98));box-shadow:0 0 0 1px rgba(255,220,132,.06) inset,0 16px 42px rgba(0,0,0,.42),0 0 24px rgba(214,145,37,.08)}
@@ -97,10 +97,14 @@
 .dp-navbar .dp-nav-link{position:relative;border-radius:0!important;padding:.82rem 1rem!important;clip-path:polygon(.7rem 0,100% 0,calc(100% - .7rem) 100%,0 100%);transition:color .2s ease,background .2s ease,transform .16s ease!important}
 .dp-navbar .dp-nav-link.is-active{color:#160d06!important;background:linear-gradient(135deg,#f1c665,#c98b25)!important;box-shadow:0 0 22px rgba(232,177,66,.22)!important}
 .dp-navbar .dp-nav-link:active{transform:translateY(2px) scale(.97)}
-.dp-navbar .container-shell{transition:transform .55s cubic-bezier(.22,1,.36,1),padding .45s ease!important;transform-origin:50% 0}
-.dp-navbar .container-shell>div:first-child{transition:border-radius .55s cubic-bezier(.22,1,.36,1),clip-path .55s cubic-bezier(.22,1,.36,1),box-shadow .45s ease,background .45s ease!important}
-.dp-navbar.is-scrolled .container-shell{transform:perspective(1100px) translateY(.2rem) scale(.965) rotateX(3deg)!important}
-.dp-navbar.is-scrolled .container-shell>div:first-child{clip-path:none!important;border-radius:50% / 34%!important;background:radial-gradient(ellipse at 50% -25%,rgba(105,58,24,.34),transparent 55%),linear-gradient(180deg,rgba(28,16,12,.97),rgba(8,6,5,.97))!important;box-shadow:0 0 0 1px rgba(255,220,132,.1) inset,0 28px 68px rgba(0,0,0,.64),0 8px 36px rgba(214,145,37,.16)!important}
+.dp-navbar .container-shell{transition:none!important;transform:none!important}
+.dp-navbar .container-shell>div:first-child{transition:box-shadow .3s ease!important}
+.dp-navbar.is-scrolled .container-shell{transform:none!important}
+.dp-navbar.is-scrolled .container-shell>div:first-child{clip-path:polygon(1.35rem 0,calc(100% - 1.35rem) 0,100% 50%,calc(100% - 1.35rem) 100%,1.35rem 100%,0 50%)!important;border-radius:0!important;background:linear-gradient(180deg,rgba(30,18,12,.98),rgba(8,6,5,.98))!important;box-shadow:0 0 0 1px rgba(255,220,132,.08) inset,0 20px 50px rgba(0,0,0,.5),0 0 26px rgba(214,145,37,.1)!important}
+
+/* The opening frame is immediately clear; scroll motion remains intact. */
+.cinematic-home--continuous .journey-scene--hero .journey-copy{opacity:1!important;filter:none!important}
+.cinematic-home--continuous .journey-pandit--hero{opacity:1!important;filter:drop-shadow(0 30px 40px rgba(0,0,0,.58)) drop-shadow(0 0 28px rgba(223,151,45,.17))!important}
 
 @media(max-width:899px){
   .cinematic-home--continuous .journey-scene:not(.journey-scene--hawan) .journey-copy{opacity:1!important;transform:none!important;filter:none!important}
@@ -110,8 +114,8 @@
   .cinematic-home--continuous .journey-scene--hawan .journey-copy{width:auto;padding-top:49svh}
   .dp-navbar{padding:.35rem 0}
   .dp-navbar .container-shell>div:first-child{min-height:62px!important;grid-template-columns:minmax(0,1fr) auto!important;padding:.3rem .85rem;clip-path:polygon(.8rem 0,calc(100% - .8rem) 0,100% 50%,calc(100% - .8rem) 100%,.8rem 100%,0 50%)}
-  .dp-navbar.is-scrolled .container-shell{transform:translateY(.15rem) scale(.98)!important}
-  .dp-navbar.is-scrolled .container-shell>div:first-child{border-radius:1.5rem!important}
+  .dp-navbar.is-scrolled .container-shell{transform:none!important}
+  .dp-navbar.is-scrolled .container-shell>div:first-child{border-radius:0!important;clip-path:polygon(.8rem 0,calc(100% - .8rem) 0,100% 50%,calc(100% - .8rem) 100%,.8rem 100%,0 50%)!important}
 }
 
 @media(prefers-reduced-motion:reduce){

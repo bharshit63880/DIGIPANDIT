@@ -199,3 +199,18 @@
   .dp-store-reference>.dp-store-atmosphere+div{padding-top:3rem!important}
   .dp-store-filterbar{margin-top:3rem!important}
 }
+
+/* Fixed supplied astrology world: the artwork stays in place while content scrolls. */
+.dp-astrology-theme{background-color:#050302!important;background-image:linear-gradient(90deg,rgba(4,3,2,.7),rgba(7,5,3,.36) 48%,rgba(5,4,3,.54)),url('/cinematic/astrology-fixed-bg.png')!important;background-position:center,center!important;background-size:cover,cover!important;background-repeat:no-repeat,no-repeat!important;background-attachment:fixed,fixed!important}
+.dp-astrology-theme:before{display:none!important}
+.dp-astrology-theme:after{z-index:0!important;background:linear-gradient(180deg,rgba(5,4,3,.05),rgba(5,4,3,.45))!important}
+
+/* One Pandit Ji temple atmosphere shared by all authentication screens. */
+.dp-auth-page{background-color:#080503!important;background-image:linear-gradient(90deg,rgba(5,3,2,.91),rgba(7,4,2,.66) 46%,rgba(6,4,2,.5)),url('/cinematic/pandit-fixed-bg.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
+.dp-auth-page:before{opacity:1!important;background:linear-gradient(180deg,rgba(5,3,2,.1),rgba(5,3,2,.6)),radial-gradient(circle at 70% 28%,rgba(225,157,50,.1),transparent 34%)!important}
+.dp-auth-sigil{position:relative;width:6.25rem!important;height:6.25rem!important;align-self:center;border:1px solid rgba(232,183,90,.5)!important;border-radius:1.5rem!important;background:rgba(10,6,5,.72);box-shadow:0 0 45px rgba(205,132,36,.22),inset 0 1px rgba(255,237,194,.1)}
+.dp-auth-sigil:before{inset:-.55rem;width:auto!important;height:auto!important;border-style:solid!important;border-radius:1.9rem!important}
+.dp-auth-sigil img{width:100%;height:100%;object-fit:contain;padding:.35rem;filter:drop-shadow(0 0 14px rgba(230,165,61,.34))}
+.dp-auth-shell--forgot{grid-template-columns:minmax(18rem,.78fr) minmax(25rem,1fr)}
+.dp-auth-shell--forgot .dp-auth-card{width:100%}
+@media(max-width:899px){.dp-auth-shell--forgot{grid-template-columns:1fr}.dp-auth-page{background-attachment:scroll!important;background-position:62% top!important}.dp-auth-sigil{width:4.5rem!important;height:4.5rem!important}}
