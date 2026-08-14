@@ -32,16 +32,10 @@ export function Navbar() {
   useEffect(() => setIsMenuOpen(false), [location.pathname, location.hash]);
   useEffect(() => {
     let frame = 0;
-    let lastY = window.scrollY;
     const update = () => {
       frame = 0;
       const y = window.scrollY;
-      const velocity = Math.max(-16, Math.min(16, y - lastY));
-      lastY = y;
       setIsScrolled(y > 24);
-      headerRef.current?.style.setProperty("--prism-rx", `${Math.sin(y / 210) * 2.1 - velocity * .035}deg`);
-      headerRef.current?.style.setProperty("--prism-rz", `${Math.sin(y / 420) * .72}deg`);
-      headerRef.current?.style.setProperty("--prism-lift", `${y > 24 ? 5 : 0}px`);
     };
     const onScroll = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     update();

@@ -168,3 +168,33 @@
 @keyframes dpAstroWheelGlow{50%{box-shadow:0 0 90px rgba(226,171,61,.28),inset 0 0 54px rgba(43,103,225,.22)}}
 @media(max-width:768px){.dp-planetarium{width:min(30rem,92vw)}}
 @media(prefers-reduced-motion:reduce){.dp-planetarium,.dp-planetarium:after{animation:none}}
+
+/* Static scene backgrounds and removal of legacy procedural spirals. */
+.dp-astro-marquee:before,.dp-panchang-spiral:before,.dp-panchang-spiral:after,
+.dp-pandit-yantra,.dp-pandit-floating-halo,.dp-store-mandala,.dp-planetarium:after{display:none!important}
+.dp-panchang-spiral{border:0!important;background:none!important;box-shadow:none!important;animation:none!important}
+.dp-astrology-theme{position:relative;isolation:isolate;background:transparent!important}
+.dp-astrology-theme:before{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;height:auto!important;background:linear-gradient(90deg,rgba(4,3,2,.56),rgba(7,5,3,.32) 47%,rgba(5,4,3,.5)),url('/cinematic/astrology-fixed-bg.png') center/cover no-repeat!important;opacity:1!important;filter:none!important;pointer-events:none}
+.dp-astrology-theme:after{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,4,3,.08),rgba(5,4,3,.45))!important;opacity:1!important;pointer-events:none}
+.dp-astrology-theme>*{position:relative;z-index:1}
+.dp-astrology-theme main,.dp-astrology-theme main:before,.dp-astrology-theme main>section,.dp-astrology-theme section:first-child{background:transparent!important}
+.dp-pandits-page{background:#090604!important}
+.dp-pandits-page:before{position:fixed!important;z-index:0!important;inset:0!important;height:auto!important;background:linear-gradient(90deg,rgba(5,3,2,.72),rgba(7,4,2,.3) 52%,rgba(5,3,2,.36)),url('/cinematic/pandit-fixed-bg.png') center/cover no-repeat!important;opacity:1!important;filter:none!important}
+.dp-pandits-page:after{position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,3,2,.12),rgba(6,4,3,.68))!important}
+.dp-pandits-page>*{position:relative;z-index:1}
+.dp-pandit-sanctum,.dp-pandit-floating-figure{display:none!important}
+.dp-pandit-hero{grid-template-columns:minmax(0,1fr)!important;max-width:58rem!important}
+.dp-store-theme{position:relative;isolation:isolate;background:#080604!important}
+.dp-store-theme:before{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(90deg,rgba(5,3,2,.6),rgba(6,4,2,.32) 55%,rgba(5,3,2,.18)),url('/cinematic/store-fixed-bg.png') center/cover no-repeat!important;opacity:1!important;pointer-events:none}
+.dp-store-theme:after{content:""!important;position:fixed!important;z-index:0!important;inset:0!important;background:linear-gradient(180deg,rgba(5,3,2,.14),rgba(5,3,2,.7))!important;opacity:1!important;pointer-events:none}
+.dp-store-theme>*{position:relative;z-index:1}
+.dp-store-atmosphere{display:none!important}
+.dp-store-reference>.dp-store-atmosphere+div{max-width:43rem!important;padding-top:clamp(2rem,7vw,7rem)!important}
+.dp-store-filterbar{margin-top:clamp(3rem,10vw,9rem)!important}
+
+@media(max-width:899px){
+  .dp-astrology-theme:before,.dp-pandits-page:before,.dp-store-theme:before{background-position:center top!important}
+  .dp-pandit-hero{min-height:0!important;padding-top:4rem!important}
+  .dp-store-reference>.dp-store-atmosphere+div{padding-top:3rem!important}
+  .dp-store-filterbar{margin-top:3rem!important}
+}
