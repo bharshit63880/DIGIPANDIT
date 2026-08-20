@@ -255,6 +255,24 @@
 @media(max-width:640px){.dp-auth-page{padding:7rem .8rem 1.5rem!important;background-position:68% center!important}.dp-auth-shell:before,.dp-auth-shell:after{width:42rem;opacity:.45}.dp-auth-intro{top:-4.7rem!important}.dp-auth-sigil{width:7.1rem!important;height:7.1rem!important;border-radius:1.55rem 1.55rem 1.1rem 1.1rem!important}.dp-auth-sigil img{height:5.8rem!important;padding-bottom:1.15rem!important}.dp-auth-sigil:after{bottom:.42rem;font-size:.56rem}.dp-auth-card{padding:4.8rem 1.15rem 1.45rem!important;border-radius:1.55rem!important}.dp-auth-card h1{font-size:2.55rem!important}.dp-auth-card>p{font-size:.82rem!important}.dp-auth-form{margin-top:1.15rem!important}.dp-auth-form input{min-height:3.3rem!important}.dp-auth-form button[type=submit]{min-height:3.65rem!important}.dp-auth-page--register{padding-top:6rem!important}.dp-auth-page--register .dp-auth-card{padding-top:4.4rem!important}}
 @media(prefers-reduced-motion:reduce){.dp-auth-glow,.dp-auth-form button[type=submit]{animation:none!important}}
 
+/* Compact login and registration cards without changing the cinematic treatment. */
+.dp-auth-page:not(.dp-auth-page--forgot){padding:7.25rem 1.25rem 2rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-shell{width:min(31.5rem,100%)!important}
+.dp-auth-page--register .dp-auth-shell{width:min(42rem,100%)!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-intro{top:-4.9rem!important;width:8rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil{width:7.75rem!important;height:7.75rem!important;border-radius:1.65rem 1.65rem 1.15rem 1.15rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil:before{border-radius:2rem 2rem 1.45rem 1.45rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil img{height:6.35rem!important;padding-bottom:1.2rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil:after{bottom:.45rem;font-size:.6rem}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card{padding:4.8rem 2.75rem 1.65rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card h1{font-size:clamp(2.2rem,4vw,3.25rem)!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card>p{margin-top:.85rem!important;font-size:.9rem!important;line-height:1.6!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-form{margin-top:1.15rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-form input{min-height:3.15rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-form button[type=submit]{min-height:3.45rem!important}
+.dp-auth-page:not(.dp-auth-page--forgot) :is(.dp-auth-links,.dp-auth-switch){padding-top:.75rem!important;margin-top:.75rem!important}
+@media(max-width:640px){.dp-auth-page:not(.dp-auth-page--forgot){padding:6rem .8rem 1.25rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-intro{top:-4.05rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil{width:6.25rem!important;height:6.25rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil img{height:5.1rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card{padding:3.95rem 1.15rem 1.2rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card h1{font-size:2.15rem!important}}
+
 /* Keep the Astrology artwork above the unified shell's generic theme layer. */
 .dp-unified-shell .dp-theme.dp-astrology-theme::before{
   content:""!important;
