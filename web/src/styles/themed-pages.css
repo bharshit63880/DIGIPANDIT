@@ -273,6 +273,33 @@
 .dp-auth-page:not(.dp-auth-page--forgot) :is(.dp-auth-links,.dp-auth-switch){padding-top:.75rem!important;margin-top:.75rem!important}
 @media(max-width:640px){.dp-auth-page:not(.dp-auth-page--forgot){padding:6rem .8rem 1.25rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-intro{top:-4.05rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil{width:6.25rem!important;height:6.25rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-sigil img{height:5.1rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card{padding:3.95rem 1.15rem 1.2rem!important}.dp-auth-page:not(.dp-auth-page--forgot) .dp-auth-card h1{font-size:2.15rem!important}}
 
+/* Flat, conversational authentication experience. */
+.dp-guide-page{position:relative;display:grid;grid-template-columns:minmax(22rem,1fr) minmax(28rem,.88fr);min-height:100svh;overflow:hidden;background:radial-gradient(circle at 18% 52%,rgba(198,139,42,.13),transparent 34%),linear-gradient(125deg,#030303,#0d0906 55%,#160e07);color:#fff5df}
+.dp-guide-page:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(241,190,85,.42) 0 1px,transparent 1.5px);background-size:91px 91px;mask-image:linear-gradient(90deg,#000,transparent 75%);opacity:.34}
+.dp-guide-art{position:relative;display:grid;min-height:100svh;place-items:end center;padding:7rem 0 0;overflow:hidden}
+.dp-guide-art:after{content:"";position:absolute;left:50%;bottom:8%;width:55%;aspect-ratio:1;translate:-50% 0;border-radius:50%;background:#d79b35;filter:blur(100px);opacity:.14}
+.dp-guide-art img{position:relative;z-index:1;width:min(49rem,94%);max-height:88svh;object-fit:contain;object-position:center bottom;mix-blend-mode:screen;filter:drop-shadow(0 28px 40px rgba(0,0,0,.52)) drop-shadow(0 0 22px rgba(232,174,70,.16));animation:dpGuideFloat 6s ease-in-out infinite}
+.dp-guide-flow{position:relative;z-index:2;display:flex;min-height:100svh;flex-direction:column;justify-content:center;padding:7rem clamp(2rem,6vw,7rem) 3rem}
+.dp-guide-heading span{color:rgba(232,184,91,.72);font-size:.68rem;font-weight:800;letter-spacing:.23em;text-transform:uppercase}
+.dp-guide-heading h1{max-width:38rem;margin:.65rem 0 2rem;font-family:Georgia,"Noto Serif Devanagari",serif;font-size:clamp(2.5rem,4.2vw,4.8rem);font-weight:500;line-height:1.02}
+.dp-guide-conversation{width:min(38rem,100%)}
+.dp-guide-namaste{color:#fff1cf;font-family:Georgia,"Noto Serif Devanagari",serif;font-size:clamp(1.35rem,2vw,1.8rem);animation:dpGuideReveal .55s both}
+.dp-guide-question{min-height:3.4rem;margin:.55rem 0 1.4rem;color:#eabb59;font-family:Georgia,"Noto Serif Devanagari",serif;font-size:clamp(1.3rem,2.2vw,2rem);line-height:1.45;animation:dpGuideReveal .45s both}
+.dp-guide-field{position:relative;border-bottom:1px solid rgba(236,191,98,.55);animation:dpGuideReveal .45s both}
+.dp-guide-field :is(input,select){width:100%;min-height:4.2rem;border:0;outline:0;background:transparent;color:#fff7e6;font-size:1.12rem}
+.dp-guide-field input::placeholder{color:rgba(255,245,223,.32)}
+.dp-guide-field select option{background:#130d08;color:#fff5df}
+.dp-guide-field:after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:2px;background:linear-gradient(90deg,#ffe3a0,#bd7921);transition:right .4s ease}
+.dp-guide-field:focus-within:after{right:0}
+.dp-guide-progress{display:flex;gap:.42rem;margin:1.25rem 0}
+.dp-guide-progress i{width:1.8rem;height:2px;background:rgba(255,255,255,.12);transition:background .3s,width .3s}.dp-guide-progress i.is-done{width:2.5rem;background:#dca643}
+.dp-guide-actions{display:flex;align-items:center;justify-content:flex-end;gap:.8rem;margin-top:1rem}.dp-guide-actions button,.dp-guide-otp{min-height:3.15rem;border-radius:999px;padding:.72rem 1.35rem;font-weight:800;transition:transform .2s,filter .2s}.dp-guide-next{border:1px solid #f6d787;background:linear-gradient(135deg,#f0cd78,#c8892d);color:#1a0f06}.dp-guide-back,.dp-guide-otp{border:1px solid rgba(232,184,91,.3);background:transparent;color:#e8bd68}.dp-guide-actions button:hover,.dp-guide-otp:hover{transform:translateY(-2px);filter:brightness(1.08)}.dp-guide-actions button:disabled,.dp-guide-otp:disabled{cursor:not-allowed;opacity:.45;transform:none}
+.dp-guide-blessing,.dp-guide-message,.dp-guide-error{margin-top:1rem;font-size:.83rem;line-height:1.6}.dp-guide-blessing,.dp-guide-message{color:rgba(255,240,207,.58)}.dp-guide-error{color:#ff9c88}.dp-guide-otp{margin-top:.85rem;font-size:.76rem}
+.dp-guide-links{display:flex;flex-wrap:wrap;gap:1rem 1.4rem;margin-top:2rem;padding-top:1.2rem;border-top:1px solid rgba(232,184,91,.13)}.dp-guide-links a{color:rgba(255,240,207,.62);font-size:.78rem;text-decoration-color:rgba(232,184,91,.5);text-underline-offset:.25rem}.dp-guide-links a:hover{color:#efc871}
+@keyframes dpGuideReveal{from{opacity:0;transform:translateY(12px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}@keyframes dpGuideFloat{50%{transform:translateY(-10px)}}
+@media(max-width:899px){.dp-guide-page{grid-template-columns:1fr;overflow:auto}.dp-guide-art{min-height:44svh;padding-top:5.5rem}.dp-guide-art img{width:min(31rem,92%);max-height:43svh}.dp-guide-flow{min-height:auto;padding:2rem 1.25rem 3rem}.dp-guide-heading h1{margin-bottom:1.4rem;font-size:2.65rem}}
+@media(prefers-reduced-motion:reduce){.dp-guide-art img,.dp-guide-namaste,.dp-guide-question,.dp-guide-field{animation:none}}
+
 /* Keep the Astrology artwork above the unified shell's generic theme layer. */
 .dp-unified-shell .dp-theme.dp-astrology-theme::before{
   content:""!important;

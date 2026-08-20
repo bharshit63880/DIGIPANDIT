@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
-import { Input } from "../components/Input";
+import { AuthConversation, AuthGuideLayout } from "../components/AuthConversation";
 import { postPublicForm } from "../lib/api";
 
 export default function ForgotPasswordPage() {
@@ -48,54 +47,17 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  return (
-    <main className="dp-auth-page dp-auth-page--forgot">
-      <div className="dp-auth-glow" aria-hidden="true" />
-      <div className="dp-auth-shell dp-auth-shell--forgot">
-        <section className="dp-auth-intro">
-          <div className="dp-auth-sigil" aria-hidden="true"><img src="/digipandit-emblem.webp" alt="" /></div>
-          <p className="dp-auth-kicker">DIGIPANDIT · सुरक्षित पुनर्प्रवेश</p>
-          <h2>अपनी आध्यात्मिक यात्रा फिर से आरंभ करें।</h2>
-          <p>सत्यापन संकेत के माध्यम से अपने खाते तक सुरक्षित पहुँच दोबारा प्राप्त करें।</p>
-          <div className="dp-auth-trust" aria-label="सुरक्षा विशेषताएँ">
-            <span>सुरक्षित सत्यापन</span><span>गोपनीय प्रक्रिया</span><span>त्वरित सहायता</span>
-          </div>
-        </section>
-        <section className="dp-auth-card">
-        <h1 className="text-4xl font-bold text-brand-ink">कूटशब्द भूल गए</h1>
-        <p className="mt-3 text-brand-ink/65">ईमेल पर भेजे गए सत्यापन संकेत से अपना कूटशब्द बदलें।</p>
+  const values = { email, otp, newPassword };
+  const fields = [
+    { name: "email", type: "email", question: "चिंता न करें। पहले अपना पंजीकृत ईमेल बताइए।", placeholder: "आपका ईमेल" },
+    { name: "otp", question: "ईमेल पर आया छह अंकों का सत्यापन संकेत लिखिए।", placeholder: "6 अंकों का संकेत" },
+    { name: "newPassword", type: "password", question: "अब अपना नया सुरक्षित कूटशब्द चुनिए।", placeholder: "नया कूटशब्द" },
+  ];
+  const update = (name, value) => ({ email: setEmail, otp: setOtp, newPassword: setNewPassword }[name](value));
 
-        <form onSubmit={handleReset} className="dp-auth-form mt-8 space-y-4">
-          <Input label="ईमेल" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <Input label="छह अंकों का सत्यापन संकेत" value={otp} maxLength={6} onChange={(event) => setOtp(event.target.value)} />
-          <Input
-            label="नया कूटशब्द"
-            type="password"
-            value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
-          />
-
-          {message ? <p className="text-sm text-brand-forest">{message}</p> : null}
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button type="button" variant="secondary" className="w-full" onClick={handleRequestOtp} disabled={requesting || !email}>
-              {requesting ? "संकेत भेजा जा रहा है..." : "संकेत भेजें या पुनः भेजें"}
-            </Button>
-            <Button type="submit" className="w-full" disabled={resetting || !email || otp.length !== 6 || newPassword.length < 6}>
-              {resetting ? "कूटशब्द बदला जा रहा है..." : "कूटशब्द बदलें"}
-            </Button>
-          </div>
-        </form>
-
-        <p className="dp-auth-switch mt-6 text-sm">
-          प्रवेश या ईमेल सत्यापन करना है?{" "}
-          <Link to="/login" className="font-semibold text-brand-maroon">
-            प्रवेश पर लौटें
-          </Link>
-        </p>
-        </section>
-      </div>
-    </main>
-  );
+  return <AuthGuideLayout eyebrow="सुरक्षित पुनर्प्रवेश" title="हम आपकी सहायता करेंगे" links={<Link to="/login">प्रवेश पर लौटें</Link>}>
+    <AuthConversation fields={fields} values={values} onChange={update} onSubmit={handleReset} busy={resetting} error={error} message={message} submitLabel="कूटशब्द बदलें">
+      <button type="button" className="dp-guide-otp" onClick={handleRequestOtp} disabled={requesting || !email}>{requesting ? "संकेत भेजा जा रहा है..." : "ईमेल पर सत्यापन संकेत भेजें"}</button>
+    </AuthConversation>
+  </AuthGuideLayout>;
 }
