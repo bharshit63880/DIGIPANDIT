@@ -319,6 +319,14 @@ body:has(.dp-astrology-theme) .panditji-panel{background:#0d0905!important}
 .dp-unified-shell:has(.dp-astrology-theme)>.dp-unified-footer{background:#060403!important}
 @media(max-width:899px){.dp-unified-shell .dp-theme.dp-astrology-theme::before{background-image:linear-gradient(180deg,rgba(3,2,1,.18),rgba(3,2,1,.36)),url('/cinematic/astrology-fixed-bg.png')!important}.dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child::before{background:linear-gradient(180deg,rgba(3,2,1,.12),rgba(3,2,1,.52) 64%,rgba(3,2,1,.82))!important}}
 
+/* Remove the final inherited navy surfaces from modules and FAQ. */
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-card,.dp-unified-shell .dp-astrology-theme .dp-astro-module-card::after{background:radial-gradient(circle at 50% 28%,rgba(200,154,69,.12),transparent 44%),linear-gradient(145deg,rgba(24,16,8,.94),rgba(5,4,3,.98))!important}
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-card{border-color:rgba(222,174,79,.38)!important;box-shadow:0 22px 58px rgba(0,0,0,.36),inset 0 1px rgba(255,225,158,.08)!important}
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-card:hover{filter:drop-shadow(0 20px 28px rgba(192,122,34,.2))!important}
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-icon{color:#211307!important;background:linear-gradient(145deg,#f1d083,#bd7d29)!important;box-shadow:0 10px 26px rgba(190,119,29,.18)}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-faq>div:last-child>div{border-color:rgba(215,164,70,.3)!important;background:linear-gradient(145deg,rgba(24,16,8,.9),rgba(5,4,3,.96))!important;box-shadow:0 14px 38px rgba(0,0,0,.26),inset 0 1px rgba(255,225,158,.06)!important}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-faq>div:last-child>div:hover{border-color:rgba(235,190,99,.52)!important;background:linear-gradient(145deg,rgba(34,22,10,.92),rgba(8,5,3,.98))!important}
+
 /* Keep the Astrology artwork above the unified shell's generic theme layer. */
 .dp-unified-shell .dp-theme.dp-astrology-theme::before{
   content:""!important;
