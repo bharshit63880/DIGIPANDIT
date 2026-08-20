@@ -46,7 +46,7 @@ export function AuthGuideLayout({ eyebrow, title, children, links }) {
   return (
     <main className="dp-guide-page">
       <section className="dp-guide-art" aria-label="DigiPandit आध्यात्मिक मार्गदर्शक">
-        <img src="/cinematic/auth-pandit-lotus.png" alt="स्वर्ण कमल और तितलियों के साथ ध्यानमग्न पंडित जी" />
+        <img src="/cinematic/auth-pandit-lotus-transparent.png" alt="स्वर्ण कमल और तितलियों के साथ ध्यानमग्न पंडित जी" />
       </section>
       <section className="dp-guide-flow">
         <div className="dp-guide-heading"><span>{eyebrow}</span><h1>{title}</h1></div>
