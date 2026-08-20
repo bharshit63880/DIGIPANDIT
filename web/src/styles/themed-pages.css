@@ -360,3 +360,34 @@
   .dp-astrology-hero-grid{min-height:auto;padding-top:7rem!important;padding-bottom:5rem!important}
 }
 @media(prefers-reduced-motion:reduce){.dp-astrology-stars{display:none}.dp-astrology-theme .dp-astro-module-card:hover{transform:none;filter:none}}
+
+/* Astrology v3 — one fixed cosmic artwork, with every scrolling surface kept
+   inside the blue/gold system. */
+.dp-unified-shell:has(.dp-astrology-theme){background:#030b18!important}
+.dp-unified-shell:has(.dp-astrology-theme)::before{opacity:.3;background-image:linear-gradient(rgba(94,149,205,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(94,149,205,.025) 1px,transparent 1px),radial-gradient(circle,rgba(239,209,141,.3) 0 1px,transparent 1.5px)!important}
+.dp-unified-shell .dp-theme.dp-astrology-theme::before{
+  background-image:linear-gradient(180deg,rgba(3,11,24,.72),rgba(7,26,53,.84) 48%,rgba(3,11,24,.94)),url('/cinematic/astrology-fixed-bg.png')!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
+  transform:translateZ(0);
+}
+.dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child::before{background:linear-gradient(90deg,rgba(3,11,24,.7),rgba(7,26,53,.32) 55%,transparent)!important}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-main::before{background:linear-gradient(180deg,rgba(3,11,24,.22),rgba(7,26,53,.34) 50%,rgba(3,11,24,.5))!important}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-main>section{border-bottom:1px solid rgba(200,154,69,.14)!important;background:transparent!important}
+.dp-unified-shell .dp-astrology-theme :is(.surface-card,article,details,.bg-white,.bg-white\/5,.bg-white\/10,.bg-slate-50,.dark\:bg-white\/5){border-color:rgba(200,154,69,.22)!important;color:#f3ebdd!important;background-color:rgba(4,18,39,.88)!important;background-image:linear-gradient(145deg,rgba(12,48,91,.72),rgba(3,14,31,.9))!important;box-shadow:0 20px 55px rgba(0,0,0,.24),inset 0 1px rgba(239,209,141,.06)!important}
+.dp-unified-shell .dp-astrology-theme :is(.text-slate-950,.text-slate-900,.text-white){color:#f3ebdd!important}
+.dp-unified-shell .dp-astrology-theme :is(.text-slate-600,.text-slate-500,.text-slate-400,.text-white\/75,.text-white\/70,.text-white\/65){color:rgba(243,235,221,.68)!important}
+.dp-unified-shell .dp-astrology-theme :is(.text-violet-200,.text-violet-300,.text-violet-600,.text-violet-700,.text-cyan-300,.text-amber-800){color:#efd18d!important}
+.dp-unified-shell .dp-astrology-theme :is(.bg-amber-50,.dark\:bg-amber-500\/10,.bg-amber-100,.bg-violet-50\/50,.dark\:bg-violet-500\/5){background:rgba(7,34,67,.78)!important;color:#f3ebdd!important}
+.dp-unified-shell .dp-astrology-theme [class*="from-brand-maroon"],.dp-unified-shell .dp-astrology-theme [class*="from-brand-clay"],.dp-unified-shell .dp-astrology-theme [class*="from-brand-forest"],.dp-unified-shell .dp-astrology-theme [class*="from-amber"],.dp-unified-shell .dp-astrology-theme [class*="to-orange"]{background-image:linear-gradient(145deg,#0b3261,#071a35)!important}
+.dp-unified-shell .dp-astrology-theme .dp-matching-placeholder svg,.dp-unified-shell .dp-astrology-theme :is(.text-rose-200,.text-rose-600,.text-rose-700){color:#efd18d!important}
+.dp-unified-shell .dp-astrology-theme :is(.bg-rose-50,.bg-violet-100,.dark\:bg-violet-900){background:#0b2850!important;color:#efd18d!important}
+.dp-unified-shell .dp-astrology-theme #matching .bg-white\/10,.dp-unified-shell .dp-astrology-theme #numerology .bg-white\/10,.dp-unified-shell .dp-astrology-theme .dp-cosmic-consult>div>div:last-child>div{background:rgba(12,50,97,.62)!important;border-color:rgba(200,154,69,.2)!important}
+.dp-unified-shell .dp-astrology-theme .dp-kundali-dialog{background:rgba(2,8,19,.88)!important}
+.dp-unified-shell .dp-astrology-theme .dp-kundali-dialog-shell :is(.bg-white,article){background:rgba(8,36,70,.72)!important}
+body:has(.dp-astrology-theme) .panditji-trigger{border-color:rgba(200,154,69,.52)!important;color:#06172e!important;background:linear-gradient(135deg,#efd18d,#c89a45)!important;box-shadow:0 18px 45px rgba(0,0,0,.34),0 0 24px rgba(42,112,182,.16)!important}
+body:has(.dp-astrology-theme) .panditji-panel{border-color:rgba(200,154,69,.3)!important;background:#06172e!important}
+.dp-unified-shell:has(.dp-astrology-theme)>.dp-unified-footer{border-color:rgba(200,154,69,.2)!important;background:#020914!important}
+@media(max-width:899px){.dp-unified-shell .dp-theme.dp-astrology-theme::before{background-position:62% top!important;background-attachment:scroll!important}.dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child::before{background:linear-gradient(180deg,rgba(3,11,24,.34),rgba(7,26,53,.7) 58%,rgba(3,11,24,.96))!important}}
