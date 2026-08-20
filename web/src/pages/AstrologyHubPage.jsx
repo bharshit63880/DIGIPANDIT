@@ -374,10 +374,10 @@ export default function AstrologyHubPage() {
 
   return (
     <div className="dp-theme dp-astrology-theme">
-      <div className="overflow-hidden bg-brand-cream text-brand-ink">
-        <section className="relative overflow-hidden bg-brand-ink text-white">
-          <div className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(circle_at_80%_20%,rgba(255,255,255,.13),transparent_25%),radial-gradient(circle_at_13%_87%,rgba(255,255,255,.07),transparent_27%)]" />
-          <div className="container-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
+      <div className="dp-astrology-canvas overflow-hidden text-brand-ink">
+        <section className="dp-astrology-hero relative overflow-hidden text-white">
+          <div className="dp-astrology-stars pointer-events-none absolute inset-0" />
+          <div className="dp-astrology-hero-grid container-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
               <h1 className="dp-astro-typewriter max-w-3xl text-5xl font-semibold leading-[.96] text-white md:text-7xl"><span>अपनी कुंडली समझें।</span><span>स्पष्टता से आगे बढ़ें।</span></h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">कुंडली, पंचांग, मिलान, महादशा, उपाय और विश्वसनीय ज्योतिषाचार्य—सब एक सहज DigiPandit अनुभव में।</p>
@@ -390,8 +390,8 @@ export default function AstrologyHubPage() {
           </div>
         </section>
 
-        <main className="container-shell">
-          <section className="py-20">
+        <main className="dp-astrology-main container-shell">
+          <section className="dp-astrology-modules py-20">
             <SectionHeading eyebrow="खोजें" title="मार्गदर्शन का एक संपूर्ण संसार" description="सभी ज्योतिष सुविधाएँ एक ही सरल और सुसंगत अनुभव में उपलब्ध हैं।" />
             <div className="dp-astro-marquee mt-12"><div className="dp-astro-marquee-track">{[...modules, ...modules].map((item, index) => { const Icon = item.icon; const duplicate = index >= modules.length; const content = <article className="dp-astro-module-card group"><div className={`dp-astro-module-icon bg-gradient-to-br ${item.tone}`}><Icon /></div><h3>{item.title}</h3><p>{item.text}</p><span>विस्तार से देखें <ArrowRight /></span></article>; return item.href ? <Link aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} to={item.href}>{content}</Link> : <a aria-hidden={duplicate || undefined} tabIndex={duplicate ? -1 : undefined} key={`${item.id}-${index}`} href={`#${item.id}`}>{content}</a>; })}</div></div>
           </section>
@@ -401,13 +401,13 @@ export default function AstrologyHubPage() {
           <MatchingWorkspace />
           <NumerologyWorkspace />
 
-          <section className="py-20">
+          <section className="dp-astrology-consult-section py-20">
             <div className="dp-cosmic-consult rounded-[38px] bg-gradient-to-br from-brand-maroon to-brand-forest p-8 text-white md:p-12">
               <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_.8fr]"><div><p className="text-xs font-bold uppercase tracking-[.24em] text-violet-200">जब मानवीय मार्गदर्शन चाहिए</p><h2 className="mt-4 text-5xl font-bold leading-none">अपनी कुंडली पर सीधे ज्योतिषाचार्य से चर्चा करें।</h2><p className="mt-5 max-w-xl leading-8 text-white/75">सत्यापित विशेषज्ञों से बातचीत, ध्वनि या दृश्य परामर्श लें। मौजूदा भुगतान और परामर्श प्रक्रिया पूरी तरह सुरक्षित रहेगी।</p><Link to="/astrology/consultations"><Button className="mt-7 bg-white text-violet-950 hover:bg-violet-100">ज्योतिषाचार्य देखें <ArrowRight className="ml-2 h-5 w-5" /></Button></Link></div><div className="grid gap-4">{[["बातचीत मार्गदर्शन", "तेज़ और केंद्रित प्रश्न", Bot], ["व्यवसाय मार्गदर्शन", "समय और पेशेवर दिशा", BriefcaseBusiness], ["संबंध स्पष्टता", "अनुकूलता और संवाद", Users]].map(([title, copy, Icon]) => <div key={title} className="flex gap-4 rounded-[24px] bg-white/10 p-5 backdrop-blur"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-violet-700"><Icon className="h-5 w-5" /></div><div><strong>{title}</strong><p className="mt-1 text-sm text-white/65">{copy}</p></div></div>)}</div></div>
             </div>
           </section>
 
-          <section className="py-20">
+          <section className="dp-astrology-faq py-20">
             <SectionHeading eyebrow="सामान्य प्रश्न" title="शुरू करने से पहले जानें" />
             <div className="mt-8 grid gap-3">{faq.map(([question, answer], index) => <div key={question} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} className="flex w-full items-center justify-between gap-4 p-5 text-left font-bold" aria-expanded={openFaq === index}>{question}<ChevronDown className={`h-5 w-5 transition ${openFaq === index ? "rotate-180" : ""}`} /></button><AnimatePresence>{openFaq === index ? <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden px-5 pb-5 leading-7 text-slate-600 dark:text-slate-300">{answer}</motion.p> : null}</AnimatePresence></div>)}</div>
           </section>

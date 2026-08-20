@@ -23,6 +23,7 @@ export function Navbar() {
   const user = useSelector((state) => state.auth.user);
   const cartCount = useSelector((state) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0));
   const isCinematicHome = location.pathname === "/";
+  const isAstrologyWorld = location.pathname.startsWith("/astrology");
   const visibleItems = navItems;
 
   const handleLogout = () => { setIsMenuOpen(false); dispatch(logout()); navigate("/"); };
@@ -53,7 +54,7 @@ export function Navbar() {
 
   const navText = "text-white";
   return (
-    <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isScrolled ? "is-scrolled" : ""}`}>
+    <header ref={headerRef} className={`cinematic-navbar dp-navbar inset-x-0 top-0 z-50 text-white ${isCinematicHome ? "fixed" : "sticky"} ${isAstrologyWorld ? "dp-navbar--astrology" : ""} ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container-shell">
         <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4">
           <Link to="/" className="dp-brand flex min-w-0 items-center gap-3" aria-label="डिजीपंडित होम">

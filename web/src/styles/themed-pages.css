@@ -273,3 +273,90 @@
   pointer-events:none!important;
 }
 @media(max-width:899px){.dp-unified-shell .dp-theme.dp-astrology-theme::before{background-position:58% center!important}}
+
+/* Astrology v2 — an isolated Deep Astrology Blue world. Global temple/brown
+   surfaces must never leak into this route. */
+.dp-unified-shell .dp-theme.dp-astrology-theme{
+  --astro-blue:#071a35;
+  --astro-blue-deep:#030b18;
+  --astro-blue-mid:#0b2850;
+  --astro-gold:#c89a45;
+  --astro-gold-light:#efd18d;
+  --astro-ivory:#f3ebdd;
+  color:var(--astro-ivory)!important;
+  background:var(--astro-blue-deep)!important;
+}
+.dp-unified-shell .dp-theme.dp-astrology-theme::before{
+  background-image:radial-gradient(circle at 82% 18%,rgba(29,91,154,.24),transparent 34rem),radial-gradient(circle at 18% 58%,rgba(16,65,116,.22),transparent 36rem),linear-gradient(180deg,#030b18,#071a35 46%,#030b18)!important;
+  background-color:var(--astro-blue)!important;
+  background-blend-mode:normal!important;
+}
+.dp-unified-shell .dp-theme.dp-astrology-theme::after{
+  z-index:0!important;
+  opacity:1!important;
+  background-image:radial-gradient(circle at 18% 16%,rgba(77,137,205,.2),transparent 30rem),radial-gradient(circle at 78% 42%,rgba(200,154,69,.12),transparent 28rem),radial-gradient(circle,rgba(243,235,221,.32) 0 1px,transparent 1.4px)!important;
+  background-size:auto,auto,83px 83px!important;
+  mask-image:linear-gradient(#000,rgba(0,0,0,.45) 72%,transparent)!important;
+}
+.dp-astrology-canvas,.dp-astrology-main,.dp-astrology-main::before,.dp-astrology-main>section{
+  background:transparent!important;
+}
+.dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child{
+  min-height:calc(100svh - 5rem);
+  display:grid;
+  align-items:center;
+  border-bottom:1px solid rgba(200,154,69,.2);
+  background:radial-gradient(circle at 76% 45%,rgba(30,105,180,.24),transparent 28rem),linear-gradient(90deg,rgba(3,11,24,.96),rgba(7,26,53,.82) 54%,rgba(5,23,47,.48))!important;
+}
+.dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child::before{content:"";position:absolute;z-index:0;inset:0;background-image:linear-gradient(90deg,rgba(3,11,24,.96),rgba(7,26,53,.72) 46%,rgba(7,26,53,.26)),url('/cinematic/astrology-fixed-bg.png');background-position:center;background-size:cover;background-repeat:no-repeat;pointer-events:none}
+.dp-astrology-hero-grid,.dp-astrology-stars{z-index:1}
+.dp-astrology-stars{opacity:.62;background:radial-gradient(circle at 72% 46%,rgba(70,137,210,.2),transparent 25rem),repeating-radial-gradient(circle at 75% 45%,transparent 0 5rem,rgba(200,154,69,.1) 5.04rem 5.1rem,transparent 5.16rem 8rem)}
+.dp-astrology-hero-grid{min-height:calc(100svh - 5rem)}
+.dp-astrology-theme .dp-astro-typewriter{color:var(--astro-ivory)!important;text-shadow:0 16px 55px rgba(0,0,0,.48)}
+.dp-astrology-theme .dp-astro-typewriter span:nth-child(2){color:var(--astro-gold-light)!important}
+.dp-astrology-theme .dp-planetarium-glow{background:radial-gradient(circle,rgba(200,154,69,.35),rgba(29,89,151,.18) 52%,transparent 72%)}
+.dp-astrology-theme .dp-orbit-ring{border-color:rgba(200,154,69,.38);box-shadow:0 0 42px rgba(36,104,174,.16)}
+.dp-astrology-theme .dp-orbit-core{background:radial-gradient(circle at 42% 35%,#164a82,#071a35 66%);box-shadow:0 0 0 .7rem rgba(200,154,69,.04),0 0 65px rgba(45,118,192,.3)}
+.dp-astrology-theme .dp-orbit-planet i{color:var(--astro-gold-light);background:#071a35;border-color:rgba(200,154,69,.62);box-shadow:0 0 22px rgba(56,126,196,.28)}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-modules{padding-top:clamp(5rem,9vw,9rem)!important}
+.dp-astrology-theme .dp-astro-marquee::before{filter:drop-shadow(0 0 28px rgba(49,119,190,.25));background:repeating-conic-gradient(from 0deg,rgba(200,154,69,.24) 0 1deg,transparent 1deg 15deg)}
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-card,
+.dp-unified-shell .dp-astrology-theme .dp-astro-module-card::after{
+  background:radial-gradient(circle at 50% 28%,rgba(35,99,164,.25),transparent 42%),linear-gradient(145deg,rgba(10,40,79,.98),rgba(3,13,29,.99))!important;
+}
+.dp-astrology-theme .dp-astro-module-card{border-color:rgba(200,154,69,.3)!important;box-shadow:inset 0 1px rgba(239,209,141,.09),0 24px 60px rgba(0,0,0,.25)!important}
+.dp-astrology-theme .dp-astro-module-card:hover{border-color:rgba(239,209,141,.65)!important;filter:drop-shadow(0 22px 32px rgba(30,92,155,.28))}
+.dp-astrology-theme .dp-astro-module-icon{color:#071a35!important;background:linear-gradient(145deg,#efd18d,#c89a45)!important}
+.dp-unified-shell .dp-astrology-theme #kundali>div:nth-child(2)>form,
+.dp-unified-shell .dp-astrology-theme #matching form,
+.dp-unified-shell .dp-astrology-theme #kundali>div:nth-child(2)>div>div,
+.dp-unified-shell .dp-astrology-theme .dp-matching-placeholder,
+.dp-unified-shell .dp-astrology-theme .dp-cosmic-panel,
+.dp-unified-shell .dp-astrology-theme .dp-cosmic-consult{
+  color:var(--astro-ivory)!important;
+  border:1px solid rgba(200,154,69,.3)!important;
+  background:radial-gradient(circle at 88% 8%,rgba(37,105,173,.24),transparent 24rem),linear-gradient(145deg,rgba(9,39,77,.97),rgba(3,14,31,.99))!important;
+  box-shadow:0 30px 80px rgba(0,0,0,.3),inset 0 1px rgba(239,209,141,.08)!important;
+}
+.dp-unified-shell .dp-astrology-theme #kundali input,
+.dp-unified-shell .dp-astrology-theme #matching input,
+.dp-unified-shell .dp-astrology-theme #numerology input{
+  color:var(--astro-ivory)!important;
+  background:linear-gradient(#06172e,#06172e) padding-box,linear-gradient(90deg,#365f88,#c89a45,#365f88) border-box!important;
+}
+.dp-astrology-theme #kundali label,.dp-astrology-theme #matching label,.dp-astrology-theme #numerology label{color:var(--astro-gold-light)!important}
+.dp-unified-shell .dp-astrology-theme #kundali button[type=submit],.dp-unified-shell .dp-astrology-theme #matching button[type=submit],.dp-unified-shell .dp-astrology-theme #numerology button[type=submit]{color:#06172e!important;background:linear-gradient(110deg,#efd18d,#c89a45)!important;border-color:#efd18d!important}
+.dp-unified-shell .dp-astrology-theme #kundali .bg-gradient-to-br{color:#06172e!important;background:linear-gradient(145deg,#efd18d,#c89a45)!important}
+.dp-astrology-theme .dp-kundali-ready,.dp-astrology-theme .dp-kundali-dialog-shell{background:radial-gradient(circle at 82% 4%,rgba(42,108,174,.25),transparent 25rem),#041226!important;border-color:rgba(200,154,69,.35)!important}
+.dp-astrology-theme .dp-kundali-dialog-close{color:var(--astro-ivory);background:#0b2850}
+.dp-unified-shell .dp-astrology-theme .dp-astrology-faq>div:last-child>div{border-color:rgba(200,154,69,.24)!important;background:linear-gradient(145deg,rgba(10,38,74,.96),rgba(3,14,30,.98))!important}
+.dp-astrology-theme .dp-astrology-faq button{color:var(--astro-ivory)!important}
+.dp-astrology-theme .dp-astrology-faq p{color:rgba(243,235,221,.7)!important}
+.dp-navbar--astrology .container-shell>div:first-child,.dp-navbar--astrology.is-scrolled .container-shell>div:first-child{background:linear-gradient(180deg,rgba(7,26,53,.98),rgba(3,11,24,.98))!important;border-color:rgba(200,154,69,.5)!important;box-shadow:0 18px 52px rgba(0,0,0,.42),0 0 30px rgba(38,105,172,.14)!important}
+@media(max-width:899px){
+  .dp-unified-shell .dp-theme.dp-astrology-theme::before{background-image:radial-gradient(circle at 70% 12%,rgba(29,91,154,.22),transparent 24rem),linear-gradient(180deg,#030b18,#071a35 48%,#030b18)!important;background-position:center!important}
+  .dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child::before{background-image:linear-gradient(180deg,rgba(3,11,24,.42),rgba(7,26,53,.82) 52%,rgba(3,11,24,.98)),url('/cinematic/astrology-fixed-bg.png');background-position:62% top}
+  .dp-unified-shell .dp-theme.dp-astrology-theme .dp-astrology-hero:first-child{min-height:auto;background:linear-gradient(180deg,rgba(3,11,24,.56),rgba(7,26,53,.84) 48%,rgba(3,11,24,.97))!important}
+  .dp-astrology-hero-grid{min-height:auto;padding-top:7rem!important;padding-bottom:5rem!important}
+}
+@media(prefers-reduced-motion:reduce){.dp-astrology-stars{display:none}.dp-astrology-theme .dp-astro-module-card:hover{transform:none;filter:none}}
