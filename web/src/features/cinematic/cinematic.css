@@ -122,3 +122,21 @@
   .cinematic-home--continuous .journey-copy,.cinematic-home--continuous .journey-pandit,.cinematic-home--continuous .journey-astrologer,.cinematic-home--continuous .store-pedestal,.cinematic-home--continuous .discovery-card{transform:none!important;opacity:1!important;filter:none!important;clip-path:none!important}
   .dp-navbar .container-shell,.dp-navbar .container-shell>div:first-child{transition:none!important}
 }
+
+/* Shared scroll timeline: fire becomes smoke, smoke reveals gold geometry,
+   the geometry cools into Jyotish blue, and warm ivory enters only at the finale. */
+.journey-shared-atmosphere{position:fixed;z-index:2;inset:0;overflow:hidden;pointer-events:none;contain:strict}
+.journey-shared-atmosphere>i{position:absolute;inset:-12%;display:block;pointer-events:none}
+.journey-smoke{opacity:clamp(0,calc((var(--journey-progress) - .08)*5.5),.82);background:radial-gradient(ellipse at 68% 62%,rgba(218,193,164,.19),transparent 31%),radial-gradient(ellipse at 33% 45%,rgba(156,145,137,.16),transparent 34%),radial-gradient(ellipse at 54% 77%,rgba(210,174,125,.12),transparent 27%);filter:blur(22px);transform:translate3d(calc((var(--journey-progress) - .5)*-7vw),calc((var(--journey-progress) - .5)*-5vh),0) scale(calc(.94 + var(--journey-progress)*.12));mix-blend-mode:screen}
+.journey-gold-geometry{opacity:clamp(0,calc((var(--journey-progress) - .25)*5),.7);background:repeating-radial-gradient(circle at 72% 46%,transparent 0 7.2rem,rgba(200,154,69,.18) 7.25rem 7.31rem,transparent 7.36rem 11rem);mask-image:radial-gradient(circle at 72% 46%,#000,transparent 64%);transform:rotate(calc((var(--journey-progress) - .25)*18deg)) scale(calc(.88 + var(--journey-progress)*.18));transform-origin:72% 46%;mix-blend-mode:screen}
+.journey-cosmic-wash{opacity:clamp(0,calc((var(--journey-progress) - .35)*4.5),.72);background:radial-gradient(circle at 68% 42%,rgba(16,61,111,.6),transparent 44%),linear-gradient(120deg,transparent 20%,rgba(7,26,53,.78));mix-blend-mode:color}
+.journey-ivory-wash{opacity:clamp(0,calc((var(--journey-progress) - .78)*5),.72);background:radial-gradient(circle at 75% 55%,rgba(243,235,221,.72),transparent 38%),linear-gradient(110deg,transparent 32%,rgba(200,154,69,.24));mix-blend-mode:screen}
+.journey-hero-video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transform:scale(calc(1.025 + var(--p)*.025));filter:saturate(calc(1 - var(--p)*.28)) brightness(calc(1 - var(--p)*.22));transition:opacity .8s cubic-bezier(.22,1,.36,1);will-change:transform,filter,opacity}
+.journey-stage.is-video-ready .journey-hero-video{opacity:1}
+.journey-hero-grade{position:absolute;z-index:1;inset:0;background:radial-gradient(ellipse at center,transparent 44%,rgba(8,7,6,.42) 100%),linear-gradient(90deg,rgba(8,7,6,.72),rgba(8,7,6,.2) 48%,rgba(8,7,6,.08)),linear-gradient(0deg,rgba(8,7,6,.78),transparent 42%);pointer-events:none}
+.cinematic-home--continuous .journey-scene--hero .journey-stage{background:#080706 url('/cinematic/digipandit-hero.png') center/cover no-repeat}
+.cinematic-home--continuous .journey-scene--hero .journey-stage:after{background:linear-gradient(0deg,rgba(8,7,6,.56),transparent 36%)!important}
+.cinematic-home--continuous .journey-scene--hero .journey-pandit--hero{display:none!important}
+.cinematic-home--continuous .journey-scene.journey-scene--hero .journey-copy{opacity:1!important;filter:none!important;text-shadow:0 2px 34px rgba(0,0,0,.72)}
+@media(max-width:899px){.journey-shared-atmosphere{position:absolute}.journey-gold-geometry{opacity:clamp(0,calc((var(--journey-progress) - .28)*3),.35)}.journey-smoke{filter:blur(10px)}.journey-hero-video{display:none}.cinematic-home--continuous .journey-scene--hero .journey-stage{background-position:58% center}}
+@media(prefers-reduced-motion:reduce){.journey-shared-atmosphere{display:none}.journey-hero-video{display:none}.journey-hero-grade{background:linear-gradient(0deg,rgba(8,7,6,.82),rgba(8,7,6,.14) 72%)}}

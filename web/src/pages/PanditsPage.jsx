@@ -9,13 +9,14 @@ import { BookingReceiptCard } from "../components/BookingReceiptCard";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { LoadingCard } from "../components/LoadingCard";
+import { GoldenTiltSurface } from "../components/GoldenTiltSurface";
+import { GoldenWriting } from "../components/GoldenWriting";
 import { hindiContent, hindiError, hindiLabel } from "../lib/hindi";
 
 const serviceTypeTabs = [
-  { label: "सभी सेवाएँ", value: "" },
-  { label: "पूजा", value: "PUJA" },
-  { label: "हवन", value: "HAWAN" },
   { label: "कथा", value: "KATHA" },
+  { label: "हवन", value: "HAWAN" },
+  { label: "सभी", value: "" },
 ];
 
 const DEFAULT_BOOKING_FORM = {
@@ -245,10 +246,7 @@ export default function PanditsPage() {
     <div className="container-shell py-12 dp-pandit-content">
       <section className="dp-pandit-hero">
         <div className="dp-pandit-hero-copy">
-          <h1 className="dp-pandit-typewriter">
-            <span>स्पष्ट पता और कीमत के साथ पूजा,</span>
-            <span>हवन और कथा की बुकिंग करें</span>
-          </h1>
+          <GoldenWriting className="dp-pandit-typewriter">स्पष्ट पता और कीमत के साथ पूजा,<br />हवन और कथा की बुकिंग करें</GoldenWriting>
           <p>निश्चित सेवा शुल्क के साथ यात्रा, सामग्री और दक्षिणा का स्पष्ट विवरण एक ही स्थान पर देखें।</p>
         </div>
         <div className="dp-pandit-floating-figure" aria-hidden="true">
@@ -301,7 +299,7 @@ export default function PanditsPage() {
               : profiles.map((profile) => {
                 const isExpanded = expandedProfiles.has(profile._id);
                 return (
-                  <article key={profile._id} className="dp-pandit-card overflow-hidden rounded-[28px] bg-white shadow-soft">
+                  <GoldenTiltSurface key={profile._id} className="dp-pandit-card overflow-hidden rounded-[28px] border border-brand-gold/20 bg-white shadow-soft">
                     <img
                       src={getExpertImage({
                         user: {
@@ -365,7 +363,7 @@ export default function PanditsPage() {
                         ))}
                       </div> : null}
                     </div>
-                  </article>
+                  </GoldenTiltSurface>
                 );
               })}
           </div>

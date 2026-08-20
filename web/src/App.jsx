@@ -7,6 +7,7 @@ import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentUser, logout } from "./features/auth/authSlice";
 import { HindiInterface } from "./components/HindiInterface";
+import { GoldenCursor } from "./components/GoldenCursor";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ export default function App() {
   return (
     <AppErrorBoundary>
       <HindiInterface />
+      <GoldenCursor />
       <Suspense fallback={<LoadingScreen />}>{element}</Suspense>
       <PanditJiChatWidget />
     </AppErrorBoundary>

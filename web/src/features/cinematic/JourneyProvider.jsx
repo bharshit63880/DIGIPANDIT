@@ -20,6 +20,7 @@ export function JourneyProvider({ children }) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [capability, setCapability] = useState("static");
   const [progress, setProgress] = useState({ home: 0, "pandit-discovery": 0 });
+  const [journeyProgress, setJourneyProgress] = useState(0);
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
@@ -49,6 +50,15 @@ export function JourneyProvider({ children }) {
         const distance = Math.abs(rect.top - window.innerHeight * 0.28);
         if (rect.bottom > 80 && distance < closest.distance) closest = { id, distance };
       });
+      const orderedSections = Array.from(sections.current.values());
+      const firstSection = orderedSections[0];
+      const lastSection = orderedSections[orderedSections.length - 1];
+      if (firstSection && lastSection) {
+        const start = firstSection.offsetTop;
+        const end = lastSection.offsetTop + lastSection.offsetHeight - window.innerHeight;
+        const nextJourneyProgress = Math.min(1, Math.max(0, (window.scrollY - start) / Math.max(1, end - start)));
+        setJourneyProgress((current) => Math.abs(current - nextJourneyProgress) > 0.002 ? nextJourneyProgress : current);
+      }
       setProgress((current) => {
         const changed = Object.keys(next).some((id) => Math.abs((current[id] || 0) - next[id]) > 0.012);
         return changed ? { ...current, ...next } : current;
@@ -97,10 +107,11 @@ export function JourneyProvider({ children }) {
   const value = useMemo(() => ({
     activeSection,
     capability,
+    journeyProgress,
     progress,
     reducedMotion,
     registerSection,
-  }), [activeSection, capability, progress, reducedMotion, registerSection]);
+  }), [activeSection, capability, journeyProgress, progress, reducedMotion, registerSection]);
 
   return <JourneyContext.Provider value={value}>{children}</JourneyContext.Provider>;
 }
