@@ -140,3 +140,13 @@
 .cinematic-home--continuous .journey-scene.journey-scene--hero .journey-copy{opacity:1!important;filter:none!important;text-shadow:0 2px 34px rgba(0,0,0,.72)}
 @media(max-width:899px){.journey-shared-atmosphere{position:absolute}.journey-gold-geometry{opacity:clamp(0,calc((var(--journey-progress) - .28)*3),.35)}.journey-smoke{filter:blur(10px)}.journey-hero-video{display:none}.cinematic-home--continuous .journey-scene--hero .journey-stage{background-position:58% center}}
 @media(prefers-reduced-motion:reduce){.journey-shared-atmosphere{display:none}.journey-hero-video{display:none}.journey-hero-grade{background:linear-gradient(0deg,rgba(8,7,6,.82),rgba(8,7,6,.14) 72%)}}
+
+/* Softer scene hand-offs and a better-balanced Hawan composition. */
+.cinematic-home--continuous .journey-scene--hawan .hawan-kund{inset:9% auto 3% 3%!important;width:min(58vw,62rem)!important;height:84%!important;background-size:contain!important;background-position:left center!important;transform:translate3d(calc((1 - var(--p))*-4vw),calc((1 - var(--p))*2.5rem),0) scale(calc(.9 + var(--p)*.08))!important}
+.cinematic-home--continuous .journey-scene--hawan .journey-copy{width:min(34rem,36vw)}
+.cinematic-home--continuous .journey-scene--hawan .journey-copy h2{font-size:clamp(2.8rem,5.35vw,5.8rem)}
+.cinematic-home--continuous .journey-scene+.journey-scene .journey-stage:before{content:"";position:absolute;z-index:7;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(7,5,10,.92),transparent 18%,transparent 82%,rgba(7,5,10,.88));opacity:clamp(0,calc(1 - var(--p)*3.2),1);transition:opacity .18s linear}
+.cinematic-home--continuous .journey-scene+.journey-scene .journey-stage{animation:dpSceneDevelop linear both;animation-timeline:view(block);animation-range:entry 0% exit 100%}
+@keyframes dpSceneDevelop{0%{opacity:.18;filter:blur(8px) brightness(.62)}12%{opacity:1;filter:blur(0) brightness(1)}88%{opacity:1;filter:blur(0) brightness(1)}100%{opacity:.24;filter:blur(7px) brightness(.68)}}
+@media(max-width:899px){.cinematic-home--continuous .journey-scene--hawan .hawan-kund{inset:5.5rem auto auto 2%!important;width:94vw!important;height:43svh!important;background-size:contain!important}.cinematic-home--continuous .journey-scene--hawan .journey-copy{padding-top:45svh}.cinematic-home--continuous .journey-scene+.journey-scene .journey-stage{animation:none;filter:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.cinematic-home--continuous .journey-scene+.journey-scene .journey-stage{animation:none!important;filter:none!important;opacity:1!important}.cinematic-home--continuous .journey-scene+.journey-scene .journey-stage:before{display:none}}
