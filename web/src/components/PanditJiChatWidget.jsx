@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bot, MessageCircle, SendHorizontal, Sparkles, Trash2, X } from "lucide-react";
+import { MessageCircle, SendHorizontal, Sparkles, Trash2, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "./Button";
@@ -12,14 +12,14 @@ const defaultMessages = [
     id: "welcome",
     role: "assistant",
     content:
-      "नमस्ते। मैं पंडितजी हूँ। आप पूजा बुकिंग, ज्योतिष परामर्श, भुगतान, सामग्री आदेश या पंडित पंजीकरण के बारे में पूछ सकते हैं।",
+      "ॐ नमः शिवाय। मैं पंडितजी हूँ। अपनी वास्तविक समस्या सरल शब्दों में लिखिए—मैं उसे समझकर सही उपाय या अगला चरण बताऊँगा। कृपया कूटशब्द, ओटीपी या भुगतान की गोपनीय जानकारी साझा न करें।",
   },
 ];
 
 const quickPrompts = [
-  "ज्योतिष परामर्श कैसे बुक करूँ?",
-  "पूजा बुकिंग के चरण बताएँ",
-  "पूजा सामग्री का आदेश कैसे दूँ?",
+  "मेरा भुगतान असफल हुआ",
+  "मेरी बुकिंग में समस्या है",
+  "ईमेल या कूटशब्द की समस्या",
 ];
 
 export function PanditJiChatWidget() {
@@ -109,14 +109,14 @@ export function PanditJiChatWidget() {
 
       {open ? (
         <div className="panditji-panel fixed bottom-24 right-5 z-50 flex h-[560px] w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-[30px] border border-brand-sand bg-white shadow-soft">
-          <div className="bg-brand-maroon p-5 text-white">
+          <div className="panditji-header bg-brand-maroon p-5 text-white">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
-                <Bot className="h-5 w-5" />
+              <div className="panditji-seal flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
+                <span aria-hidden="true">ॐ</span>
               </div>
               <div>
-                <p className="text-lg font-bold">PanditJi</p>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/75">आध्यात्मिक सहायक</p>
+                <p className="text-lg font-bold">पंडितजी संवाद</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/75">वैदिक मार्गदर्शन · DigiPandit सहायता</p>
               </div>
               <button type="button" onClick={clearConversation} className="ml-auto rounded-xl p-2 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="बातचीत साफ करें" title="बातचीत साफ करें">
                 <Trash2 className="h-4 w-4" />
@@ -124,11 +124,11 @@ export function PanditJiChatWidget() {
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-brand-cream/50 p-4">
+          <div ref={scrollRef} className="panditji-messages flex-1 space-y-4 overflow-y-auto bg-brand-cream/50 p-4">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`max-w-[90%] rounded-[24px] px-4 py-3 text-sm leading-7 ${
+                className={`panditji-message panditji-message--${message.role} max-w-[90%] rounded-[24px] px-4 py-3 text-sm leading-7 ${
                   message.role === "user"
                     ? "ml-auto bg-brand-maroon text-white"
                     : "bg-white text-brand-ink shadow-soft"
@@ -163,7 +163,8 @@ export function PanditJiChatWidget() {
             ) : null}
           </div>
 
-          <div className="border-t border-brand-sand bg-white p-4">
+          <div className="panditji-composer border-t border-brand-sand bg-white p-4">
+            <p className="panditji-question-label">अपनी समस्या चुनें या नीचे विस्तार से लिखें</p>
             <div className="mb-3 flex flex-wrap gap-2">
               {quickPrompts.map((prompt) => (
                 <button
@@ -188,7 +189,7 @@ export function PanditJiChatWidget() {
                     if (canSend) sendMessage(draft);
                   }
                 }}
-                placeholder="अपना प्रश्न लिखें—अनुष्ठान, मंत्र, समय या सामग्री"
+                placeholder="उदाहरण: भुगतान कट गया लेकिन बुकिंग नहीं बनी..."
                 className="min-h-[52px] flex-1 resize-none rounded-[20px] border border-brand-sand px-4 py-3 text-sm outline-none focus:border-brand-clay"
               />
               <Button onClick={() => sendMessage(draft)} disabled={!canSend} className="h-[52px] w-[52px] rounded-2xl px-0">

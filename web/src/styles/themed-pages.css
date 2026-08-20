@@ -327,6 +327,26 @@ body:has(.dp-astrology-theme) .panditji-panel{background:#0d0905!important}
 .dp-unified-shell .dp-astrology-theme .dp-astrology-faq>div:last-child>div{border-color:rgba(215,164,70,.3)!important;background:linear-gradient(145deg,rgba(24,16,8,.9),rgba(5,4,3,.96))!important;box-shadow:0 14px 38px rgba(0,0,0,.26),inset 0 1px rgba(255,225,158,.06)!important}
 .dp-unified-shell .dp-astrology-theme .dp-astrology-faq>div:last-child>div:hover{border-color:rgba(235,190,99,.52)!important;background:linear-gradient(145deg,rgba(34,22,10,.92),rgba(8,5,3,.98))!important}
 
+/* PanditJi — Vedic manuscript conversation. */
+body .panditji-panel{width:min(27rem,calc(100vw - 2rem))!important;max-width:none!important;height:min(40rem,calc(100svh - 8rem))!important;border:1px solid #bd7b2a!important;border-radius:1.25rem .4rem 1.25rem .4rem!important;background:#ead8ad!important;box-shadow:0 28px 90px rgba(0,0,0,.58),0 0 0 4px rgba(58,29,10,.74),0 0 0 5px rgba(222,174,79,.34)!important}
+.panditji-panel:before{content:"";position:absolute;z-index:20;inset:.45rem;pointer-events:none;border:1px solid rgba(116,62,20,.28);border-radius:.9rem .2rem .9rem .2rem}
+.panditji-header{position:relative;flex:none;padding:1.15rem 1.25rem!important;background:linear-gradient(115deg,#351608,#6f2b0e 52%,#2b1208)!important;border-bottom:1px solid #d49a3d;color:#fff1cd!important}
+.panditji-header:after{content:"॥ श्री गणेशाय नमः ॥";position:absolute;right:1.25rem;bottom:.35rem;color:rgba(247,213,145,.4);font-family:Georgia,"Noto Serif Devanagari",serif;font-size:.55rem;letter-spacing:.08em}
+.panditji-seal{border:1px solid rgba(244,205,127,.45);border-radius:50%!important;background:radial-gradient(circle,#9b4a17,#3a1708)!important;color:#f5cf76;font-family:Georgia,serif;font-size:1.25rem;box-shadow:0 0 0 3px rgba(229,175,75,.08)}
+.panditji-messages{position:relative;padding:1.2rem!important;background-color:#ead8ad!important;background-image:linear-gradient(rgba(105,57,20,.055) 1px,transparent 1px),radial-gradient(circle at 12% 8%,rgba(117,65,22,.08),transparent 18rem)!important;background-size:100% 2rem,auto;color:#3c2516}
+.panditji-messages:before{content:"ॐ";position:absolute;right:1.5rem;top:30%;pointer-events:none;color:rgba(107,57,19,.045);font-family:Georgia,serif;font-size:10rem}
+.panditji-message{position:relative;border-radius:.8rem .2rem .8rem .2rem!important;font-family:"Noto Serif Devanagari",Georgia,serif;line-height:1.75!important;box-shadow:0 8px 22px rgba(69,37,16,.1)!important}
+.panditji-message--assistant{border:1px solid rgba(118,67,25,.22);background:rgba(255,247,222,.78)!important;color:#3f2819!important}
+.panditji-message--user{border:1px solid rgba(231,183,89,.42);background:linear-gradient(135deg,#54220c,#823814)!important;color:#fff0cb!important}
+.panditji-message button{border:1px solid rgba(146,82,27,.22);background:#f2dfb6!important;color:#6c3517!important}.panditji-message a{color:#713717!important}
+.panditji-composer{position:relative;flex:none;padding:1rem 1.15rem!important;border-top:1px solid rgba(116,62,20,.34)!important;background:linear-gradient(180deg,#f1dfb8,#dfc38d)!important}
+.panditji-question-label{margin:0 0 .55rem;color:#6f3b1e;font-family:Georgia,"Noto Serif Devanagari",serif;font-size:.7rem;font-weight:800;letter-spacing:.04em}
+.panditji-composer>div:nth-of-type(1){margin-bottom:.65rem!important}.panditji-composer>div:nth-of-type(1) button{border:1px solid rgba(136,73,24,.22);background:rgba(255,244,216,.72)!important;color:#643116!important;padding:.42rem .65rem!important}
+.panditji-composer textarea{border:1px solid rgba(113,61,22,.42)!important;border-radius:.65rem .2rem .65rem .2rem!important;background:rgba(255,249,230,.7)!important;color:#3b2517!important;box-shadow:inset 0 2px 8px rgba(76,38,13,.08)}.panditji-composer textarea::placeholder{color:rgba(66,40,24,.48)}
+.panditji-composer .bg-brand-maroon{border:1px solid #e1ad50!important;border-radius:.65rem .2rem .65rem .2rem!important;background:linear-gradient(135deg,#6f2c0f,#a84d18)!important;color:#ffe7ad!important}
+body .panditji-trigger{border:1px solid rgba(240,199,111,.48)!important;background:linear-gradient(115deg,#411a0a,#8c3911)!important;color:#fff0cd!important;box-shadow:0 16px 40px rgba(0,0,0,.38),inset 0 1px rgba(255,230,174,.16)!important}
+@media(max-width:480px){body .panditji-panel{right:.5rem!important;bottom:4.25rem!important;width:calc(100vw - 1rem)!important;height:min(38rem,calc(100svh - 5rem))!important}.panditji-header{padding:.9rem 1rem!important}.panditji-messages{padding:1rem!important}.panditji-composer{padding:.8rem!important}}
+
 /* Keep the Astrology artwork above the unified shell's generic theme layer. */
 .dp-unified-shell .dp-theme.dp-astrology-theme::before{
   content:""!important;
