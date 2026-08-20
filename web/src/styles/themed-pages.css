@@ -254,3 +254,22 @@
 @keyframes dpAuthButtonGlow{50%{background-position:100% 0;box-shadow:0 16px 36px rgba(213,136,31,.38),0 0 36px rgba(245,193,83,.28),inset 0 1px #fff8df}}
 @media(max-width:640px){.dp-auth-page{padding:7rem .8rem 1.5rem!important;background-position:68% center!important}.dp-auth-shell:before,.dp-auth-shell:after{width:42rem;opacity:.45}.dp-auth-intro{top:-4.7rem!important}.dp-auth-sigil{width:7.1rem!important;height:7.1rem!important;border-radius:1.55rem 1.55rem 1.1rem 1.1rem!important}.dp-auth-sigil img{height:5.8rem!important;padding-bottom:1.15rem!important}.dp-auth-sigil:after{bottom:.42rem;font-size:.56rem}.dp-auth-card{padding:4.8rem 1.15rem 1.45rem!important;border-radius:1.55rem!important}.dp-auth-card h1{font-size:2.55rem!important}.dp-auth-card>p{font-size:.82rem!important}.dp-auth-form{margin-top:1.15rem!important}.dp-auth-form input{min-height:3.3rem!important}.dp-auth-form button[type=submit]{min-height:3.65rem!important}.dp-auth-page--register{padding-top:6rem!important}.dp-auth-page--register .dp-auth-card{padding-top:4.4rem!important}}
 @media(prefers-reduced-motion:reduce){.dp-auth-glow,.dp-auth-form button[type=submit]{animation:none!important}}
+
+/* Keep the Astrology artwork above the unified shell's generic theme layer. */
+.dp-unified-shell .dp-theme.dp-astrology-theme::before{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  z-index:0!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100svh!important;
+  background-image:linear-gradient(90deg,rgba(4,3,2,.48),rgba(7,5,3,.22) 48%,rgba(5,4,3,.38)),url('/cinematic/astrology-fixed-bg.png')!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  opacity:1!important;
+  filter:none!important;
+  pointer-events:none!important;
+}
+@media(max-width:899px){.dp-unified-shell .dp-theme.dp-astrology-theme::before{background-position:58% center!important}}
