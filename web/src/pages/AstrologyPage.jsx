@@ -312,7 +312,7 @@ export default function AstrologyPage() {
   const ActiveSessionIcon = activeSessionMeta.icon;
 
   return (
-    <div className="dp-theme dp-astrology-theme pb-20">
+    <div className="dp-theme dp-astrology-theme dp-consultation-page pb-20">
       <section className="bg-hero-pattern">
         <div className="container-shell grid gap-10 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
           <div className="space-y-7">

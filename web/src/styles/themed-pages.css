@@ -347,6 +347,14 @@ body .panditji-panel{width:min(27rem,calc(100vw - 2rem))!important;max-width:non
 body .panditji-trigger{border:1px solid rgba(240,199,111,.48)!important;background:linear-gradient(115deg,#411a0a,#8c3911)!important;color:#fff0cd!important;box-shadow:0 16px 40px rgba(0,0,0,.38),inset 0 1px rgba(255,230,174,.16)!important}
 @media(max-width:480px){body .panditji-panel{right:.5rem!important;bottom:4.25rem!important;width:calc(100vw - 1rem)!important;height:min(38rem,calc(100svh - 5rem))!important}.panditji-header{padding:.9rem 1rem!important}.panditji-messages{padding:1rem!important}.panditji-composer{padding:.8rem!important}}
 
+/* Consultation route: fixed cosmic artwork with no page-wide brown layer. */
+.dp-unified-shell .dp-consultation-page{background:transparent!important}
+.dp-unified-shell .dp-consultation-page::before{background-image:linear-gradient(90deg,rgba(3,2,1,.5),rgba(3,2,1,.08) 48%,rgba(3,2,1,.2)),url('/cinematic/astrology-fixed-bg.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;background-attachment:fixed!important;filter:saturate(1.08) contrast(1.03)!important}
+.dp-unified-shell .dp-consultation-page::after{display:none!important}
+.dp-unified-shell .dp-consultation-page>section:first-child{background:transparent!important}
+.dp-unified-shell .dp-consultation-page>section:first-child::after{display:none!important}
+@media(max-width:899px){.dp-unified-shell .dp-consultation-page::before{background-position:58% center!important;background-attachment:scroll!important}}
+
 /* Keep the Astrology artwork above the unified shell's generic theme layer. */
 .dp-unified-shell .dp-theme.dp-astrology-theme::before{
   content:""!important;

@@ -262,7 +262,7 @@ export default function PanditsPage() {
         </div>
       ) : null}
 
-      <div className="mt-8 grid gap-8 xl:grid-cols-[1.08fr_0.92fr]">
+      <div className={`mt-8 grid gap-8 ${selectedOffer ? "xl:grid-cols-[1.08fr_0.92fr]" : ""}`}>
         <div className="min-w-0">
           <div className="grid gap-4 rounded-[30px] bg-white p-5 shadow-soft md:grid-cols-[1fr_1fr_auto]">
             <Input label="शहर" value={filters.city} onChange={(event) => setFilters((current) => ({ ...current, city: event.target.value }))} />
@@ -378,7 +378,7 @@ export default function PanditsPage() {
           ) : null}
         </div>
 
-        <aside className="dp-booking-desk h-fit rounded-[32px] bg-white p-6 shadow-soft xl:sticky xl:top-28">
+        <aside className={`dp-booking-desk h-fit rounded-[32px] bg-white p-6 shadow-soft xl:sticky xl:top-28 ${selectedOffer ? "" : "hidden"}`}>
           <p className="text-xs font-bold uppercase tracking-[0.26em] text-brand-clay">बुकिंग डेस्क</p>
           <h2 className="mt-2 text-3xl font-bold text-brand-ink">
             {selectedOffer ? selectedOffer.service.name : "पंडित सेवा चुनें"}
